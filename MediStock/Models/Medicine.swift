@@ -13,7 +13,7 @@ struct Medicine: Identifiable, Codable, Equatable {
         self.name = name
         self.stock = stock
         self.aisle = aisle
-        self.nameSearch = name.lowercased()
+        self.nameSearch = name.removingAccentsUppercased
     }
 
     static func == (lhs: Medicine, rhs: Medicine) -> Bool {

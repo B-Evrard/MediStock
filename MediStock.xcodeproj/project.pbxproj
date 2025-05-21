@@ -60,6 +60,8 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		FE1051912DDE1EFA004D2D6D /* Utilities */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Utilities; sourceTree = "<group>"; };
+		FE1051962DDE214F004D2D6D /* ViewData */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = ViewData; sourceTree = "<group>"; };
 		FEFC1C6D2DDDC42D007D10D8 /* Views */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Views; sourceTree = "<group>"; };
 		FEFC1C6E2DDDC4AB007D10D8 /* ViewModels */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = ViewModels; sourceTree = "<group>"; };
 		FEFC1C6F2DDDC5F3007D10D8 /* Services */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Services; sourceTree = "<group>"; };
@@ -125,6 +127,8 @@
 		53E0D8952C06084700DE1134 /* MediStock */ = {
 			isa = PBXGroup;
 			children = (
+				FE1051962DDE214F004D2D6D /* ViewData */,
+				FE1051912DDE1EFA004D2D6D /* Utilities */,
 				FEFC1C702DDDC60B007D10D8 /* Models */,
 				FEFC1C6F2DDDC5F3007D10D8 /* Services */,
 				FEFC1C6E2DDDC4AB007D10D8 /* ViewModels */,
@@ -179,6 +183,8 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
+				FE1051912DDE1EFA004D2D6D /* Utilities */,
+				FE1051962DDE214F004D2D6D /* ViewData */,
 				FEFC1C6D2DDDC42D007D10D8 /* Views */,
 				FEFC1C6E2DDDC4AB007D10D8 /* ViewModels */,
 				FEFC1C6F2DDDC5F3007D10D8 /* Services */,
