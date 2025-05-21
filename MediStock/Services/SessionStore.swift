@@ -16,6 +16,8 @@ class SessionStore: ObservableObject {
     }
 
     func signUp(email: String, password: String) {
+        
+        Auth.auth().createUser(withEmail: <#T##String#>, password: <#T##String#>)
         Auth.auth().createUser(withEmail: email, password: password) { (result, error) in
             if let error = error {
                 print("Error creating user: \(error.localizedDescription) \(error)")
