@@ -10,6 +10,16 @@ import Foundation
 
 class UserManager: ObservableObject {
     
-    @Published var currentUser: User?
-    @Published var isLogged: Bool = false
+    @Published var user: UserInfo?
+    @Published var isConnected: Bool = false
+    
+    func update(user: UserInfo?) {
+        self.user = user
+        self.isConnected = user != nil
+    }
+    
+    func reset() {
+        self.user = nil
+        self.isConnected = false
+    }
 }

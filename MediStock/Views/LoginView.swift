@@ -1,10 +1,11 @@
 import SwiftUI
 
 struct LoginView: View {
+
+    @StateObject var viewModel:LoginViewModel
     @State private var email = ""
     @State private var password = ""
-    @EnvironmentObject var session: SessionStore
-
+    
     var body: some View {
         VStack {
             TextField("Email", text: $email)
@@ -25,7 +26,11 @@ struct LoginView: View {
             }
         }
         .padding()
+        .onAppear {
+            viewModel.initListen()
+        }
     }
+        
 }
 
 struct LoginView_Previews: PreviewProvider {
