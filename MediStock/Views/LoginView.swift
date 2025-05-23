@@ -3,24 +3,22 @@ import SwiftUI
 struct LoginView: View {
 
     @StateObject var viewModel:LoginViewModel
-    @State private var email = ""
-    @State private var password = ""
     
     var body: some View {
         VStack {
-            TextField("Email", text: $email)
+            TextField("Email", text: $viewModel.email)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding()
-            SecureField("Password", text: $password)
+            SecureField("Password", text: $viewModel.password)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding()
             Button(action: {
-                session.signIn(email: email, password: password)
+                viewModel.signIn()
             }) {
                 Text("Login")
             }
             Button(action: {
-                session.signUp(email: email, password: password)
+                viewModel.signUp()
             }) {
                 Text("Sign Up")
             }
@@ -33,8 +31,8 @@ struct LoginView: View {
         
 }
 
-struct LoginView_Previews: PreviewProvider {
-    static var previews: some View {
-        LoginView().environmentObject(SessionStore())
-    }
+#Preview {
+    let viewModel = LoginViewModel(userManager: MockUserManager())
+    LoginView(viewModel: LoginViewModel(userManager: userManager))
 }
+

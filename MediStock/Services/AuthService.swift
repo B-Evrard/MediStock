@@ -20,7 +20,7 @@ class AuthService: AuthProviding {
 
     func listen() {
         handle = Auth.auth().addStateDidChangeListener { [weak self] (auth, user) in
-            if let user = user {
+            if user != nil {
                 self?.userManager.isConnected = true
             } else {
                 self?.userManager.reset()

@@ -7,6 +7,7 @@
 
 import Foundation
 
+@MainActor
 class LoginViewModel: ObservableObject {
     
     @Published var email: String = ""
@@ -25,8 +26,20 @@ class LoginViewModel: ObservableObject {
         self.userManager = userManager
     }
     
+    func signIn() {
+        //self.authService.signIn(withEmail: email, password: password)
+    }
+    
+    func signUp() {
+        //self.authService.signUp(withEmail: email, password: password)
+    }
+    
+
+    
     func initListen() {
         self.authService.listen()
     }
+    
+    
     
 }

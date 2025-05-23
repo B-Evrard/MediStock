@@ -8,4 +8,16 @@
 
 protocol DataStore {
     
+    // MARK: Aisles
+    func streamAisles() throws -> AsyncThrowingStream<[Aisle], Error>
+    func loadNextPageAisles(completion: @escaping (Result<[Aisle], Error>) -> Void)
+    
+    // MARK: Medicines
+    func fetchMedicines(forAisle aisle: Aisle) -> AsyncThrowingStream<[Medicine], Error>
+    func fetchMedicines() -> AsyncThrowingStream<[Medicine], Error>
+    
+    // MARK: History
+    
+    // MARK: User
+    
 }

@@ -10,5 +10,5 @@ import FirebaseFirestore
 
 struct Aisle: Codable {
     @DocumentID var id: String?
-    var name: String
+    var aisleNumber: Int
 }
