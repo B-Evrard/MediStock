@@ -7,20 +7,20 @@ struct AisleListView: View {
         NavigationView {
             List {
                 ForEach(viewModel.aisles, id: \.self) { aisle in
-                    NavigationLink(destination: MedicineListView(aisle: aisle)) {
+                    NavigationLink(destination: MedicineListView()) {
                         Text(aisle)
                     }
                 }
             }
             .navigationBarTitle("Aisles")
-            .navigationBarItems(trailing: Button(action: {
-                viewModel.addRandomMedicine(user: "test_user") // Remplacez par l'utilisateur actuel
-            }) {
-                Image(systemName: "plus")
-            })
+//            .navigationBarItems(trailing: Button(action: {
+//                viewModel.addRandomMedicine(user: "test_user") // Remplacez par l'utilisateur actuel
+//            }) {
+//                Image(systemName: "plus")
+//            })
         }
         .onAppear {
-            viewModel.fetchAisles()
+            //viewModel.fetchAisles()
         }
     }
 }

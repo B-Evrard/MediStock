@@ -18,12 +18,10 @@ class LoginViewModel: ObservableObject {
     
     private let authService: AuthProviding
     private let storeService: DataStore
-    private var userManager: UserManager
-    
-    init(authService: AuthProviding, storeService: DataStore, userManager: UserManager) {
+
+    init(authService: AuthProviding , storeService: DataStore = FireStoreService()) {
         self.authService = authService
         self.storeService = storeService
-        self.userManager = userManager
     }
     
     func signIn() {
@@ -33,8 +31,6 @@ class LoginViewModel: ObservableObject {
     func signUp() {
         //self.authService.signUp(withEmail: email, password: password)
     }
-    
-
     
     func initListen() {
         self.authService.listen()

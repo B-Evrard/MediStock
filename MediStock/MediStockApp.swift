@@ -10,12 +10,17 @@ import SwiftUI
 @main
 struct MediStockApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
-    var sessionStore = SessionStore()
+    @StateObject private var userManager = UserManager()
     
     var body: some Scene {
         WindowGroup {
-            ContentView()
-                .environmentObject(sessionStore)
+            if userManager.isConnected {
+                MainTabView()
+            } else {
+                LoginView(viewModel: LoginViewModel(authService: AuthService(userManager: userManager)))
+            }
         }
+        .environmentObject(userManager)
+        
     }
 }

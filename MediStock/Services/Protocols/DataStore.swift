@@ -13,8 +13,8 @@ protocol DataStore {
     func loadNextPageAisles(completion: @escaping (Result<[Aisle], Error>) -> Void)
     
     // MARK: Medicines
-    func fetchMedicines(forAisle aisle: Aisle) -> AsyncThrowingStream<[Medicine], Error>
-    func fetchMedicines() -> AsyncThrowingStream<[Medicine], Error>
+    //func fetchMedicines(forAisle aisle: Aisle) -> AsyncThrowingStream<[Medicine], Error>
+    //func fetchMedicines() -> AsyncThrowingStream<[Medicine], Error>
     
     // MARK: History
     

@@ -15,7 +15,7 @@ class AuthService: AuthProviding {
 
     init(auth: Auth  = Auth.auth(), userManager: UserManager) {
         self.auth = auth
-        self.userManager = userManager
+        self.userManager = userManager  
     }
 
     func listen() {

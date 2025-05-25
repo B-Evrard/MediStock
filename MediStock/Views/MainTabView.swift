@@ -9,11 +9,11 @@ struct MainTabView: View {
                     Text("Aisles")
                 }
 
-            AllMedicinesView()
-                .tabItem {
-                    Image(systemName: "square.grid.2x2")
-                    Text("All Medicines")
-                }
+//            AllMedicinesView()
+//                .tabItem {
+//                    Image(systemName: "square.grid.2x2")
+//                    Text("All Medicines")
+//                }
         }
     }
 }

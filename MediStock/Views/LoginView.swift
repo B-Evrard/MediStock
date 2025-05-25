@@ -5,34 +5,51 @@ struct LoginView: View {
     @StateObject var viewModel:LoginViewModel
     
     var body: some View {
-        VStack {
-            TextField("Email", text: $viewModel.email)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding()
-            SecureField("Password", text: $viewModel.password)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding()
-            Button(action: {
-                viewModel.signIn()
-            }) {
-                Text("Login")
+        ZStack {
+            Color("Background").ignoresSafeArea()
+            VStack {
+                TextField("Email", text: $viewModel.email)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .keyboardType(.emailAddress)
+                    .autocapitalization(.none)
+                    .disableAutocorrection(true)
+                    
+                SecureField("Password", text: $viewModel.password)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    
+                
+                Button(action: {
+                    viewModel.signIn()
+                }) {
+                    HStack {
+                        Spacer()
+                        Text("Sign in")
+                            .font(.callout)
+                            .foregroundColor(.white)
+                            .bold(true)
+                        Spacer()
+                    }
+                    .padding(.vertical, 15)
+                    .background(Color("BackgroundRed"))
+                    .cornerRadius(4)
+                }
+                .padding(.vertical, 30)
+                
             }
-            Button(action: {
-                viewModel.signUp()
-            }) {
-                Text("Sign Up")
+            .padding(.horizontal, 30)
+            
+            
+            .onAppear {
+                viewModel.initListen()
             }
-        }
-        .padding()
-        .onAppear {
-            viewModel.initListen()
         }
     }
         
 }
 
 #Preview {
-    let viewModel = LoginViewModel(userManager: MockUserManager())
-    LoginView(viewModel: LoginViewModel(userManager: userManager))
+    let userManager = UserManager()
+    let viewModel = LoginViewModel(authService: AuthService(userManager: userManager))
+    LoginView(viewModel: viewModel)
 }
 

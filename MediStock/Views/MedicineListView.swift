@@ -1,31 +1,18 @@
+//
+//  MedicineListView.swift
+//  MediStock
+//
+//  Created by Bruno Evrard on 25/05/2025.
+//
+
 import SwiftUI
 
 struct MedicineListView: View {
-    @ObservedObject var viewModel = MedicineStockViewModel()
-    var aisle: String
-
     var body: some View {
-        List {
-            ForEach(viewModel.medicines.filter { $0.aisle == aisle }, id: \.id) { medicine in
-                NavigationLink(destination: MedicineDetailView(medicine: medicine)) {
-                    VStack(alignment: .leading) {
-                        Text(medicine.name)
-                            .font(.headline)
-                        Text("Stock: \(medicine.stock)")
-                            .font(.subheadline)
-                    }
-                }
-            }
-        }
-        .navigationBarTitle(aisle)
-        .onAppear {
-            viewModel.fetchMedicines()
-        }
+        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
     }
 }
 
-struct MedicineListView_Previews: PreviewProvider {
-    static var previews: some View {
-        MedicineListView(aisle: "Aisle 1").environmentObject(SessionStore())
-    }
+#Preview {
+    MedicineListView()
 }

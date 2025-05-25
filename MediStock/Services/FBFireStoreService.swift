@@ -78,13 +78,13 @@ final class FireStoreService: DataStore {
     }
     
     // MARK: Medicines
-    func fetchMedicines(forAisle aisle: Aisle) -> AsyncThrowingStream<[Medicine], any Error> {
-        <#code#>
-    }
-    
-    func fetchMedicines() -> AsyncThrowingStream<[Medicine], any Error> {
-        <#code#>
-    }
+//    func fetchMedicines(forAisle aisle: Aisle) -> AsyncThrowingStream<[Medicine], any Error> {
+//        
+//    }
+//    
+//    func fetchMedicines() -> AsyncThrowingStream<[Medicine], any Error> {
+//        
+//    }
     
     // MARK: History
     

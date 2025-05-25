@@ -127,17 +127,17 @@
 		53E0D8952C06084700DE1134 /* MediStock */ = {
 			isa = PBXGroup;
 			children = (
-				FE1051962DDE214F004D2D6D /* ViewData */,
-				FE1051912DDE1EFA004D2D6D /* Utilities */,
-				FEFC1C702DDDC60B007D10D8 /* Models */,
-				FEFC1C6F2DDDC5F3007D10D8 /* Services */,
-				FEFC1C6E2DDDC4AB007D10D8 /* ViewModels */,
-				FEFC1C6D2DDDC42D007D10D8 /* Views */,
 				53E0D8E32C0660FD00DE1134 /* GoogleService-Info.plist */,
+				53E0D8E12C065FFE00DE1134 /* AppDelegate.swift */,
 				53E0D8962C06084700DE1134 /* MediStockApp.swift */,
 				53E0D89A2C06084900DE1134 /* Assets.xcassets */,
+				FEFC1C702DDDC60B007D10D8 /* Models */,
 				53E0D89C2C06084900DE1134 /* Preview Content */,
-				53E0D8E12C065FFE00DE1134 /* AppDelegate.swift */,
+				FEFC1C6F2DDDC5F3007D10D8 /* Services */,
+				FE1051912DDE1EFA004D2D6D /* Utilities */,
+				FE1051962DDE214F004D2D6D /* ViewData */,
+				FEFC1C6E2DDDC4AB007D10D8 /* ViewModels */,
+				FEFC1C6D2DDDC42D007D10D8 /* Views */,
 			);
 			path = MediStock;
 			sourceTree = "<group>";
