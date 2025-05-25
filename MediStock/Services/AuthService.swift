@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Firebase
+import FirebaseAuth
 
 class AuthService: AuthProviding {
     private let auth: Auth

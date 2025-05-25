@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import FirebaseAuth
 
 @MainActor
 class LoginViewModel: ObservableObject {
@@ -16,6 +17,7 @@ class LoginViewModel: ObservableObject {
     @Published var name  = ""
     @Published var message: String = ""
     
+    
     private let authService: AuthProviding
     private let storeService: DataStore
 
@@ -24,8 +26,36 @@ class LoginViewModel: ObservableObject {
         self.storeService = storeService
     }
     
-    func signIn() {
-        //self.authService.signIn(withEmail: email, password: password)
+    func signIn() async -> Bool{
+        self.message = ""
+        do {
+            try Control.signIn(email: email, password: password)
+            let id = try await authService.signIn(withEmail: email, password: password)
+            guard id != nil else {
+                message = AppMessages.genericError
+                return false
+            }
+        } catch let error as ControlError {
+            message = error.message
+            return false
+        } catch  let error as NSError {
+            if let errorCode = AuthErrorCode(rawValue: error.code) {
+                switch errorCode {
+                case .invalidCredential, .wrongPassword, .userNotFound:
+                    message = AppMessages.loginFailed
+                default:
+                    message = AppMessages.genericError
+                }
+                return false
+            } else {
+                message = AppMessages.genericError
+                return false
+            }
+           
+        }
+        
+        return true
+        
     }
     
     func signUp() {
