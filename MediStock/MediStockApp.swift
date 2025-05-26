@@ -6,21 +6,24 @@
 //
 
 import SwiftUI
+import FirebaseCore
 
 @main
 struct MediStockApp: App {
-    @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+    //@UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     @StateObject private var userManager = UserManager()
+    init () {
+        FirebaseApp.configure()
+    }
     
     var body: some Scene {
         WindowGroup {
             if userManager.isConnected {
                 MainTabView()
             } else {
-                LoginView(viewModel: LoginViewModel(authService: AuthService(userManager: userManager)))
+                LoginView(viewModel: LoginViewModel(authService: FireBaseAuthService(userManager: userManager), userManager: userManager))
             }
         }
         .environmentObject(userManager)
-        
     }
 }

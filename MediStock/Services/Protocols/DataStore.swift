@@ -19,5 +19,6 @@ protocol DataStore {
     // MARK: History
     
     // MARK: User
-    
+    func addUser(_ user: UserInfo) async throws
+    func getUser(idAuth: String) async throws -> UserInfo?
 }

@@ -16,7 +16,7 @@ final class AisleListViewModel: ObservableObject {
     @Published var aisles: [AisleViewData] = []
     @Published var isError: Bool = false
     
-    init(dataStoreService: DataStore = FireStoreService()) {
+    init(dataStoreService: DataStore = FireBaseStoreService()) {
         self.dataStoreService = dataStoreService
     }
     

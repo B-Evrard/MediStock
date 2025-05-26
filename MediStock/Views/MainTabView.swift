@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct MainTabView: View {
+    @EnvironmentObject var userManager: UserManager
+    
     var body: some View {
         TabView {
             AisleListView()
@@ -14,6 +16,12 @@ struct MainTabView: View {
 //                    Image(systemName: "square.grid.2x2")
 //                    Text("All Medicines")
 //                }
+            
+            UserView(viewModel: UserViewModel(authService: FireBaseAuthService(userManager: userManager), userManager: userManager))
+                .tabItem {
+                    Image(systemName: "person")
+                    Text("Profile")
+                }
         }
     }
 }

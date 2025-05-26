@@ -10,6 +10,7 @@ struct LoginView: View {
             Color("Background").ignoresSafeArea()
             
             VStack {
+                Spacer()
                 if (!isSignUp) {
                     SignInView(viewModel: viewModel)
                 } else {
@@ -18,10 +19,14 @@ struct LoginView: View {
                 
                 
                 Button(action: {
-                    if (isSignUp) {
-                        viewModel.signUp()
-                    } else {
-                        //viewModel.signIn()
+                    Task {
+                        if (isSignUp) {
+                            _ = await viewModel.signUp()
+                            return
+                        } else {
+                            _ = await viewModel.signIn()
+                            return
+                        }
                     }
                     
                 }) {
@@ -50,8 +55,12 @@ struct LoginView: View {
                         .accessibilityHint(isSignUp ? "Tap to sign in" : "Tap to sign up")
                 }
                 .padding(.vertical, 10)
-                
-                
+               
+                Text(viewModel.message)
+                    .foregroundColor(.red)
+                    .font(.callout)
+                    
+                Spacer()
             }
             .padding(.horizontal, 30)
             
@@ -66,7 +75,7 @@ struct LoginView: View {
 
 #Preview {
     let userManager = UserManager()
-    let viewModel = LoginViewModel(authService: AuthService(userManager: userManager))
+    let viewModel = LoginViewModel(authService: FireBaseAuthService(userManager: userManager), userManager: userManager)
     LoginView(viewModel: viewModel)
 }
 

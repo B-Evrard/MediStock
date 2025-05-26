@@ -7,7 +7,7 @@
 
 import Foundation
 import FirebaseFirestore
-final class FireStoreService: DataStore {
+final class FireBaseStoreService: DataStore {
     
     let db = Firestore.firestore()
     private let aislePageSize = 20
@@ -90,7 +90,19 @@ final class FireStoreService: DataStore {
     
     // MARK: User
     
+    func addUser(_ user: UserInfo) async throws {
+        _ = try db.collection("Users").addDocument(from: user)
+    }
     
+    func getUser(idAuth: String) async throws -> UserInfo? {
+        var user: UserInfo?
+        let FBUsers = db.collection("Users")
+        let snapshot = try await FBUsers.whereField("idAuth", isEqualTo: idAuth).getDocuments()
+        if (!snapshot.isEmpty) {
+            user = try snapshot.documents[0].data(as : UserInfo.self)
+        }
+        return user
+    }
     
     
     

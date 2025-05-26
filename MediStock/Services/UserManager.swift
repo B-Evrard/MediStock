@@ -22,4 +22,17 @@ class UserManager: ObservableObject {
         self.user = nil
         self.isConnected = false
     }
+    
+//    func checkUserSession() {
+//        if let currentUser = Auth.auth().currentUser {
+//            Task {
+//                let userInfo = try await storeService.getUser(id: currentUser.uid)
+//                await MainActor.run {
+//                    self.update(user: userInfo)
+//                }
+//            }
+//        } else {
+//            self.reset()
+//        }
+//    }
 }

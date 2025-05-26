@@ -20,10 +20,12 @@ class LoginViewModel: ObservableObject {
     
     private let authService: AuthProviding
     private let storeService: DataStore
+    private var userManager: UserManager
 
-    init(authService: AuthProviding , storeService: DataStore = FireStoreService()) {
+    init(authService: AuthProviding , storeService: DataStore = FireBaseStoreService(), userManager: UserManager) {
         self.authService = authService
         self.storeService = storeService
+        self.userManager = userManager
     }
     
     func signIn() async -> Bool{
@@ -31,10 +33,13 @@ class LoginViewModel: ObservableObject {
         do {
             try Control.signIn(email: email, password: password)
             let id = try await authService.signIn(withEmail: email, password: password)
-            guard id != nil else {
+            
+            guard let id = id else {
                 message = AppMessages.genericError
                 return false
             }
+            let user = try await storeService.getUser(idAuth: id)
+            userManager.update(user: user)
         } catch let error as ControlError {
             message = error.message
             return false
@@ -48,6 +53,7 @@ class LoginViewModel: ObservableObject {
                 }
                 return false
             } else {
+                print (error.localizedDescription)
                 message = AppMessages.genericError
                 return false
             }
@@ -58,8 +64,36 @@ class LoginViewModel: ObservableObject {
         
     }
     
-    func signUp() {
-        //self.authService.signUp(withEmail: email, password: password)
+    func signUp() async -> Bool {
+        self.message = ""
+        do {
+            try Control.signUp(email: email, password: password, confirmedPassword: confirmedPassword, name: name)
+            let user = try await authService.signUp(withEmail: email, password: password)
+            guard var user = user else {
+                message = AppMessages.genericError
+                return false
+            }
+            user.displayName = name
+            try await storeService.addUser(user)
+            userManager.update(user: user)
+            
+        } catch let error as ControlError {
+            message = error.message
+            return false
+        } catch let error as NSError {
+            switch error.code {
+            case AuthErrorCode.emailAlreadyInUse.rawValue:
+                self.message = AppMessages.emailAlreadyExists
+                return false
+            default:
+                self.message = AppMessages.genericError
+                return false
+            }
+        } catch {
+            message = AppMessages.genericError
+            return false
+        }
+        return true
     }
     
     func initListen() {
