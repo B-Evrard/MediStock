@@ -22,26 +22,29 @@ class FireBaseAuthService: AuthProviding {
     
     func listen() {
         handle = Auth.auth().addStateDidChangeListener { [weak self] (auth, user) in
-            guard user != nil else {
-                Task { @MainActor in
-                    self?.userManager.reset()
+            if let firebaseUser = user {
+                guard let self = self else { return }
+                Task {
+                    do {
+                        let userId = firebaseUser.uid
+                        let userInfo = try await self.storeService.getUser(idAuth: userId)
+                        await MainActor.run {
+                            self.userManager.update(user: userInfo)
+                        }
+                    } catch {
+                        await MainActor.run {
+                            self.userManager.reset()
+                        }
+                    }
                 }
-                return
+            } else {
+                self?.userManager.reset()
             }
         }
     }
     
     func checkUserSession() async throws {
-        if let currentUser = Auth.auth().currentUser {
-            Task {
-                let userInfo = try await storeService.getUser(idAuth: currentUser.uid)
-                await MainActor.run {
-                    self.userManager.update(user: userInfo)
-                }
-            }
-        } else {
-            self.userManager.reset()
-        }
+        
     }
     
     func signIn(withEmail email: String, password: String) async throws -> String? {

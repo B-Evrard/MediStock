@@ -38,8 +38,8 @@ class LoginViewModel: ObservableObject {
                 message = AppMessages.genericError
                 return false
             }
-            let user = try await storeService.getUser(idAuth: id)
-            userManager.update(user: user)
+            //let user = try await storeService.getUser(idAuth: id)
+            //userManager.update(user: user)
         } catch let error as ControlError {
             message = error.message
             return false

@@ -10,15 +10,9 @@ import FirebaseCore
 
 @main
 struct MediStockApp: App {
-    //@UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
-    var authService: AuthProviding
-    @StateObject private var userManager: UserManager
-    init () {
-        FirebaseApp.configure()
-        self.userManager = UserManager()
-        authService = FireBaseAuthService(userManager: userManager)
-        authService.checkUserSession()
-    }
+    
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+    @StateObject private var userManager = UserManager()
     
     var body: some Scene {
         WindowGroup {

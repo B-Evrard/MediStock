@@ -10,7 +10,17 @@ struct LoginView: View {
             Color("Background").ignoresSafeArea()
             
             VStack {
-                Spacer()
+                Image("Logo")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(
+                        width: 200,
+                        height: 200
+                    )
+                    .padding(.top, 50)
+                    .padding(.bottom, 40)
+                    .accessibilityLabel("Rebonnté Logo")
+               
                 if (!isSignUp) {
                     SignInView(viewModel: viewModel)
                 } else {
