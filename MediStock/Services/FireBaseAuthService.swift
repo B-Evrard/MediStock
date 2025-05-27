@@ -31,6 +31,18 @@ class FireBaseAuthService: AuthProviding {
         }
     }
     
+    func checkUserSession() async throws {
+        if let currentUser = Auth.auth().currentUser {
+            Task {
+                let userInfo = try await storeService.getUser(idAuth: currentUser.uid)
+                await MainActor.run {
+                    self.userManager.update(user: userInfo)
+                }
+            }
+        } else {
+            self.userManager.reset()
+        }
+    }
     
     func signIn(withEmail email: String, password: String) async throws -> String? {
         _ = try await Auth.auth().signIn(withEmail: email, password: password)
