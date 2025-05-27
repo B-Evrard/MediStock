@@ -9,7 +9,7 @@ import Foundation
 import FirebaseAuth
 
 @MainActor
-class LoginViewModel: ObservableObject {
+final class LoginViewModel: ObservableObject {
     
     @Published var email: String = ""
     @Published var password: String = ""
@@ -34,12 +34,11 @@ class LoginViewModel: ObservableObject {
             try Control.signIn(email: email, password: password)
             let id = try await authService.signIn(withEmail: email, password: password)
             
-            guard let id = id else {
+            guard id != nil else {
                 message = AppMessages.genericError
                 return false
             }
-            //let user = try await storeService.getUser(idAuth: id)
-            //userManager.update(user: user)
+            
         } catch let error as ControlError {
             message = error.message
             return false

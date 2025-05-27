@@ -20,7 +20,12 @@ final class AisleListViewModel: ObservableObject {
         self.dataStoreService = dataStoreService
     }
     
+    //    deinit {
+    //        stopListening()
+    //    }
+    
     func startListening() {
+        streamTask?.cancel()
         streamTask = Task {
             do {
                 for try await batch in try dataStoreService.streamAisles() {
@@ -36,5 +41,8 @@ final class AisleListViewModel: ObservableObject {
         }
     }
     
-    
+    func stopListening() {
+        streamTask?.cancel()
+        dataStoreService.detachAisleListener()
+    }
 }

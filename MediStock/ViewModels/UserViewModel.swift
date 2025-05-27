@@ -8,7 +8,7 @@
 import Foundation
 
 @MainActor
-class UserViewModel: ObservableObject {
+final class UserViewModel: ObservableObject {
     
     private let authService: AuthProviding
     private let storeService: DataStore

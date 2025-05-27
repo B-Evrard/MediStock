@@ -41,8 +41,8 @@ final class FireBaseStoreService: DataStore {
         
         detachAisleListener()
         
-        var query = db.collection("aisles")
-            .order(by: "name")
+        var query = db.collection("Aisles")
+            .order(by: "sortKey")
             .limit(to: aislePageSize)
         
         if let lastDoc = lastAisleDocument {

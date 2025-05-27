@@ -9,9 +9,9 @@ import Foundation
 
 struct AisleViewData: Hashable, Decodable {
     var id: String?
-    var aisleNumber: Int
+    var name: String
     
     var label: String {
-        return "Aisle \(aisleNumber)"
+        return "Aisle \(name)"
     }
 }

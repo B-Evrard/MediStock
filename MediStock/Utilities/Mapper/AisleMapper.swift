@@ -12,14 +12,16 @@ struct AisleMapper {
     static func mapToViewData(_ aisle: Aisle) -> AisleViewData {
         return AisleViewData(
             id: aisle.id,
-            aisleNumber: aisle.aisleNumber
+            name: aisle.name
         )
     }
     
     static func mapToModel(_ viewData: AisleViewData) -> Aisle {
         return Aisle(
             id: viewData.id,
-            aisleNumber: viewData.aisleNumber
+            name: viewData.name,
+            nameSearch: viewData.name.removingAccentsUppercased,
+            sortKey: viewData.name.normalizedSortKey
         )
     }
     

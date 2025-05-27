@@ -1,41 +1,58 @@
 import SwiftUI
 
 struct AisleListView: View {
-    @ObservedObject var viewModel = MedicineStockViewModel()
-
+    @ObservedObject var viewModel = AisleListViewModel()
+    @EnvironmentObject var userManager: UserManager
+    
+    @State private var showMedicineView = false
+    
     var body: some View {
-
+        
         NavigationStack {
-                ZStack {
-                    Color("Background").ignoresSafeArea()
-                    VStack {
-                        Text("Aisles")
-                            .font(.title)
-                            .foregroundColor(.white)
-                    Spacer()
-                    }
-                    
-//                List {
-//                    ForEach(viewModel.aisles, id: \.self) { aisle in
-//                        NavigationLink(destination: MedicineListView()) {
-//                            Text(aisle)
-//                        }
-//                    }
-//                }
-//                .navigationBarTitle("Aisles")
-//                .toolbarBackground(Color.blue, for: .navigationBar)
-//                .toolbarBackground(.visible, for: .navigationBar)
+            ZStack {
+                Color("Background").ignoresSafeArea()
                 
-                //            .navigationBarItems(trailing: Button(action: {
-                //                viewModel.addRandomMedicine(user: "test_user") // Remplacez par l'utilisateur actuel
-                //            }) {
-                //                Image(systemName: "plus")
-                //            })
+                ScrollView {
+                    ForEach(viewModel.aisles, id: \.self) { aisle in
+                        //NavigationLink(destination: MedicineListView()) {
+                        HStack {
+                            Text(aisle.label)
+                                .font(.system(size: 20, weight: .bold, design: .rounded))
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                //.padding(.leading, 20)
+                        }
+                        .padding(.vertical,20)
+                        .padding(.horizontal)
+                        .background(Color("BackgroundElement"))
+                        .cornerRadius(20)
+                        //}
+                    }
+                    .listRowInsets(EdgeInsets())
+                    .listRowBackground(Color("BackgroundColor"))
+                    .listRowSeparator(.hidden)
+                }
+                .padding(.horizontal)
+                .navigationBarTitle("Aisles")
+                .toolbarBackground(Color("Background"), for: .navigationBar)
+                .toolbarBackground(.visible, for: .navigationBar)
+                .toolbarColorScheme(.dark, for: .navigationBar)
+                .navigationBarItems(trailing:
+                                        Button(action: {
+                    showMedicineView = true
+                }) {
+                    Image(systemName: "plus")
+                }
+                )
             }
             .onAppear {
-                //viewModel.fetchAisles()
+                viewModel.startListening()
             }
-            
+            .onDisappear {
+                viewModel.stopListening()
+            }
+            .navigationDestination(isPresented: $showMedicineView) {
+                MedicineView(viewModel: MedicineViewModel(userManager: userManager))
+            }
             
         }
     }
