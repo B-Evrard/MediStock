@@ -7,11 +7,16 @@
 
 
 import Foundation
+import FirebaseAuth
 
 class UserManager: ObservableObject {
     
     @Published var user: UserInfo?
-    @Published var isConnected: Bool = false
+    @Published var isConnected: Bool
+    
+    init() {
+        self.isConnected = Auth.auth().currentUser != nil
+    }
     
     func update(user: UserInfo?) {
         self.user = user

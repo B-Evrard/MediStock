@@ -51,7 +51,7 @@ struct AisleListView: View {
                 viewModel.stopListening()
             }
             .navigationDestination(isPresented: $showMedicineView) {
-                MedicineView(viewModel: MedicineViewModel(userManager: userManager))
+                MedicineView(viewModel: MedicineViewModel(userManager: userManager, medicine: MedicineViewData.init()))
             }
             
         }

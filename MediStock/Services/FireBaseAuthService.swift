@@ -22,6 +22,7 @@ class FireBaseAuthService: AuthProviding {
     
     func listen() {
         handle = Auth.auth().addStateDidChangeListener { [weak self] (auth, user) in
+        
             if let firebaseUser = user {
                 guard let self = self else { return }
                 Task {

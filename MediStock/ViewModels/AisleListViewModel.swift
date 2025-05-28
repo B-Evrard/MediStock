@@ -13,36 +13,27 @@ final class AisleListViewModel: ObservableObject {
     private let dataStoreService: DataStore
     private var streamTask: Task<Void, Never>?
     
+    private let aisleStreamingService: AisleStreamingService
+    
     @Published var aisles: [AisleViewData] = []
     @Published var isError: Bool = false
     
     init(dataStoreService: DataStore = FireBaseStoreService()) {
         self.dataStoreService = dataStoreService
+        self.aisleStreamingService = AisleStreamingService(dataStoreService: dataStoreService)
     }
     
-    //    deinit {
-    //        stopListening()
-    //    }
-    
     func startListening() {
-        streamTask?.cancel()
-        streamTask = Task {
-            do {
-                for try await batch in try dataStoreService.streamAisles() {
-                    
-                    let newAisles = batch.filter { newAisle in
-                        !self.aisles.contains { $0.id == newAisle.id }
-                    }
-                    self.aisles.append(contentsOf: newAisles.map { AisleMapper.mapToViewData($0)})
-                }
-            } catch {
-                print("Erreur de streaming: \(error)")
+        aisleStreamingService.startListening { [weak self] newAisles in
+            DispatchQueue.main.async {
+                self?.aisles = newAisles
             }
         }
     }
     
     func stopListening() {
-        streamTask?.cancel()
-        dataStoreService.detachAisleListener()
+        aisleStreamingService.stopListening()
     }
+    
+    
 }
