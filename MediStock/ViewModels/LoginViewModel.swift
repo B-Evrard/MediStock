@@ -74,7 +74,7 @@ final class LoginViewModel: ObservableObject {
             }
             user.displayName = name
             try await storeService.addUser(user)
-            authService.updateUserManager(user: user)
+            authService.updateUser(user: user)
             
         } catch let error as ControlError {
             message = error.message

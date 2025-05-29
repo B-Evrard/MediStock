@@ -10,10 +10,11 @@ import FirebaseAuth
 
 protocol AuthProviding: ObservableObject{
     
-    var userManager: UserManager { get }
+    var user: UserInfo? { get }
     
+    func updateUser(user: UserInfo?)
+    func resetUser()
     func listen()
-    func updateUserManager(user: UserInfo?)
     func signIn(withEmail email: String, password: String) async throws -> String?
     func signUp(withEmail email: String, password: String) async throws -> UserInfo?
     func signOut() async throws

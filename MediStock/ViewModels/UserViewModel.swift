@@ -33,7 +33,7 @@ final class UserViewModel: ObservableObject {
     }
     
     private func loadUser() {
-        guard let user = authService.userManager.user else { return }
+        guard let user = authService.user else { return }
         self.user = UserInfoMapper.mapToViewData(user)
     }
 }

@@ -7,28 +7,32 @@
 
 import Foundation
 import FirebaseAuth
+import Combine
 
 class FireBaseAuthService: AuthProviding , ObservableObject {
+    
+    @Published var user: UserInfo?
+    @Published var isConnected: Bool = false
+    
     private let auth: Auth
     private var handle: AuthStateDidChangeListenerHandle?
-    @Published var userManager: UserManager
     private let storeService: DataStore
     
-    init(auth: Auth  = Auth.auth(), userManager: UserManager = UserManager(), storeService: DataStore = FireBaseStoreService()) {
+    init(auth: Auth  = Auth.auth(), storeService: DataStore = FireBaseStoreService()) {
         self.auth = auth
-        self.userManager = userManager
+        self.user = nil
         self.storeService = storeService
         listen()
     }
     
-    func updateUserManager(user: UserInfo?) {
-        self.userManager.user = user
-        self.userManager.isConnected = user != nil
+    func updateUser(user: UserInfo?) {
+        self.user = user
+        self.isConnected = user != nil
     }
     
-    func resetUserManager() {
-        self.userManager.user = nil
-        self.userManager.isConnected = false
+    func resetUser() {
+        self.user = nil
+        self.isConnected = false
     }
     
     func listen() {
@@ -40,13 +44,13 @@ class FireBaseAuthService: AuthProviding , ObservableObject {
                         do {
                             let userId = firebaseUser.uid
                             let userInfo = try await self.storeService.getUser(idAuth: userId)
-                            self.updateUserManager(user: userInfo)
+                            self.updateUser(user: userInfo)
                         } catch {
-                            self.resetUserManager()
+                            self.resetUser()
                         }
                     }
                 } else {
-                    self?.resetUserManager()
+                    self?.resetUser()
                 }
             }
         }
@@ -66,7 +70,7 @@ class FireBaseAuthService: AuthProviding , ObservableObject {
     func signOut() async throws {
         try auth.signOut()
         await MainActor.run {
-            resetUserManager()
+            resetUser()
         }
     }
     

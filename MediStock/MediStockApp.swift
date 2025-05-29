@@ -16,7 +16,7 @@ struct MediStockApp: App {
     
     var body: some Scene {
         WindowGroup {
-            if session.userManager.isConnected {
+            if session.isConnected {
                 MainTabView()
             } else {
                 LoginView(viewModel: LoginViewModel(authService: session))
