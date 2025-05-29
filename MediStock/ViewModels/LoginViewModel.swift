@@ -18,14 +18,14 @@ final class LoginViewModel: ObservableObject {
     @Published var message: String = ""
     
     
-    private let authService: AuthProviding
+    private let authService: any AuthProviding
     private let storeService: DataStore
-    private var userManager: UserManager
+    //private var userManager: UserManager
 
-    init(authService: AuthProviding , storeService: DataStore = FireBaseStoreService(), userManager: UserManager) {
+    init(authService: any AuthProviding , storeService: DataStore = FireBaseStoreService()) {
         self.authService = authService
         self.storeService = storeService
-        self.userManager = userManager
+        //self.userManager = userManager
     }
     
     func signIn() async -> Bool{
@@ -74,7 +74,7 @@ final class LoginViewModel: ObservableObject {
             }
             user.displayName = name
             try await storeService.addUser(user)
-            userManager.update(user: user)
+            authService.updateUserManager(user: user)
             
         } catch let error as ControlError {
             message = error.message
@@ -94,11 +94,4 @@ final class LoginViewModel: ObservableObject {
         }
         return true
     }
-    
-    func initListen() {
-        self.authService.listen()
-    }
-    
-    
-    
 }

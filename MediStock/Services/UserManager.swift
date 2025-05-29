@@ -12,19 +12,9 @@ import FirebaseAuth
 class UserManager: ObservableObject {
     
     @Published var user: UserInfo?
-    @Published var isConnected: Bool
+    @Published var isConnected: Bool = false
     
     init() {
-        self.isConnected = Auth.auth().currentUser != nil
-    }
-    
-    func update(user: UserInfo?) {
-        self.user = user
-        self.isConnected = user != nil
-    }
-    
-    func reset() {
-        self.user = nil
-        self.isConnected = false
+        //self.isConnected = Auth.auth().currentUser != nil
     }
 }

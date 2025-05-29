@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct MainTabView: View {
-    @EnvironmentObject var userManager: UserManager
+    @EnvironmentObject var session: FireBaseAuthService
     
     var body: some View {
         TabView {
@@ -17,7 +17,7 @@ struct MainTabView: View {
 //                    Text("All Medicines")
 //                }
             
-            UserView(viewModel: UserViewModel(authService: FireBaseAuthService(userManager: userManager), userManager: userManager))
+            UserView(viewModel: UserViewModel(authService: session))
                 .tabItem {
                     Image(systemName: "person")
                     Text("Profile")

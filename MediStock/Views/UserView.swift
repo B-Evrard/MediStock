@@ -86,6 +86,6 @@ struct UserView: View {
 
 #Preview {
     let userManager = UserManager()
-    let viewModel = UserViewModel(authService: FireBaseAuthService(userManager: userManager), userManager: userManager)
+    let viewModel = UserViewModel(authService: FireBaseAuthService(userManager: userManager))
     UserView(viewModel: viewModel)
 }

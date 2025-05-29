@@ -10,17 +10,16 @@ import Foundation
 @MainActor
 final class UserViewModel: ObservableObject {
     
-    private let authService: AuthProviding
+    private let authService: any AuthProviding
     private let storeService: DataStore
-    private var userManager: UserManager
+    
     
     @Published var user: UserInfoViewData?
     @Published var error: String = ""
     
-    init(authService: AuthProviding , storeService: DataStore = FireBaseStoreService(), userManager: UserManager) {
+    init(authService: any AuthProviding , storeService: DataStore = FireBaseStoreService()) {
         self.authService = authService
         self.storeService = storeService
-        self.userManager = userManager
         loadUser()
     }
     
@@ -34,7 +33,7 @@ final class UserViewModel: ObservableObject {
     }
     
     private func loadUser() {
-        guard let user = userManager.user else { return }
+        guard let user = authService.userManager.user else { return }
         self.user = UserInfoMapper.mapToViewData(user)
     }
 }

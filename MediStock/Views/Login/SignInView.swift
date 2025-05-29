@@ -28,7 +28,7 @@ struct SignInView: View {
 }
 
 #Preview {
-    let userManager = UserManager()
-    let viewModel = LoginViewModel(authService: FireBaseAuthService(userManager: userManager), userManager: userManager)
+    
+    let viewModel = LoginViewModel(authService: FireBaseAuthService())
     SignInView(viewModel: viewModel)
 }

@@ -74,18 +74,14 @@ struct LoginView: View {
             }
             .padding(.horizontal, 30)
             
-            
-            .onAppear {
-                viewModel.initListen()
-            }
         }
     }
     
 }
 
 #Preview {
-    let userManager = UserManager()
-    let viewModel = LoginViewModel(authService: FireBaseAuthService(userManager: userManager), userManager: userManager)
+    
+    let viewModel = LoginViewModel(authService: FireBaseAuthService())
     LoginView(viewModel: viewModel)
 }
 
