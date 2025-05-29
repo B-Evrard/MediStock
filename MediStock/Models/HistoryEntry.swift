@@ -1,5 +1,5 @@
 import Foundation
-import FirebaseFirestoreSwift
+import FirebaseFirestore
 
 struct HistoryEntry: Codable {
     @DocumentID var id: String?

@@ -66,7 +66,7 @@ class FireBaseAuthService: AuthProviding , ObservableObject {
     func signOut() async throws {
         try auth.signOut()
         await MainActor.run {
-            self.userManager.reset()
+            resetUserManager()
         }
     }
     
