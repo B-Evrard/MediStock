@@ -16,16 +16,13 @@ final class LoginViewModel: ObservableObject {
     @Published var confirmedPassword  = ""
     @Published var name  = ""
     @Published var message: String = ""
-    
-    
+
     private let authService: any AuthProviding
     private let storeService: DataStore
-    //private var userManager: UserManager
-
+    
     init(authService: any AuthProviding , storeService: DataStore = FireBaseStoreService()) {
         self.authService = authService
         self.storeService = storeService
-        //self.userManager = userManager
     }
     
     func signIn() async -> Bool{
