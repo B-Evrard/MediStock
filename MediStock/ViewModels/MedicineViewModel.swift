@@ -9,18 +9,19 @@ import Foundation
 
 final class MedicineViewModel: ObservableObject {
     
+    private let session: any AuthProviding
     private let dataStoreService: DataStore
-    private var userManager: UserManager
     private let aisleStreamingService: AisleStreamingService
+   
     @Published var medicine : MedicineViewData
     @Published var aisles: [AisleViewData] = []
     
     @Published var showAddAisleSheet = false
     @Published var newAisle = AisleViewData.init(name: "")
     
-    init(dataStoreService: DataStore = FireBaseStoreService(), userManager: UserManager, medicine: MedicineViewData) {
+    init(session: any AuthProviding, dataStoreService: DataStore = FireBaseStoreService(), medicine: MedicineViewData) {
+        self.session = session
         self.dataStoreService = dataStoreService
-        self.userManager = userManager
         self.medicine = medicine
         self.aisleStreamingService = AisleStreamingService(dataStoreService: dataStoreService)
     }

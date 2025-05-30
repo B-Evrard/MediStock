@@ -12,7 +12,7 @@ import Combine
 class FireBaseAuthService: AuthProviding , ObservableObject {
     
     @Published var user: UserInfo?
-    @Published var isConnected: Bool = false
+    @Published var isConnected: Bool
     
     private let auth: Auth
     private var handle: AuthStateDidChangeListenerHandle?
@@ -22,6 +22,7 @@ class FireBaseAuthService: AuthProviding , ObservableObject {
         self.auth = auth
         self.user = nil
         self.storeService = storeService
+        self.isConnected = auth.currentUser != nil
         listen()
     }
     
@@ -36,7 +37,7 @@ class FireBaseAuthService: AuthProviding , ObservableObject {
     }
     
     func listen() {
-        handle = Auth.auth().addStateDidChangeListener { [weak self] (auth, user) in
+        handle = auth.addStateDidChangeListener { [weak self] (auth, user) in
             DispatchQueue.main.async {
                 if let firebaseUser = user {
                     guard let self = self else { return }
@@ -57,12 +58,12 @@ class FireBaseAuthService: AuthProviding , ObservableObject {
     }
     
     func signIn(withEmail email: String, password: String) async throws -> String? {
-        _ = try await Auth.auth().signIn(withEmail: email, password: password)
+        _ = try await auth.signIn(withEmail: email, password: password)
         return auth.currentUser?.uid
     }
     
     func signUp(withEmail email: String, password: String) async throws  -> UserInfo?  {
-        _ = try await Auth.auth().createUser(withEmail: email, password: password)
+        _ = try await auth.createUser(withEmail: email, password: password)
         let user = UserInfo(idAuth: auth.currentUser?.uid, displayName: "", email: email)
         return user
     }

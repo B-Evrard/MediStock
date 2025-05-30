@@ -5,7 +5,7 @@ struct MainTabView: View {
     
     var body: some View {
         TabView {
-            AisleListView()
+            AisleListScreen()
                 .tabItem {
                     Image(systemName: "list.dash")
                     Text("Aisles")
@@ -17,7 +17,7 @@ struct MainTabView: View {
 //                    Text("All Medicines")
 //                }
             
-            UserView(viewModel: UserViewModel(authService: session))
+            UserView(viewModel: UserViewModel(session: session))
                 .tabItem {
                     Image(systemName: "person")
                     Text("Profile")

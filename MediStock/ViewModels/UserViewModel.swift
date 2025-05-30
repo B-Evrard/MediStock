@@ -10,15 +10,15 @@ import Foundation
 @MainActor
 final class UserViewModel: ObservableObject {
     
-    private let authService: any AuthProviding
+    private let session: any AuthProviding
     private let storeService: DataStore
     
     
     @Published var user: UserInfoViewData?
     @Published var error: String = ""
     
-    init(authService: any AuthProviding , storeService: DataStore = FireBaseStoreService()) {
-        self.authService = authService
+    init(session: any AuthProviding , storeService: DataStore = FireBaseStoreService()) {
+        self.session = session
         self.storeService = storeService
         loadUser()
     }
@@ -26,14 +26,14 @@ final class UserViewModel: ObservableObject {
     func logout() async {
         self.error = ""
         do {
-            try await authService.signOut()
+            try await session.signOut()
         } catch {
            self.error = AppMessages.genericError
         }
     }
     
     private func loadUser() {
-        guard let user = authService.user else { return }
+        guard let user = session.user else { return }
         self.user = UserInfoMapper.mapToViewData(user)
     }
 }

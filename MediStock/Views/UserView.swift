@@ -85,6 +85,6 @@ struct UserView: View {
 }
 
 #Preview {
-    let viewModel = UserViewModel(authService: FireBaseAuthService())
+    let viewModel = UserViewModel(session: FireBaseAuthService())
     UserView(viewModel: viewModel)
 }
