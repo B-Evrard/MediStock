@@ -7,43 +7,54 @@
 
 import Foundation
 
+@MainActor
 final class MedicineViewModel: ObservableObject {
     
     private let session: any AuthProviding
     private let dataStoreService: DataStore
-    private let aisleStreamingService: AisleStreamingService
-   
+    
     @Published var medicine : MedicineViewData
     @Published var aisles: [AisleViewData] = []
+    @Published var searchText: String = "" {
+        didSet {
+            updateFilteredAisles()
+        }
+    }
+    @Published var filteredAisles: [AisleViewData] = []
     
     @Published var showAddAisleSheet = false
     @Published var newAisle = AisleViewData.init(name: "")
     
-    init(session: any AuthProviding, dataStoreService: DataStore = FireBaseStoreService(), medicine: MedicineViewData) {
+    @Published var isError: Bool = false
+    
+    init(session: any AuthProviding, dataStoreService: DataStore = FireBaseStoreService(), medicine: MedicineViewData = MedicineViewData.init()) {
         self.session = session
         self.dataStoreService = dataStoreService
         self.medicine = medicine
-        self.aisleStreamingService = AisleStreamingService(dataStoreService: dataStoreService)
     }
     
-    func startAisleStreamingListening() {
-        aisleStreamingService.startListening { [weak self] newAisles in
-            DispatchQueue.main.async {
-                self?.aisles = newAisles
-            }
+    
+    func checkAilseSelected(aisleSelected: AisleViewData) -> Bool{
+        guard let aisle = medicine.aisle else {
+           return false
+        }
+        return aisleSelected.id == aisle.id
+    }
+    
+    func fetchAisles() async {
+        do {
+            let aislesData = try await dataStoreService.fetchAisles()
+            self.aisles = aislesData.map(AisleMapper.mapToViewData)
+            
+        } catch {
+            self.isError = true
         }
     }
     
-    func stopAisleStreamingListening() {
-        aisleStreamingService.stopListening()
-    }
-    
-    private func initMedicine(medicine: MedicineViewData?) {
-        if let medicine = medicine {
-            //TODO: Charge Aisle
-            self.medicine = medicine
-        } else {
-            self.medicine = MedicineViewData(id: "", aisleId: "", name: "", stock: 0)
+    func updateFilteredAisles() {
+        let lowercased = searchText.lowercased()
+        filteredAisles = aisles.filter {
+            $0.label.lowercased().contains(lowercased)
         }
     }
     

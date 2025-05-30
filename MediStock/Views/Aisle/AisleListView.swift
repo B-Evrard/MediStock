@@ -1,61 +1,84 @@
 import SwiftUI
 
 struct AisleListView: View {
-    @ObservedObject var viewModel: AisleListViewModel
-    @Environment(\.scenePhase) private var scenePhase
-    @Binding var showMedicineView: Bool
+    @StateObject var viewModel = AisleListViewModel()
+    @EnvironmentObject var session: FireBaseAuthService
+    
+    @State private var showMedicineView = false
     
     var body: some View {
-        ZStack {
-            Color("Background").ignoresSafeArea()
-
-            ScrollView {
-                ForEach(viewModel.aisles, id: \.self) { aisle in
-                    HStack {
-                        Text(aisle.label)
-                            .font(.system(size: 20, weight: .bold, design: .rounded))
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                    }
-                    .padding(.vertical, 20)
-                    .padding(.horizontal)
-                    .background(Color("BackgroundElement"))
-                    .cornerRadius(20)
+        
+        NavigationStack {
+            ZStack {
+                Color("Background").ignoresSafeArea()
+                VStack {
+                    headerSection
+                    aisleList
                 }
+                
+                
             }
-            .padding(.horizontal)
-            .onChange(of: scenePhase) { oldPhase, newPhase in
-                switch newPhase {
-                case .active:
-                    viewModel.startListening()
-                    print("➡️ L’app est active")
-                case .inactive:
-                    viewModel.stopListening()
-                    print("⏸ L’app est inactive")
-                case .background:
-                    print("🔙 L’app passe en arrière-plan")
-                @unknown default:
-                    break
+            .onAppear {
+                Task {
+                    await viewModel.fetchAisles()
                 }
+                
             }
+            .fullScreenCover(isPresented: $showMedicineView) {
+                MedicineView(viewModel: MedicineViewModel(session: session, medicine: MedicineViewData.init()))
+            }
+            
         }
-        .navigationTitle("Aisles")
-        .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: {
-                    showMedicineView = true
-                }) {
-                    Image(systemName: "plus")
-                }
-            }
-        }
-        .toolbarBackground(Color("Background"), for: .navigationBar)
-        .toolbarBackground(.visible, for: .navigationBar)
-        .toolbarColorScheme(.dark, for: .navigationBar)
     }
 }
 
-//struct AisleListView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        AisleListView()
-//    }
-//}
+extension AisleListView {
+    private var headerSection: some View {
+        HStack {
+            Text("Aisles")
+                .foregroundColor(.white)
+                .font(.title3)
+                .bold()
+            Spacer()
+            Button(action: {
+                showMedicineView = true
+            }) {
+                Image(systemName: "plus")
+                    .foregroundColor(.white)
+            }
+        }
+        .padding(.horizontal)
+    }
+    
+    private var aisleList: some View {
+        ScrollView {
+            LazyVStack {
+                ForEach(viewModel.aisles, id: \.self) { aisle in
+                    //NavigationLink(destination: MedicineListView()) {
+                    HStack {
+                        Text(aisle.label)
+                            .font(.system(size: 20, weight: .bold, design: .rounded))
+                            .foregroundColor(.black)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        //.padding(.leading, 20)
+                    }
+                    .padding(.vertical,20)
+                    .padding(.horizontal)
+                    .background(Color("BackgroundElement"))
+                    .cornerRadius(20)
+                    //}
+                }
+                .listRowInsets(EdgeInsets())
+                .listRowBackground(Color("BackgroundColor"))
+                .listRowSeparator(.hidden)
+            }
+        }
+        .padding(.horizontal)
+    }
+}
+
+struct AisleListView_Previews: PreviewProvider {
+    static var previews: some View {
+        AisleListView()
+    }
+}

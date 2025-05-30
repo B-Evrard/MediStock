@@ -11,28 +11,22 @@ import Foundation
 final class AisleListViewModel: ObservableObject {
     
     private let dataStoreService: DataStore
-    private var streamTask: Task<Void, Never>?
-    
-    private let aisleStreamingService: AisleStreamingService
     
     @Published var aisles: [AisleViewData] = []
     @Published var isError: Bool = false
     
     init(dataStoreService: DataStore = FireBaseStoreService()) {
         self.dataStoreService = dataStoreService
-        self.aisleStreamingService = AisleStreamingService(dataStoreService: dataStoreService)
     }
     
-    func startListening() {
-        aisleStreamingService.startListening { [weak self] newAisles in
-            DispatchQueue.main.async {
-                self?.aisles = newAisles
-            }
+    func fetchAisles() async {
+        do {
+            let aislesData = try await dataStoreService.fetchAisles()
+            self.aisles = aislesData.map(AisleMapper.mapToViewData)
+            
+        } catch {
+            self.isError = true
         }
-    }
-    
-    func stopListening() {
-        aisleStreamingService.stopListening()
     }
     
     

@@ -9,9 +9,7 @@
 protocol DataStore {
     
     // MARK: Aisles
-    func streamAisles() throws -> AsyncThrowingStream<[Aisle], Error>
-    func loadNextPageAisles(completion: @escaping (Result<[Aisle], Error>) -> Void)
-    func detachAisleListener()
+    func fetchAisles() async throws -> [Aisle]
     
     // MARK: Medicines
     //func fetchMedicines(forAisle aisle: Aisle) -> AsyncThrowingStream<[Medicine], Error>

@@ -12,10 +12,8 @@ struct MedicineMapper {
     static func mapToViewData(_ medicine: Medicine, aisle: Aisle?) -> MedicineViewData {
         return .init(
             id: medicine.id ?? "",
-            aisleId: medicine.aisleId,
             name: medicine.name,
             stock: medicine.stock,
-            
             aisle: AisleMapper.mapToViewData(aisle ?? Aisle(id: "", name: "", nameSearch: "", sortKey: ""))
         )
     }
@@ -23,7 +21,7 @@ struct MedicineMapper {
     static func mapToModel(_ viewData: MedicineViewData) -> Medicine {
         return .init(
             id: viewData.id,
-            aisleId: viewData.aisleId,
+            aisleId: viewData.aisle?.id ?? "",
             name: viewData.name,
             stock: viewData.stock,
             nameSearch: viewData.name.removingAccentsUppercased

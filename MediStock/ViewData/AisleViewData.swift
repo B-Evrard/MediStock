@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct AisleViewData: Hashable, Decodable {
+struct AisleViewData: Hashable, Decodable, Identifiable {
     var id: String?
     var name: String
     
