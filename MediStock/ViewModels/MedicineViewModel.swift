@@ -27,11 +27,14 @@ final class MedicineViewModel: ObservableObject {
     
     @Published var isError: Bool = false
     
+    
+    
     init(session: any AuthProviding, dataStoreService: DataStore = FireBaseStoreService(), medicine: MedicineViewData = MedicineViewData.init()) {
         self.session = session
         self.dataStoreService = dataStoreService
         self.medicine = medicine
     }
+    
     
     
     func checkAilseSelected(aisleSelected: AisleViewData) -> Bool{

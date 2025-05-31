@@ -18,7 +18,7 @@ struct MedicineView: View {
         ZStack {
             Color("Background").ignoresSafeArea()
             VStack {
-                
+                headerSection
                 medicineNameSection
                 medicineStockSection
                 medicineAisleSection
@@ -37,6 +37,17 @@ struct MedicineView: View {
 }
 
 extension MedicineView {
+    private var headerSection: some View {
+        HStack {
+            Text(viewModel.medicine.id.isEmpty ? "New Medicine" : viewModel.medicine.name)
+                .foregroundColor(.white)
+                .font(.largeTitle)
+                .bold()
+                .frame(maxWidth: .infinity, alignment: .leading)
+        }
+    }
+    
+    
     private var medicineNameSection: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text("Name")
@@ -69,7 +80,7 @@ extension MedicineView {
                 }) {
                     Image(systemName: "minus.circle.fill")
                         .font(.title2)
-                        .foregroundColor(.accentColor)
+                        .foregroundColor(.red)
                 }
                 
                 TextField(
@@ -90,7 +101,7 @@ extension MedicineView {
                 }) {
                     Image(systemName: "plus.circle.fill")
                         .font(.title2)
-                        .foregroundColor(.accentColor)
+                        .foregroundColor(.green)
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)

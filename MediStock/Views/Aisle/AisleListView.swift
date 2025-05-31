@@ -15,8 +15,6 @@ struct AisleListView: View {
                     headerSection
                     aisleList
                 }
-                
-                
             }
             .onAppear {
                 Task {
@@ -37,14 +35,18 @@ extension AisleListView {
         HStack {
             Text("Aisles")
                 .foregroundColor(.white)
-                .font(.title3)
+                .font(.largeTitle)
                 .bold()
             Spacer()
             Button(action: {
                 showMedicineView = true
             }) {
                 Image(systemName: "plus")
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
                     .foregroundColor(.white)
+                    .clipShape(Circle())
+                    .frame(width: 20, height: 20)
             }
         }
         .padding(.horizontal)

@@ -31,7 +31,7 @@ extension UserView {
         HStack {
             Text("User Profile")
                 .foregroundColor(.white)
-                .font(.title3)
+                .font(.largeTitle)
                 .bold()
             Spacer()
             Button(action: {
@@ -46,9 +46,7 @@ extension UserView {
                     .foregroundColor(.white)
                     .clipShape(Circle())
                     .frame(width: 30, height: 30)
-                
             }
-            
         }
     }
     
