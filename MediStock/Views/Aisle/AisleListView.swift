@@ -22,9 +22,9 @@ struct AisleListView: View {
                 }
                 
             }
-            .fullScreenCover(isPresented: $showMedicineView) {
-                MedicineView(viewModel: MedicineViewModel(session: session, medicine: MedicineViewData.init()))
-            }
+//            .fullScreenCover(isPresented: $showMedicineView) {
+//                MedicineView(viewModel: MedicineViewModel(session: session, medicine: MedicineViewData.init()))
+//            }
             
         }
     }
@@ -38,9 +38,9 @@ extension AisleListView {
                 .font(.largeTitle)
                 .bold()
             Spacer()
-            Button(action: {
-                showMedicineView = true
-            }) {
+            //Button(destination:
+                NavigationLink(destination: MedicineView(viewModel: MedicineViewModel(session: session, medicine: MedicineViewData.init())))
+            {
                 Image(systemName: "plus")
                     .resizable()
                     .aspectRatio(contentMode: .fill)
@@ -48,6 +48,14 @@ extension AisleListView {
                     .clipShape(Circle())
                     .frame(width: 20, height: 20)
             }
+            
+//            NavigationLink(destination: AddEventView(viewModel: AddEventViewModel(userManager: userManager))) {
+//                Image(systemName: "plus")
+//                    .foregroundColor(.white)
+//                    .frame(width: 56, height: 56)
+//                    .background(Color("RedEventorias"))
+//                    .cornerRadius(16)
+//            }
         }
         .padding(.horizontal)
     }

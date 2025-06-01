@@ -9,7 +9,6 @@ import Foundation
 
 final class HistoryService {
     
-    
     func generateHistory(userId: String, oldMedicine: MedicineViewData?, newMedicine: MedicineViewData?) -> HistoryEntry? {
         
         guard let oldMedicine = oldMedicine else {
@@ -45,11 +44,8 @@ final class HistoryService {
             return entry
         }
         
-        
         // MODIFIY
-        let timeStamp: Date = Date()
         var isModified: Bool = false
-        
         var detail = ""
         if (oldMedicine.name != newMedicine.name) {
             detail += "Rename : \(newMedicine.name)"
