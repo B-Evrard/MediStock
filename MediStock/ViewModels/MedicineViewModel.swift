@@ -61,4 +61,8 @@ final class MedicineViewModel: ObservableObject {
         }
     }
     
+    func validate() async -> Bool {
+        return true
+    }
+    
 }

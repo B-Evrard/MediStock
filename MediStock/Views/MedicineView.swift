@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct MedicineView: View {
+    @Environment(\.dismiss) var dismiss
+    
     @StateObject var viewModel: MedicineViewModel
     
     @State private var showPicker = false
@@ -23,6 +25,23 @@ struct MedicineView: View {
                 medicineStockSection
                 medicineAisleSection
                 Spacer()
+                Button(action: {
+                    Task {
+                        let isOk = await viewModel.validate()
+                        if isOk {
+                            dismiss()
+                        }
+                    }
+                }) {
+                    Text("Validate")
+                        .foregroundColor(.white)
+                        .font(.callout)
+                        .bold()
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 15)
+                        .background(Color(.red))
+                        .cornerRadius(4)
+                }
             }
             .padding()
             
