@@ -36,6 +36,15 @@ public struct Control  {
         }
     }
     
+    static func controleMedicine(medicine: MedicineViewData) throws (ControlError) {
+        guard !medicine.name.isEmpty else {
+            throw ControlError.emptyField(message: AppMessages.medicineNameEmpty)
+        }
+        guard medicine.aisle != nil else {
+            throw ControlError.emptyField(message: AppMessages.aisleEmpty)
+        }
+    }
+    
     private static func validateEmail(_ email: String) throws (ControlError) {
         guard !email.isEmpty else {
             throw ControlError.mailEmpty()

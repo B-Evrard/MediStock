@@ -9,12 +9,12 @@ struct HistoryEntry: Codable {
     var details: String
     var timestamp: Date
 
-//    init(id: String? = nil, medicineId: String, user: String, action: String, details: String, timestamp: Date = Date()) {
-//        self.id = id
-//        self.medicineId = medicineId
-//        self.user = user
-//        self.action = action
-//        self.details = details
-//        self.timestamp = timestamp
-//    }
+    init(id: String? = nil, medicineId: String = "", userId: String = "", action: String = "", details: String = "", timestamp: Date = Date()) {
+        self.id = id
+        self.medicineId = medicineId
+        self.userId = userId
+        self.action = action
+        self.details = details
+        self.timestamp = timestamp
+    }
 }

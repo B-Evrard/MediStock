@@ -28,17 +28,36 @@ final class FireBaseStoreService: DataStore {
         return aisles
     }
     
+    func addAisle(_ aisle: Aisle) async throws -> Aisle{
+        let ref = try db.collection("Aisles").addDocument(from: aisle)
+        return try await ref.getDocument().data(as: Aisle.self)
+    }
     
     // MARK: Medicines
-//    func fetchMedicines(forAisle aisle: Aisle) -> AsyncThrowingStream<[Medicine], any Error> {
-//        
-//    }
-//    
-//    func fetchMedicines() -> AsyncThrowingStream<[Medicine], any Error> {
-//        
-//    }
+    func getMedicine(id: String) async throws -> Medicine {
+        let ref = db.collection("Medicines").document(id)
+        let medicine = try await ref.getDocument(as : Medicine.self)
+        return medicine
+    }
+    
+    func addMedicine(_ medicine: Medicine) async throws -> Medicine {
+        let ref = try db.collection("Medicines").addDocument(from: medicine)
+        return try await ref.getDocument().data(as: Medicine.self)
+    }
+    
+    func updateMedicine(_ medicine: Medicine) async throws {
+        guard let id = medicine.id else {
+            throw ControlError.genericError()
+        }
+        try db.collection("Medicines").document(id).setData(from: medicine)
+    }
     
     // MARK: History
+    func addHistory(_ historyEntry: HistoryEntry) async throws -> HistoryEntry {
+        let ref = try db.collection("History").addDocument(from: historyEntry)
+        return try await ref.getDocument().data(as: HistoryEntry.self)
+    }
+    
     
     // MARK: User
     

@@ -23,8 +23,7 @@ struct MedicineMapper {
             id: viewData.id,
             aisleId: viewData.aisle?.id ?? "",
             name: viewData.name,
-            stock: viewData.stock,
-            nameSearch: viewData.name.removingAccentsUppercased
+            stock: viewData.stock
         )
     }
 }

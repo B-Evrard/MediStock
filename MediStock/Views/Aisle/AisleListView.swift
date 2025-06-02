@@ -14,17 +14,14 @@ struct AisleListView: View {
                 VStack {
                     headerSection
                     aisleList
+                        .safeAreaPadding(.bottom)
                 }
             }
             .onAppear {
                 Task {
                     await viewModel.fetchAisles()
                 }
-                
             }
-//            .fullScreenCover(isPresented: $showMedicineView) {
-//                MedicineView(viewModel: MedicineViewModel(session: session, medicine: MedicineViewData.init()))
-//            }
             
         }
     }
@@ -38,7 +35,7 @@ extension AisleListView {
                 .font(.largeTitle)
                 .bold()
             Spacer()
-            //Button(destination:
+            
                 NavigationLink(destination: MedicineView(viewModel: MedicineViewModel(session: session, medicine: MedicineViewData.init())))
             {
                 Image(systemName: "plus")
@@ -48,14 +45,6 @@ extension AisleListView {
                     .clipShape(Circle())
                     .frame(width: 20, height: 20)
             }
-            
-//            NavigationLink(destination: AddEventView(viewModel: AddEventViewModel(userManager: userManager))) {
-//                Image(systemName: "plus")
-//                    .foregroundColor(.white)
-//                    .frame(width: 56, height: 56)
-//                    .background(Color("RedEventorias"))
-//                    .cornerRadius(16)
-//            }
         }
         .padding(.horizontal)
     }
@@ -64,7 +53,7 @@ extension AisleListView {
         ScrollView {
             LazyVStack {
                 ForEach(viewModel.aisles, id: \.self) { aisle in
-                    //NavigationLink(destination: MedicineListView()) {
+                    NavigationLink(destination: MedicineListView()) {
                     HStack {
                         Text(aisle.label)
                             .font(.system(size: 20, weight: .bold, design: .rounded))
@@ -76,15 +65,18 @@ extension AisleListView {
                     .padding(.horizontal)
                     .background(Color("BackgroundElement"))
                     .cornerRadius(20)
-                    //}
+                    }
                 }
                 .listRowInsets(EdgeInsets())
                 .listRowBackground(Color("BackgroundColor"))
                 .listRowSeparator(.hidden)
             }
+            .padding(.horizontal)
         }
-        .padding(.horizontal)
+        
+       
     }
+        
 }
 
 struct AisleListView_Previews: PreviewProvider {

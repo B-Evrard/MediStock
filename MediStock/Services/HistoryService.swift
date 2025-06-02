@@ -20,7 +20,7 @@ final class HistoryService {
             
             let entry = HistoryEntry(
                 id:"",
-                medicineId: newMedicine.id,
+                medicineId: newMedicine.id ?? "",
                 userId: userId,
                 action: HistoryAction.Add.rawValue,
                 details: detail,
@@ -35,7 +35,7 @@ final class HistoryService {
             
             let entry = HistoryEntry(
                 id:"",
-                medicineId: oldMedicine.id,
+                medicineId: oldMedicine.id ?? "",
                 userId: userId,
                 action: HistoryAction.Delete.rawValue,
                 details: detail,
@@ -66,7 +66,7 @@ final class HistoryService {
         if (isModified) {
             let entry = HistoryEntry(
                 id:"",
-                medicineId: oldMedicine.id,
+                medicineId: oldMedicine.id ?? "",
                 userId: userId,
                 action: HistoryAction.Update.rawValue,
                 details: "Upddate medicine \(oldMedicine.name) : \(detail)",

@@ -8,12 +8,12 @@
 import Foundation
 
 struct MedicineViewData {
-    var id: String
+    var id: String?
     var name: String
     var stock: Int
     var aisle: AisleViewData?
     
-    init(id: String = "", name: String = "", stock: Int = 0, aisle: AisleViewData? = nil) {
+    init(id: String? = nil, name: String = "", stock: Int = 0, aisle: AisleViewData? = nil) {
             self.id = id
             self.name = name
             self.stock = stock

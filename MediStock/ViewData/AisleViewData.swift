@@ -15,3 +15,4 @@ struct AisleViewData: Hashable, Decodable, Identifiable {
         return "Aisle \(name)"
     }
 }
+

@@ -24,32 +24,27 @@ struct MedicineView: View {
                 medicineNameSection
                 medicineStockSection
                 medicineAisleSection
+                medicineHistorySection
                 Spacer()
-                Button(action: {
-                    Task {
-                        let isOk = await viewModel.validate()
-                        if isOk {
-                            dismiss()
-                        }
-                    }
-                }) {
-                    Text("Validate")
-                        .foregroundColor(.white)
-                        .font(.callout)
-                        .bold()
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 15)
-                        .background(Color(.red))
-                        .cornerRadius(4)
-                }
+                buttonValidate
             }
             .padding()
+            .overlay(alignment: .top) {
+                listAisleSection
+            }
             
         }
         .onAppear() {
             Task {
                 await viewModel.fetchAisles()
             }
+        }
+        .alert(isPresented: $viewModel.isError) {
+            Alert(
+                title: Text("Error"),
+                message: Text(viewModel.errorMessage),
+                dismissButton: .default(Text("OK"))
+            )
         }
         
     }
@@ -58,7 +53,7 @@ struct MedicineView: View {
 extension MedicineView {
     private var headerSection: some View {
         HStack {
-            Text(viewModel.medicine.id.isEmpty ? "New Medicine" : viewModel.medicine.name)
+            Text(viewModel.medicine.id != nil ? "New Medicine" : viewModel.medicine.name)
                 .foregroundColor(.white)
                 .font(.largeTitle)
                 .bold()
@@ -132,16 +127,94 @@ extension MedicineView {
     }
     
     private var medicineAisleSection: some View {
+        ZStack(alignment: .top) {
+            VStack {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Aisle : \(viewModel.medicine.aisle?.name ?? "")")
+                        .font(.title3)
+                        .foregroundColor(Color(.black))
+
+                    HStack {
+                        TextField("", text: $viewModel.searchText,
+                                  prompt: Text("Choose an aisle...")
+                            .foregroundColor(.gray))
+                        .font(.body)
+                        .foregroundColor(Color("ColorFont"))
+                        .autocorrectionDisabled()
+                        Spacer()
+                        if (!viewModel.searchText.isEmpty && !viewModel.aisleExist()) {
+                            Button(action: {
+                                Task {
+                                    await viewModel.AddAisle()
+                                }
+                            }) {
+                                Label("Add Aisle", systemImage: "plus.app")
+                                    .font(.title3)
+                                    .foregroundColor(.black)
+                            }
+                        }
+                    }
+                    
+                }
+                .padding()
+                .background(Color("BackgroundElement"))
+                .cornerRadius(20)
+                .accessibilityLabel("Aisle")
+            }
+            
+        }
+    }
+    
+    private var listAisleSection: some View {
+        Group {
+            if !viewModel.filteredAisles.isEmpty && !viewModel.searchText.isEmpty {
+                GeometryReader { geo in
+                    VStack(alignment: .leading, spacing: 4) {
+                        ScrollView {
+                            VStack(alignment: .leading, spacing: 4) {
+                                ForEach(viewModel.filteredAisles) { aisle in
+                                    Button(action: {
+                                        viewModel.medicine.aisle = aisle
+                                        viewModel.searchText = ""
+                                        viewModel.filteredAisles = []
+                                    }) {
+                                        Text(aisle.label)
+                                            .padding(.vertical, 8)
+                                            .padding(.horizontal)
+                                            .foregroundColor(Color(.black))
+                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                            .background(Color(.gray))
+                                            .cornerRadius(4)
+                                    }
+                                    .padding(.horizontal)
+                                }
+                            }
+                        }
+                        .frame(maxHeight: 155)
+                        .background(Color("BackgroundElement"))
+                        .cornerRadius(8)
+                        .shadow(radius: 4)
+                        .padding(.horizontal)
+                        .position(x: geo.size.width / 2, y: 440)
+                    }
+                }
+                .zIndex(2)
+            }
+        }
+        
+    }
+    
+    private var medicineHistorySection: some View {
         VStack {
             VStack(alignment: .leading, spacing: 8) {
-                Text("Aisles")
+                Text("History")
                     .font(.title3)
                     .foregroundColor(Color("ColorFont"))
-                TextField("", text: $viewModel.searchText,
-                          prompt: Text("Choose an aisle...")
-                    .foregroundColor(.gray))
-                .font(.body)
-                .foregroundColor(Color("ColorFont"))
+//                TextField("", text: $viewModel.searchText,
+//                          prompt: Text("Choose an aisle...")
+//                    .foregroundColor(.gray))
+//                .font(.body)
+//                .foregroundColor(Color("ColorFont"))
                 
                 
             }
@@ -150,36 +223,28 @@ extension MedicineView {
             .cornerRadius(20)
             .accessibilityLabel("Aisle")
             
-            if !viewModel.filteredAisles.isEmpty && viewModel.searchText != "" {
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 4) {
-                        ForEach(viewModel.filteredAisles) { aisle in
-                            Button(action: {
-                                viewModel.medicine.aisle = aisle
-                                viewModel.searchText = aisle.label
-                                viewModel.filteredAisles = []
-                            }) {
-                                Text(aisle.label)
-                                    .padding(.vertical, 8)
-                                    .padding(.horizontal)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                    .background(Color(.systemBackground))
-                            }
-                            .buttonStyle(PlainButtonStyle())
-                        }
-                    }
-                }
-                .frame(maxHeight: 150)
-                .background(Color(.systemGray5))
-                .cornerRadius(8)
-            }
-
-            if let selected = viewModel.medicine.aisle {
-                Text("Selected: \(selected.label)")
-                    .padding(.top)
-            }
         }
         
+    }
+    
+    private var buttonValidate: some View {
+        Button(action: {
+            Task {
+                let isOk = await viewModel.validate()
+                if isOk {
+                    dismiss()
+                }
+            }
+        }) {
+            Text("Validate")
+                .foregroundColor(.white)
+                .font(.callout)
+                .bold()
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 15)
+                .background(Color(.red))
+                .cornerRadius(4)
+        }
     }
 }
 
