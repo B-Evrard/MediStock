@@ -7,6 +7,12 @@
 import Foundation
 
 // MARK: Date Extension
+extension Date {
+    var formattedDateString: String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MM/dd/yyyy 'at' HH:mm"
+        return dateFormatter.string(from: self)}
+}
 
 // MARK: String Extension
 extension String {

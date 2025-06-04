@@ -11,15 +11,19 @@ protocol DataStore {
     // MARK: Aisles
     func fetchAisles() async throws -> [Aisle]
     func addAisle(_ aisle: Aisle) async throws -> Aisle
+    func getAisle(id: String) async throws -> Aisle
     
     // MARK: Medicines
-    //func fetchMedicines(forAisle aisle: Aisle) -> AsyncThrowingStream<[Medicine], Error>
-    //func fetchMedicines() -> AsyncThrowingStream<[Medicine], Error>
+    func streamMedicines(aisleId: String?) -> AsyncThrowingStream<[Medicine], Error>
+    func loadNextPageMedicine(aisleId: String?, completion: @escaping (Result<[Medicine], Error>) -> Void)
+    func resetStreamMedicines()
     func getMedicine(id: String) async throws -> Medicine
+    func medicineExistByNameAndAisle(name: String, aisleId: String) async throws -> Bool
     func addMedicine(_ medicine: Medicine) async throws -> Medicine
     func updateMedicine(_ medicine: Medicine) async throws
     
     // MARK: History
+    func fetchHistory(medicineId: String) async throws -> [HistoryEntry]
     func addHistory(_ historyEntry: HistoryEntry) async throws -> HistoryEntry
     
     // MARK: User

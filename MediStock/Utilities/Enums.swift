@@ -8,9 +8,23 @@
 import Foundation
 
 enum HistoryAction: String, CaseIterable {
-    
     case Add
     case Delete
     case Update
+    case Unknown
     
+    var display: String {
+        switch self {
+        case .Add: return "Creation"
+        case .Delete: return "Delete"
+        case .Update: return "Update"
+        case .Unknown: return "Unknown"
+        }
+    }
+}
+
+extension HistoryAction {
+    static func from(_ rawValue: String) -> Self {
+        Self(rawValue: rawValue) ?? .Unknown
+    }
 }

@@ -9,17 +9,17 @@ struct MainTabView: View {
     
     var body: some View {
         TabView {
-            AisleListView(viewModel: AisleListViewModel())
+            AisleListView()
                 .tabItem {
                     Image(systemName: "list.dash")
                     Text("Aisles")
                 }
 
-//            AllMedicinesView()
-//                .tabItem {
-//                    Image(systemName: "square.grid.2x2")
-//                    Text("All Medicines")
-//                }
+            MedicineListView(viewModel: MedicineListViewModel()  )
+                .tabItem {
+                    Image(systemName: "square.grid.2x2")
+                    Text("All Medicines")
+                }
             
             UserView(viewModel: UserViewModel(session: session))
                 .tabItem {
@@ -32,7 +32,7 @@ struct MainTabView: View {
     private func configureTabBar() {
         let tabBarAppearance = UITabBarAppearance()
         tabBarAppearance.configureWithOpaqueBackground()
-        tabBarAppearance.backgroundColor = UIColor(named: "BackgroundColor")
+        tabBarAppearance.backgroundColor = UIColor(named: "Background")
         UITabBar.appearance().standardAppearance = tabBarAppearance
         UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
         
@@ -41,7 +41,7 @@ struct MainTabView: View {
         
         let navigationBarAppearance = UINavigationBarAppearance()
         navigationBarAppearance.configureWithOpaqueBackground()
-        navigationBarAppearance.backgroundColor = UIColor(named: "BackgroundColor")
+        navigationBarAppearance.backgroundColor = UIColor(named: "Background")
         UINavigationBar.appearance().standardAppearance = navigationBarAppearance
         UINavigationBar.appearance().scrollEdgeAppearance = navigationBarAppearance
     }

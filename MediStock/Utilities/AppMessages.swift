@@ -19,5 +19,6 @@ final class AppMessages {
     static let emailAlreadyExists = "Email already in use"
     static let medicineNameEmpty = "Medicine name is required."
     static let aisleEmpty = "Aisle is required"
+    static let medicineExist = "This medicine has already been added to this aisle."
     
 }

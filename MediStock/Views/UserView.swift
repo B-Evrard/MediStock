@@ -12,7 +12,7 @@ struct UserView: View {
     
     var body: some View {
         ZStack {
-            Color("Background").ignoresSafeArea()
+            Color("Background").ignoresSafeArea(edges: .top)
             VStack(alignment: .leading) {
                 
                 headerSection

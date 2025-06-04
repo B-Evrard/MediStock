@@ -10,11 +10,11 @@ struct AisleListView: View {
         
         NavigationStack {
             ZStack {
-                Color("Background").ignoresSafeArea()
+                Color("Background").ignoresSafeArea(edges: .top)
                 VStack {
                     headerSection
                     aisleList
-                        .safeAreaPadding(.bottom)
+                        //.safeAreaPadding(.bottom)
                 }
             }
             .onAppear {
@@ -53,7 +53,7 @@ extension AisleListView {
         ScrollView {
             LazyVStack {
                 ForEach(viewModel.aisles, id: \.self) { aisle in
-                    NavigationLink(destination: MedicineListView()) {
+                    NavigationLink(destination: MedicineListView(viewModel: MedicineListViewModel(aisleSelected: aisle))) {
                     HStack {
                         Text(aisle.label)
                             .font(.system(size: 20, weight: .bold, design: .rounded))

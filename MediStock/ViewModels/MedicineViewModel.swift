@@ -14,7 +14,7 @@ final class MedicineViewModel: ObservableObject {
     private let dataStoreService: DataStore
     private let historyService: HistoryService
     
-    private let medicineBeforeUpdate: MedicineViewData?
+    private var medicineBeforeUpdate: MedicineViewData? = nil
     
     @Published var medicine : MedicineViewData
     @Published var aisles: [AisleViewData] = []
@@ -26,19 +26,43 @@ final class MedicineViewModel: ObservableObject {
     @Published var filteredAisles: [AisleViewData] = []
     
     @Published var showAddAisleSheet = false
-    @Published var newAisle = AisleViewData.init(name: "")
+    @Published var newAisle = AisleViewData.init(id: nil, name: "")
     
     @Published var isError: Bool = false
     @Published var errorMessage: String = ""
     
+    //private var onSave: ((MedicineViewData) -> Void)?
     
-    
-    init(session: any AuthProviding, dataStoreService: DataStore = FireBaseStoreService(), medicine: MedicineViewData = MedicineViewData.init()) {
+    init(
+        session: any AuthProviding,
+        dataStoreService: DataStore = FireBaseStoreService(),
+        medicine: MedicineViewData = MedicineViewData.init(),
+        onSave: ((MedicineViewData) -> Void)? = nil
+    ) {
         self.session = session
         self.dataStoreService = dataStoreService
         self.medicine = medicine
         self.historyService = HistoryService()
-        self.medicineBeforeUpdate = medicine
+        //self.onSave = onSave
+    }
+    
+    func initMedicine() async {
+        await fetchAisles()
+        guard let medicineId = medicine.id else {
+            return
+        }
+        do
+        {
+            let medicineData = try await dataStoreService.getMedicine(id: medicineId)
+            let aisleData = try await dataStoreService.getAisle(id: medicineData.aisleId)
+            self.medicine = MedicineMapper.mapToViewData(medicineData, aisle: aisleData)
+            self.medicineBeforeUpdate = medicine
+            let historyEntries = try await dataStoreService.fetchHistory(medicineId: medicineId)
+            medicine.history = historyEntries.map { HistoryEntryViewData(historyEntry: $0) }
+        } catch {
+            self.isError = true
+            self.errorMessage = AppMessages.genericError
+        }
     }
     
     func checkAilseSelected(aisleSelected: AisleViewData) -> Bool{
@@ -48,7 +72,7 @@ final class MedicineViewModel: ObservableObject {
         return aisleSelected.id == aisle.id
     }
     
-    func fetchAisles() async {
+    private func fetchAisles() async {
         do {
             let aislesData = try await dataStoreService.fetchAisles()
             self.aisles = aislesData.map(AisleMapper.mapToViewData)
@@ -87,7 +111,7 @@ final class MedicineViewModel: ObservableObject {
         self.isError = false
         self.errorMessage = ""
         do {
-            guard let userId = session.user?.idAuth else {
+            guard let user = session.user else {
                 self.isError = true
                 self.errorMessage = AppMessages.genericError
                 return false
@@ -97,19 +121,26 @@ final class MedicineViewModel: ObservableObject {
             let medicineModel = MedicineMapper.mapToModel(self.medicine)
             if medicineModel.id != nil {
                 try await dataStoreService.updateMedicine(medicineModel)
-                historyEntry = historyService.generateHistory(userId: userId, oldMedicine: medicineBeforeUpdate, newMedicine: medicine)
+                historyEntry = historyService.generateHistory(user: user, oldMedicine: medicineBeforeUpdate, newMedicine: medicine)
             } else {
+                let isMedicineExist = try await dataStoreService.medicineExistByNameAndAisle(name: medicine.name, aisleId: medicine.aisle?.id ?? "")
+                if isMedicineExist {
+                    self.isError = true
+                    self.errorMessage = AppMessages.medicineExist
+                    return false
+                }
                 let newMedicine = try await dataStoreService.addMedicine(medicineModel)
                 medicine.id = newMedicine.id
-                historyEntry = historyService.generateHistory(userId: userId, oldMedicine: nil, newMedicine: medicine)
+                historyEntry = historyService.generateHistory(user: user, oldMedicine: nil, newMedicine: medicine)
             }
-            guard let historyEntry else {
-                self.isError = true
-                self.errorMessage = AppMessages.genericError
-                return false
+            if let historyEntry {
+                _ = try await dataStoreService.addHistory(historyEntry)
             }
-            _ = try await dataStoreService.addHistory(historyEntry)
             return true
+        } catch let error as ControlError {
+            self.isError = true
+            self.errorMessage = error.message
+            return false
         } catch {
             self.isError = true
             self.errorMessage = AppMessages.genericError

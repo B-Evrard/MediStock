@@ -7,16 +7,18 @@
 
 import Foundation
 
-struct MedicineViewData {
+struct MedicineViewData: Hashable, Identifiable {
     var id: String?
     var name: String
     var stock: Int
     var aisle: AisleViewData?
+    var history: [HistoryEntryViewData]?
     
-    init(id: String? = nil, name: String = "", stock: Int = 0, aisle: AisleViewData? = nil) {
-            self.id = id
-            self.name = name
-            self.stock = stock
-            self.aisle = aisle
-        }
+    init(id: String? = nil, name: String = "", stock: Int = 0, aisle: AisleViewData? = nil, history: [HistoryEntryViewData]? = nil) {
+        self.id = id
+        self.name = name
+        self.stock = stock
+        self.aisle = aisle
+        self.history = history
+    }
 }

@@ -18,6 +18,15 @@ struct MedicineMapper {
         )
     }
     
+    static func mapToListViewData(_ medicine: Medicine) -> MedicineViewData {
+        return .init(
+            id: medicine.id ?? "",
+            name: medicine.name,
+            stock: medicine.stock,
+            aisle: AisleViewData.init(id: medicine.aisleId)
+        )
+    }
+    
     static func mapToModel(_ viewData: MedicineViewData) -> Medicine {
         return .init(
             id: viewData.id,

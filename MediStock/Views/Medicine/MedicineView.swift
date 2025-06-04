@@ -18,7 +18,7 @@ struct MedicineView: View {
     
     var body: some View {
         ZStack {
-            Color("Background").ignoresSafeArea()
+            Color("Background").ignoresSafeArea(edges: .top)
             VStack {
                 headerSection
                 medicineNameSection
@@ -36,7 +36,7 @@ struct MedicineView: View {
         }
         .onAppear() {
             Task {
-                await viewModel.fetchAisles()
+                await viewModel.initMedicine()
             }
         }
         .alert(isPresented: $viewModel.isError) {
@@ -53,7 +53,7 @@ struct MedicineView: View {
 extension MedicineView {
     private var headerSection: some View {
         HStack {
-            Text(viewModel.medicine.id != nil ? "New Medicine" : viewModel.medicine.name)
+            Text(viewModel.medicine.id == nil ? "New Medicine" : viewModel.medicine.name)
                 .foregroundColor(.white)
                 .font(.largeTitle)
                 .bold()
@@ -133,7 +133,7 @@ extension MedicineView {
                     Text("Aisle : \(viewModel.medicine.aisle?.name ?? "")")
                         .font(.title3)
                         .foregroundColor(Color(.black))
-
+                    
                     HStack {
                         TextField("", text: $viewModel.searchText,
                                   prompt: Text("Choose an aisle...")
@@ -210,22 +210,40 @@ extension MedicineView {
                 Text("History")
                     .font(.title3)
                     .foregroundColor(Color("ColorFont"))
-//                TextField("", text: $viewModel.searchText,
-//                          prompt: Text("Choose an aisle...")
-//                    .foregroundColor(.gray))
-//                .font(.body)
-//                .foregroundColor(Color("ColorFont"))
-                
-                
+                VStack(alignment: .leading, spacing: 4) {
+                    ScrollView {
+                        VStack(alignment: .leading, spacing: 4) {
+                            if let history = viewModel.medicine.history {
+                                ForEach(history, id: \.id) { history in
+                                    VStack(alignment: .leading, spacing: 2) {
+                                        Text(history.ligne1)
+                                            .font(.caption)
+                                            .fontWeight(.bold)
+                                        
+                                        Text(history.details)
+                                            .font(.caption2)
+                                              
+                                    }
+                                }
+                            }
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+                .background(Color("BackgroundElement"))
+                .cornerRadius(8)
+                .padding(.horizontal)
             }
-            .padding()
-            .background(Color("BackgroundElement"))
-            .cornerRadius(20)
-            .accessibilityLabel("Aisle")
             
         }
+        .padding()
+        .background(Color("BackgroundElement"))
+        .cornerRadius(20)
+        .accessibilityLabel("Aisle")
         
     }
+    
+    
     
     private var buttonValidate: some View {
         Button(action: {

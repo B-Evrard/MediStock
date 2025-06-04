@@ -9,37 +9,37 @@ import Foundation
 
 final class HistoryService {
     
-    func generateHistory(userId: String, oldMedicine: MedicineViewData?, newMedicine: MedicineViewData?) -> HistoryEntry? {
+    func generateHistory(user: UserInfo, oldMedicine: MedicineViewData?, newMedicine: MedicineViewData?) -> HistoryEntry? {
         
         guard let oldMedicine = oldMedicine else {
             // ADD medicine
             guard let newMedicine = newMedicine else {
                 return nil
             }
-            let detail  = "Add medicine : Name : \(newMedicine.name) - Stock : \(newMedicine.stock) - Aisle : \(newMedicine.aisle?.label ?? "") "
+            let detail  = "Stock : \(newMedicine.stock) - Aisle : \(newMedicine.aisle?.label ?? "") "
             
             let entry = HistoryEntry(
-                id:"",
                 medicineId: newMedicine.id ?? "",
-                userId: userId,
                 action: HistoryAction.Add.rawValue,
                 details: detail,
-                timestamp: Date()
+                modifiedAt: Date(),
+                modifiedByUserId: user.idAuth ?? "",
+                modifiedByUserName: user.displayName
             )
             return entry
         }
         
         guard let newMedicine = newMedicine else {
             // DELETE medicine
-            let detail  = "Delete medicine : Name : \(oldMedicine.name)"
+            let detail  = ""
             
             let entry = HistoryEntry(
-                id:"",
                 medicineId: oldMedicine.id ?? "",
-                userId: userId,
                 action: HistoryAction.Delete.rawValue,
                 details: detail,
-                timestamp: Date()
+                modifiedAt: Date(),
+                modifiedByUserId: user.idAuth ?? "",
+                modifiedByUserName: user.displayName
             )
             return entry
         }
@@ -65,12 +65,12 @@ final class HistoryService {
         }
         if (isModified) {
             let entry = HistoryEntry(
-                id:"",
                 medicineId: oldMedicine.id ?? "",
-                userId: userId,
                 action: HistoryAction.Update.rawValue,
-                details: "Upddate medicine \(oldMedicine.name) : \(detail)",
-                timestamp: Date()
+                details: detail,
+                modifiedAt: Date(),
+                modifiedByUserId: user.idAuth ?? "",
+                modifiedByUserName: user.displayName
             )
             return entry
         }

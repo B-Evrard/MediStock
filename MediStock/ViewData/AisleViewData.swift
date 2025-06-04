@@ -14,5 +14,10 @@ struct AisleViewData: Hashable, Decodable, Identifiable {
     var label: String {
         return "Aisle \(name)"
     }
+    
+    init (id: String?, name: String = "") {
+        self.id = id
+        self.name = name
+    }
 }
 
