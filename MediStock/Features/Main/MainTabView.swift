@@ -15,7 +15,7 @@ struct MainTabView: View {
                     Text("Aisles")
                 }
 
-            MedicineListView(viewModel: MedicineListViewModel()  )
+            MedicineListView(viewModel: MedicineListViewModel(session: session)  )
                 .tabItem {
                     Image(systemName: "square.grid.2x2")
                     Text("All Medicines")

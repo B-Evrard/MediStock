@@ -10,8 +10,6 @@ import FirebaseFirestore
 final class FireBaseStoreService: DataStore {
     
     let db = Firestore.firestore()
-    private let medicinePageSize = 20
-    private var lastMedicineDocument: DocumentSnapshot?
     private var listenerMedicine: ListenerRegistration?
     
     // MARK: Aisle
@@ -49,7 +47,7 @@ final class FireBaseStoreService: DataStore {
     func medicineExistByNameAndAisle(name: String, aisleId: String) async throws -> Bool {
         let FBMedicines = db.collection("Medicines")
         var query: Query
-            query = FBMedicines
+        query = FBMedicines
             .whereField("nameSearch", isEqualTo: name.removingAccentsUppercased)
             .whereField("aisleId", isEqualTo: aisleId)
         let snapshot = try await query.getDocuments()
@@ -68,77 +66,121 @@ final class FireBaseStoreService: DataStore {
         try db.collection("Medicines").document(id).setData(from: medicine)
     }
     
-    func streamMedicines(aisleId: String?) -> AsyncThrowingStream<[Medicine], Error> {
+    func deleteMedicine(id: String) async throws {
+        try await db.collection("Medicines").document(id).delete()
+    }
+    
+    func streamMedicines(aisleId: String?) -> AsyncThrowingStream<MedicineUpdate, Error> {
         AsyncThrowingStream { [weak self] continuation in
-            guard let self = self else {
+            guard let self else {
                 continuation.finish(throwing: CancellationError())
                 return
             }
             
-            self.loadNextPageMedicine(aisleId: aisleId) { result in
-                switch result {
-                case .success(let medicines):
-                    continuation.yield(medicines)
-                case .failure(let error):
+            let FBMedicines = db.collection("Medicines")
+            var query: Query
+            
+            if let aisleId {
+                query = FBMedicines.whereField("aisleId", isEqualTo: aisleId).order(by: "name")
+            } else {
+                query = FBMedicines.order(by: "name")
+            }
+            
+            self.listenerMedicine = query.addSnapshotListener { snapshot, error in
+                if let error {
                     continuation.finish(throwing: error)
+                    return
                 }
+                var mediciceUpdates = MedicineUpdate()
+                guard let snapshot else {
+                    continuation.yield(mediciceUpdates)
+                    return
+                }
+                
+//                if isInitialSnapshot && snapshot.documentChanges.isEmpty {
+//                    isInitialSnapshot = false
+//                    let allMeds = snapshot.documents.compactMap { try? $0.data(as: Medicine.self) }
+//                    continuation.yield(.initial(allMeds))
+//                    return
+//                }
+//                snapshot.documentChanges.forEach { diff in
+//                    switch diff.type {
+//                    case .added:
+//                        break
+//                    case .modified:
+//                        break
+//                    case .removed:
+//                        break
+//                    @unknown default:
+//                        fatalError()ied:
+//                    }
+//                }
+                let added = snapshot.documentChanges
+                    .filter { $0.type == .added }
+                    .compactMap { try? $0.document.data(as: Medicine.self) }
+                
+                let modified = snapshot.documentChanges
+                    .filter { $0.type == .modified }
+                    .compactMap { try? $0.document.data(as: Medicine.self) }
+                
+                let removedIds = snapshot.documentChanges
+                    .filter { $0.type == .removed }
+                    .map { $0.document.documentID }
+                
+                mediciceUpdates.added = added
+                mediciceUpdates.modified = modified
+                mediciceUpdates.removedIds = removedIds
+                
+                continuation.yield(mediciceUpdates)
             }
             
             continuation.onTermination = { [weak self] _ in
                 self?.listenerMedicine?.remove()
             }
-        }
-    }
-    
-    func loadNextPageMedicine(aisleId: String?, completion: @escaping (Result<[Medicine], Error>) -> Void) {
-        if let listenerMedicine {
-            listenerMedicine.remove()
-        }
-        
-        let FBMedicines = db.collection("Medicines")
-        
-        var query: Query
-        
-        if let aisleId {
-            query = FBMedicines
-                .whereField("aisleId", isEqualTo: aisleId)
-                .order(by: "name")
-                .limit(to: medicinePageSize)
-        } else {
-            query = FBMedicines
-                .order(by: "name")
-                .limit(to: medicinePageSize)
-        }
-        
-        if let lastDoc = lastMedicineDocument {
-            query = query.start(afterDocument: lastDoc)
-        }
-        
-        listenerMedicine = query.addSnapshotListener { [weak self] snapshot, error in
-            guard let self = self else { return }
             
-            if let error = error {
-                completion(.failure(error))
-                return
-            }
             
-            guard let snapshot = snapshot else {
-                completion(.success([]))
-                return
-            }
-            
-            self.lastMedicineDocument = snapshot.documents.last
-            
-            let medicines = snapshot.documents.compactMap { document -> Medicine? in
-                try? document.data(as: Medicine.self)
-            }
-            
-            completion(.success(medicines))
+            //            self.listenerMedicine = query.addSnapshotListener { snapshot, error in
+            //                if let error {
+            //                    continuation.finish(throwing: error)
+            //                    return
+            //                }
+            //
+            //                if isInitialSnapshot {
+            //                    isInitialSnapshot = false
+            //                    guard let documents = snapshot?.documents else {
+            //                        continuation.yield([])
+            //                        return
+            //                    }
+            //                    let medicines = documents.compactMap { try? $0.data(as: Medicine.self) }
+            //                    continuation.yield(medicines)
+            //                }
+            //                    let added = snapshot.documentChanges
+            //                        .filter { $0.type == .added }
+            //                        .compactMap { try? $0.document.data(as: Medicine.self) }
+            //
+            //                    let modified = snapshot.documentChanges
+            //                        .filter { $0.type == .modified }
+            //                        .compactMap { try? $0.document.data(as: Medicine.self) }
+            //
+            //                    let removedIds = snapshot.documentChanges
+            //                        .filter { $0.type == .removed }
+            //                        .map { $0.document.documentID }
+            //
+            //                    continuation.yield(.added(added))
+            //                    continuation.yield(.modified(modified))
+            //                    continuation.yield(.removed(removedIds))
+            //
+            //
+            //
+            //            }
+            //
+            //            continuation.onTermination = { [weak self] _ in
+            //                self?.listenerMedicine?.remove()
+            //            }
         }
     }
     
     func resetStreamMedicines() {
-        lastMedicineDocument = nil
         listenerMedicine?.remove()
     }
     
@@ -148,8 +190,8 @@ final class FireBaseStoreService: DataStore {
         let FBHistory = db.collection("History")
         var query: Query
         query = FBHistory
-                .whereField("medicineId", isEqualTo: medicineId)
-                .order(by: "modifiedAt")
+            .whereField("medicineId", isEqualTo: medicineId)
+            .order(by: "modifiedAt")
         let snapshot = try await query.getDocuments()
         let historyEntries = snapshot.documents.compactMap { document -> HistoryEntry? in
             try? document.data(as: HistoryEntry.self)

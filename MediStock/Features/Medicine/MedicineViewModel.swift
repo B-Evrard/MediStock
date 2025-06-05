@@ -31,19 +31,15 @@ final class MedicineViewModel: ObservableObject {
     @Published var isError: Bool = false
     @Published var errorMessage: String = ""
     
-    //private var onSave: ((MedicineViewData) -> Void)?
-    
     init(
         session: any AuthProviding,
         dataStoreService: DataStore = FireBaseStoreService(),
         medicine: MedicineViewData = MedicineViewData.init(),
-        onSave: ((MedicineViewData) -> Void)? = nil
     ) {
         self.session = session
         self.dataStoreService = dataStoreService
         self.medicine = medicine
         self.historyService = HistoryService()
-        //self.onSave = onSave
     }
     
     func initMedicine() async {

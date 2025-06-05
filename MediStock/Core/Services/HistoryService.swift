@@ -31,7 +31,7 @@ final class HistoryService {
         
         guard let newMedicine = newMedicine else {
             // DELETE medicine
-            let detail  = ""
+            let detail  = "\(oldMedicine.name) - Aisle : \(oldMedicine.aisle?.label ?? "") "
             
             let entry = HistoryEntry(
                 medicineId: oldMedicine.id ?? "",

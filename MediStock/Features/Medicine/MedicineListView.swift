@@ -13,6 +13,8 @@ struct MedicineListView: View {
     
     @StateObject var viewModel: MedicineListViewModel
     @State private var showMedicineView = false
+    @State private var medicineToDelete: MedicineViewData?
+    @State private var showDeleteAlert = false
     
     var body: some View {
         
@@ -26,14 +28,9 @@ struct MedicineListView: View {
             }
             .onAppear {
                 Task {
-//                    if (viewModel.medicines.isEmpty) {
-//                        await viewModel.fetchMedicines()
-//                    }
                     viewModel.startListening()
-                            
                 }
             }
-            
         }
     }
 }
@@ -48,7 +45,7 @@ extension MedicineListView {
                 .bold()
             Spacer()
             
-            NavigationLink(destination: MedicineView(viewModel: MedicineViewModel(session: session, medicine: MedicineViewData.init())))
+            NavigationLink(destination: MedicineView(viewModel: MedicineViewModel(session: session, medicine: MedicineViewData.init(aisle: viewModel.aisleSelected ))))
             {
                 Image(systemName: "plus")
                     .resizable()
@@ -73,30 +70,35 @@ extension MedicineListView {
                             )
                         )
                     ) {
-                    VStack {
-                        Text(medicine.name)
-                            .font(.headline)
-                            .foregroundColor(.black)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                        Spacer()
-                        Text("Stock : \(medicine.stock)")
-                            .font(.body)
-                            .foregroundColor(.black)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                        //.padding(.leading, 20)
+                        VStack {
+                            Text(medicine.name)
+                                .font(.headline)
+                                .foregroundColor(.black)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            Spacer()
+                            Text("Stock : \(medicine.stock)")
+                                .font(.body)
+                                .foregroundColor(.black)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            //.padding(.leading, 20)
+                        }
+                        .padding(.vertical,10)
+                        .padding(.horizontal)
+                        .background(Color("BackgroundElement"))
+                        .cornerRadius(20)
+                        
                     }
-                    .padding(.vertical,10)
-                    .padding(.horizontal)
-                    .background(Color("BackgroundElement"))
-                    .cornerRadius(20)
-                    .onAppear {
-//                        if medicine == viewModel.medicines.last {
-//                            Task {
-//                                await viewModel.fetchMedicines()
-//                            }
-//                        }
+                    .contextMenu {
+                        if medicine.stock==0 {
+                            Button(role: .destructive) {
+                                medicineToDelete = medicine
+                                showDeleteAlert = true
+                            } label: {
+                                Label("Delete", systemImage: "trash")
+                            }
+                        } 
                     }
-                    }
+                    
                 }
                 .listRowInsets(EdgeInsets())
                 .listRowBackground(Color("BackgroundColor"))
@@ -107,12 +109,26 @@ extension MedicineListView {
         .refreshable {
             await viewModel.refreshMedicines()
         }
+        .alert("Delete this medicine ?", isPresented: $showDeleteAlert, presenting: medicineToDelete) { medicine in
+            Button("Delete", role: .destructive) {
+                Task {
+                    await _ = viewModel.deleteMedicine(medicine: medicine)
+                    medicineToDelete = nil
+                }
+                
+            }
+            Button("Cancel", role: .cancel) {
+                medicineToDelete = nil
+            }
+        } message: { medicine in
+            Text("The medicine “\(medicine.name)” will be permanently deleted.")
+        }
         
-       
+        
     }
-     
+    
 }
 
 #Preview {
-    MedicineListView(viewModel: MedicineListViewModel())
+    MedicineListView(viewModel: MedicineListViewModel(session: FireBaseAuthService()))
 }

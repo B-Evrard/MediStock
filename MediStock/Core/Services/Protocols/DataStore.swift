@@ -14,13 +14,13 @@ protocol DataStore {
     func getAisle(id: String) async throws -> Aisle
     
     // MARK: Medicines
-    func streamMedicines(aisleId: String?) -> AsyncThrowingStream<[Medicine], Error>
-    func loadNextPageMedicine(aisleId: String?, completion: @escaping (Result<[Medicine], Error>) -> Void)
+    func streamMedicines(aisleId: String?) -> AsyncThrowingStream<MedicineUpdate, Error>
     func resetStreamMedicines()
     func getMedicine(id: String) async throws -> Medicine
     func medicineExistByNameAndAisle(name: String, aisleId: String) async throws -> Bool
     func addMedicine(_ medicine: Medicine) async throws -> Medicine
     func updateMedicine(_ medicine: Medicine) async throws
+    func deleteMedicine(id: String) async throws
     
     // MARK: History
     func fetchHistory(medicineId: String) async throws -> [HistoryEntry]

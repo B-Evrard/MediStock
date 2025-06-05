@@ -14,7 +14,6 @@ struct AisleListView: View {
                 VStack {
                     headerSection
                     aisleList
-                        //.safeAreaPadding(.bottom)
                 }
             }
             .onAppear {
@@ -53,7 +52,7 @@ extension AisleListView {
         ScrollView {
             LazyVStack {
                 ForEach(viewModel.aisles, id: \.self) { aisle in
-                    NavigationLink(destination: MedicineListView(viewModel: MedicineListViewModel(aisleSelected: aisle))) {
+                    NavigationLink(destination: MedicineListView(viewModel: MedicineListViewModel(session: session,aisleSelected: aisle))) {
                     HStack {
                         Text(aisle.label)
                             .font(.system(size: 20, weight: .bold, design: .rounded))
