@@ -7,14 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		53E0D8972C06084700DE1134 /* MediStockApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E0D8962C06084700DE1134 /* MediStockApp.swift */; };
-		53E0D89B2C06084900DE1134 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 53E0D89A2C06084900DE1134 /* Assets.xcassets */; };
 		53E0D89E2C06084900DE1134 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 53E0D89D2C06084900DE1134 /* Preview Assets.xcassets */; };
 		53E0D8A82C06084900DE1134 /* MediStockTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E0D8A72C06084900DE1134 /* MediStockTests.swift */; };
 		53E0D8B22C06084900DE1134 /* MediStockUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E0D8B12C06084900DE1134 /* MediStockUITests.swift */; };
 		53E0D8B42C06084900DE1134 /* MediStockUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E0D8B32C06084900DE1134 /* MediStockUITestsLaunchTests.swift */; };
-		53E0D8E22C065FFE00DE1134 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E0D8E12C065FFE00DE1134 /* AppDelegate.swift */; };
-		53E0D8E42C0660FD00DE1134 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 53E0D8E32C0660FD00DE1134 /* GoogleService-Info.plist */; };
 		FEDB6DB02DE363D2008E5701 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = FEDB6DAF2DE363D2008E5701 /* FirebaseAuth */; };
 		FEDB6DB22DE363D2008E5701 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = FEDB6DB12DE363D2008E5701 /* FirebaseFirestore */; };
 /* End PBXBuildFile section */
@@ -38,26 +34,20 @@
 
 /* Begin PBXFileReference section */
 		53E0D8932C06084700DE1134 /* MediStock.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MediStock.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		53E0D8962C06084700DE1134 /* MediStockApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediStockApp.swift; sourceTree = "<group>"; };
-		53E0D89A2C06084900DE1134 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		53E0D89D2C06084900DE1134 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		53E0D8A32C06084900DE1134 /* MediStockTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MediStockTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		53E0D8A72C06084900DE1134 /* MediStockTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediStockTests.swift; sourceTree = "<group>"; };
 		53E0D8AD2C06084900DE1134 /* MediStockUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MediStockUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		53E0D8B12C06084900DE1134 /* MediStockUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediStockUITests.swift; sourceTree = "<group>"; };
 		53E0D8B32C06084900DE1134 /* MediStockUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediStockUITestsLaunchTests.swift; sourceTree = "<group>"; };
-		53E0D8E12C065FFE00DE1134 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		53E0D8E32C0660FD00DE1134 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		FE1051912DDE1EFA004D2D6D /* Utilities */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Utilities; sourceTree = "<group>"; };
-		FE1051962DDE214F004D2D6D /* ViewData */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = ViewData; sourceTree = "<group>"; };
-		FEDB6D762DE35756008E5701 /* Errors */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Errors; sourceTree = "<group>"; };
-		FEFC1C6D2DDDC42D007D10D8 /* Views */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Views; sourceTree = "<group>"; };
+		FEB8F8262DF16E8500A8298B /* Features */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Features; sourceTree = "<group>"; };
+		FEB8F82E2DF170C700A8298B /* Ressources */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Ressources; sourceTree = "<group>"; };
+		FEB8F82F2DF170D600A8298B /* App */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = App; sourceTree = "<group>"; };
+		FEB8F8302DF1712600A8298B /* Core */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Core; sourceTree = "<group>"; };
 		FEFC1C6E2DDDC4AB007D10D8 /* ViewModels */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = ViewModels; sourceTree = "<group>"; };
-		FEFC1C6F2DDDC5F3007D10D8 /* Services */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Services; sourceTree = "<group>"; };
-		FEFC1C702DDDC60B007D10D8 /* Models */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Models; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -110,18 +100,12 @@
 		53E0D8952C06084700DE1134 /* MediStock */ = {
 			isa = PBXGroup;
 			children = (
-				FEDB6D762DE35756008E5701 /* Errors */,
-				53E0D8E32C0660FD00DE1134 /* GoogleService-Info.plist */,
-				53E0D8E12C065FFE00DE1134 /* AppDelegate.swift */,
-				53E0D8962C06084700DE1134 /* MediStockApp.swift */,
-				53E0D89A2C06084900DE1134 /* Assets.xcassets */,
-				FEFC1C702DDDC60B007D10D8 /* Models */,
+				FEB8F82F2DF170D600A8298B /* App */,
+				FEB8F8262DF16E8500A8298B /* Features */,
+				FEB8F82E2DF170C700A8298B /* Ressources */,
 				53E0D89C2C06084900DE1134 /* Preview Content */,
-				FEFC1C6F2DDDC5F3007D10D8 /* Services */,
-				FE1051912DDE1EFA004D2D6D /* Utilities */,
-				FE1051962DDE214F004D2D6D /* ViewData */,
+				FEB8F8302DF1712600A8298B /* Core */,
 				FEFC1C6E2DDDC4AB007D10D8 /* ViewModels */,
-				FEFC1C6D2DDDC42D007D10D8 /* Views */,
 			);
 			path = MediStock;
 			sourceTree = "<group>";
@@ -167,13 +151,11 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				FE1051912DDE1EFA004D2D6D /* Utilities */,
-				FE1051962DDE214F004D2D6D /* ViewData */,
-				FEDB6D762DE35756008E5701 /* Errors */,
-				FEFC1C6D2DDDC42D007D10D8 /* Views */,
+				FEB8F8262DF16E8500A8298B /* Features */,
+				FEB8F82E2DF170C700A8298B /* Ressources */,
+				FEB8F82F2DF170D600A8298B /* App */,
+				FEB8F8302DF1712600A8298B /* Core */,
 				FEFC1C6E2DDDC4AB007D10D8 /* ViewModels */,
-				FEFC1C6F2DDDC5F3007D10D8 /* Services */,
-				FEFC1C702DDDC60B007D10D8 /* Models */,
 			);
 			name = MediStock;
 			packageProductDependencies = (
@@ -272,8 +254,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				53E0D89E2C06084900DE1134 /* Preview Assets.xcassets in Resources */,
-				53E0D89B2C06084900DE1134 /* Assets.xcassets in Resources */,
-				53E0D8E42C0660FD00DE1134 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -298,8 +278,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				53E0D8E22C065FFE00DE1134 /* AppDelegate.swift in Sources */,
-				53E0D8972C06084700DE1134 /* MediStockApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
