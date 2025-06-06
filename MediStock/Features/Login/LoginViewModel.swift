@@ -11,30 +11,38 @@ import FirebaseAuth
 @MainActor
 final class LoginViewModel: ObservableObject {
     
+    // MARK: - Published
     @Published var email: String = ""
     @Published var password: String = ""
     @Published var confirmedPassword  = ""
     @Published var name  = ""
     @Published var message: String = ""
 
+    // MARK: - Public
+    
+    // MARK: - Private
+    private let session: SessionManager
     private let authService: any AuthProviding
     private let storeService: DataStore
     
-    init(authService: any AuthProviding , storeService: DataStore = FireBaseStoreService()) {
-        self.authService = authService
-        self.storeService = storeService
+    // MARK: - Init
+    init(session: SessionManager) {
+        self.session = session
+        self.authService = session.authService
+        self.storeService = session.storeService
     }
     
+    // MARK: - Public methods
     func signIn() async -> Bool{
         self.message = ""
         do {
             try Control.signIn(email: email, password: password)
             let id = try await authService.signIn(withEmail: email, password: password)
-            
-            guard id != nil else {
+            guard let id else {
                 message = AppMessages.genericError
                 return false
             }
+            await session.updateUser(userId: id)
             
         } catch let error as ControlError {
             message = error.message
@@ -70,8 +78,14 @@ final class LoginViewModel: ObservableObject {
                 return false
             }
             user.displayName = name
+            user.email = email
             try await storeService.addUser(user)
-            authService.updateUser(user: user)
+            guard let id = user.idAuth else {
+                message = AppMessages.genericError
+                return false
+            }
+            await session.updateUser(userId: id)
+            
             
         } catch let error as ControlError {
             message = error.message

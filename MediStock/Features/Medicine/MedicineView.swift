@@ -267,7 +267,7 @@ extension MedicineView {
 }
 
 #Preview {
-    let viewModel = MedicineViewModel( session: FireBaseAuthService(), medicine: MedicineViewData.init())
+    let viewModel = MedicineViewModel( session: SessionManager(), medicine: MedicineViewData.init())
     MedicineView(viewModel: viewModel)
     
 }

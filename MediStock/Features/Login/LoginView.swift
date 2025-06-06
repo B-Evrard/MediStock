@@ -81,7 +81,7 @@ struct LoginView: View {
 
 #Preview {
     
-    let viewModel = LoginViewModel(authService: FireBaseAuthService())
+    let viewModel = LoginViewModel(session: SessionManager())
     LoginView(viewModel: viewModel)
 }
 

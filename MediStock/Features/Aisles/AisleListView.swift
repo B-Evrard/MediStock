@@ -1,8 +1,9 @@
 import SwiftUI
 
 struct AisleListView: View {
-    @StateObject var viewModel = AisleListViewModel()
-    @EnvironmentObject var session: FireBaseAuthService
+    
+    @EnvironmentObject var session: SessionManager
+    @StateObject var viewModel: AisleListViewModel
     
     @State private var showMedicineView = false
     
@@ -80,6 +81,8 @@ extension AisleListView {
 
 struct AisleListView_Previews: PreviewProvider {
     static var previews: some View {
-        AisleListView()
+        let session = SessionManager()
+        let viewModel = AisleListViewModel(session: session)
+        AisleListView(viewModel: viewModel)
     }
 }

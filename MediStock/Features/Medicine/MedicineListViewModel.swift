@@ -9,27 +9,32 @@ import Foundation
 
 @MainActor
 final class MedicineListViewModel: ObservableObject {
-    private let dataStoreService: DataStore
-    private let historyService: HistoryService
-    private let session: any AuthProviding
-    let aisleSelected: AisleViewData?
     
+    // MARK: - Published
     @Published var medicines: [MedicineViewData] = []
     @Published var isError: Bool = false
     @Published var errorMessage: String = ""
     
+    // MARK: - Public
+    let aisleSelected: AisleViewData?
+    
+    // MARK: - Private
+    private let session: SessionManager
+    private let dataStoreService: DataStore
+    private let historyService: HistoryService
     private var isLoading: Bool = false
     private var hasStartedListening = false
-    
     private var streamTask: Task<Void, Never>?
     
-    init(session: any AuthProviding,dataStoreService: DataStore = FireBaseStoreService(), aisleSelected: AisleViewData? = nil) {
+    // MARK: - Init
+    init(session: SessionManager, aisleSelected: AisleViewData? = nil) {
         self.session = session
-        self.dataStoreService = dataStoreService
+        self.dataStoreService = session.storeService
         self.aisleSelected = aisleSelected
         self.historyService = HistoryService()
     }
     
+    // MARK: - Methods
     func startListening() {
         guard !hasStartedListening else { return }
         hasStartedListening = true

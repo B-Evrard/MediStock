@@ -10,14 +10,14 @@ import Foundation
 @MainActor
 final class UserViewModel: ObservableObject {
     
-    private let session: any AuthProviding
+    private let session: SessionManager
     private let storeService: DataStore
     
     
     @Published var user: UserInfoViewData?
     @Published var error: String = ""
     
-    init(session: any AuthProviding , storeService: DataStore = FireBaseStoreService()) {
+    init(session: SessionManager, storeService: DataStore = FireBaseStoreService()) {
         self.session = session
         self.storeService = storeService
         loadUser()

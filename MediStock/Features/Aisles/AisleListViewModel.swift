@@ -10,15 +10,23 @@ import Foundation
 @MainActor
 final class AisleListViewModel: ObservableObject {
     
-    private let dataStoreService: DataStore
-    
+    // MARK: - Published
     @Published var aisles: [AisleViewData] = []
     @Published var isError: Bool = false
     
-    init(dataStoreService: DataStore = FireBaseStoreService()) {
-        self.dataStoreService = dataStoreService
+    // MARK: - Public
+    
+    // MARK: - Private
+    private let session: SessionManager
+    private let dataStoreService: DataStore
+    
+    // MARK: - Init
+    init(session: SessionManager) {
+        self.session = session
+        self.dataStoreService = session.storeService
     }
     
+    // MARK: - Public methods
     func fetchAisles() async {
         do {
             let aislesData = try await dataStoreService.fetchAisles()

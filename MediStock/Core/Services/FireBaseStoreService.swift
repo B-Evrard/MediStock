@@ -85,7 +85,7 @@ final class FireBaseStoreService: DataStore {
             } else {
                 query = FBMedicines.order(by: "name")
             }
-            
+            resetStreamMedicines()
             self.listenerMedicine = query.addSnapshotListener { snapshot, error in
                 if let error {
                     continuation.finish(throwing: error)
@@ -96,25 +96,7 @@ final class FireBaseStoreService: DataStore {
                     continuation.yield(mediciceUpdates)
                     return
                 }
-                
-//                if isInitialSnapshot && snapshot.documentChanges.isEmpty {
-//                    isInitialSnapshot = false
-//                    let allMeds = snapshot.documents.compactMap { try? $0.data(as: Medicine.self) }
-//                    continuation.yield(.initial(allMeds))
-//                    return
-//                }
-//                snapshot.documentChanges.forEach { diff in
-//                    switch diff.type {
-//                    case .added:
-//                        break
-//                    case .modified:
-//                        break
-//                    case .removed:
-//                        break
-//                    @unknown default:
-//                        fatalError()ied:
-//                    }
-//                }
+
                 let added = snapshot.documentChanges
                     .filter { $0.type == .added }
                     .compactMap { try? $0.document.data(as: Medicine.self) }
@@ -137,46 +119,6 @@ final class FireBaseStoreService: DataStore {
             continuation.onTermination = { [weak self] _ in
                 self?.listenerMedicine?.remove()
             }
-            
-            
-            //            self.listenerMedicine = query.addSnapshotListener { snapshot, error in
-            //                if let error {
-            //                    continuation.finish(throwing: error)
-            //                    return
-            //                }
-            //
-            //                if isInitialSnapshot {
-            //                    isInitialSnapshot = false
-            //                    guard let documents = snapshot?.documents else {
-            //                        continuation.yield([])
-            //                        return
-            //                    }
-            //                    let medicines = documents.compactMap { try? $0.data(as: Medicine.self) }
-            //                    continuation.yield(medicines)
-            //                }
-            //                    let added = snapshot.documentChanges
-            //                        .filter { $0.type == .added }
-            //                        .compactMap { try? $0.document.data(as: Medicine.self) }
-            //
-            //                    let modified = snapshot.documentChanges
-            //                        .filter { $0.type == .modified }
-            //                        .compactMap { try? $0.document.data(as: Medicine.self) }
-            //
-            //                    let removedIds = snapshot.documentChanges
-            //                        .filter { $0.type == .removed }
-            //                        .map { $0.document.documentID }
-            //
-            //                    continuation.yield(.added(added))
-            //                    continuation.yield(.modified(modified))
-            //                    continuation.yield(.removed(removedIds))
-            //
-            //
-            //
-            //            }
-            //
-            //            continuation.onTermination = { [weak self] _ in
-            //                self?.listenerMedicine?.remove()
-            //            }
         }
     }
     

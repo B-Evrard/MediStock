@@ -10,7 +10,7 @@ import Foundation
 @MainActor
 final class MedicineViewModel: ObservableObject {
     
-    private let session: any AuthProviding
+    private let session: SessionManager
     private let dataStoreService: DataStore
     private let historyService: HistoryService
     
@@ -32,7 +32,7 @@ final class MedicineViewModel: ObservableObject {
     @Published var errorMessage: String = ""
     
     init(
-        session: any AuthProviding,
+        session: SessionManager,
         dataStoreService: DataStore = FireBaseStoreService(),
         medicine: MedicineViewData = MedicineViewData.init(),
     ) {

@@ -92,6 +92,6 @@ extension UserView {
 }
 
 #Preview {
-    let viewModel = UserViewModel(session: FireBaseAuthService())
+    let viewModel = UserViewModel(session: SessionManager())
     UserView(viewModel: viewModel)
 }

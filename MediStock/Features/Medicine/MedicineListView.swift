@@ -9,7 +9,7 @@ import SwiftUI
 
 struct MedicineListView: View {
     
-    @EnvironmentObject var session: FireBaseAuthService
+    @EnvironmentObject var session: SessionManager
     
     @StateObject var viewModel: MedicineListViewModel
     @State private var showMedicineView = false
@@ -130,5 +130,5 @@ extension MedicineListView {
 }
 
 #Preview {
-    MedicineListView(viewModel: MedicineListViewModel(session: FireBaseAuthService()))
+    MedicineListView(viewModel: MedicineListViewModel(session: SessionManager()))
 }

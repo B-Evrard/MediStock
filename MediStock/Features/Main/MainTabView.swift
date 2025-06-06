@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct MainTabView: View {
-    @EnvironmentObject var session: FireBaseAuthService
+    @EnvironmentObject var session: SessionManager
     
     init() {
         configureTabBar()
@@ -9,7 +9,7 @@ struct MainTabView: View {
     
     var body: some View {
         TabView {
-            AisleListView()
+            AisleListView(viewModel: AisleListViewModel(session: session))
                 .tabItem {
                     Image(systemName: "list.dash")
                     Text("Aisles")

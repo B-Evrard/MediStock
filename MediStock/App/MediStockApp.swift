@@ -12,14 +12,14 @@ import FirebaseCore
 struct MediStockApp: App {
     
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
-    @StateObject private var session = FireBaseAuthService()
+    @StateObject private var session = SessionManager()
     
     var body: some Scene {
         WindowGroup {
             if session.isConnected {
                 MainTabView()
             } else {
-                LoginView(viewModel: LoginViewModel(authService: session))
+                LoginView(viewModel: LoginViewModel(session: session))
             }
         }
         .environmentObject(session)

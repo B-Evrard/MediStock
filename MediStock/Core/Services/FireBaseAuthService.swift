@@ -11,47 +11,19 @@ import Combine
 
 class FireBaseAuthService: AuthProviding  {
     
-    
-    private let auth: Auth
-    private var handle: AuthStateDidChangeListenerHandle?
+    // MARK: - Public
     var userIdPublisher = PassthroughSubject<String?, Never>()
     
+    // MARK: - Private
+    private let auth: Auth
+    private var handle: AuthStateDidChangeListenerHandle?
+    
+    // MARK: - Init
     init(auth: Auth  = Auth.auth() ) {
         self.auth = auth
-        //listen()
     }
-    
-//    func updateUser(user: UserInfo?) {
-//        self.user = user
-//        self.isConnected = user != nil
-//    }
-//    
-//    func resetUser() {
-//        self.user = nil
-//        self.isConnected = false
-//    }
-    
-//    func listen() -> {
-//        handle = auth.addStateDidChangeListener { [weak self] (auth, user) in
-//            DispatchQueue.main.async {
-//                if let firebaseUser = user {
-//                    guard let self = self else { return }
-//                    //Task {
-//                        //do {
-//                            return firebaseUser.uid
-//                            //let userInfo = try await self.storeService.getUser(idAuth: userId)
-//                            //self.updateUser(user: userInfo)
-//                        //} catch {
-//                            //self.resetUser()
-//                        //}
-//                    //}
-//                } else {
-//                    //self?.resetUser()
-//                }
-//            }
-//        }
-//    }
-    
+
+    // MARK: - Methods
     func listen() {
         handle = Auth.auth().addStateDidChangeListener { [weak self] auth, user in
             self?.userIdPublisher.send(user?.uid)
@@ -71,12 +43,13 @@ class FireBaseAuthService: AuthProviding  {
     
     func signOut() async throws {
         try auth.signOut()
-//        await MainActor.run {
-//            resetUser()
-//        }
     }
     
-    func unbind() {
+    func isConnected()  -> Bool {
+        return auth.currentUser != nil
+    }
+    
+    func removeListener() {
         if let handle = handle {
             auth.removeStateDidChangeListener(handle)
         }

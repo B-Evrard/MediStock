@@ -57,6 +57,6 @@ struct SignUpView: View {
 
 #Preview {
     
-    let viewModel = LoginViewModel(authService: FireBaseAuthService())
+    let viewModel = LoginViewModel(session: SessionManager())
     SignUpView(viewModel: viewModel)
 }
