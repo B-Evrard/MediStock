@@ -7,9 +7,11 @@
 
 
 import FirebaseAuth
+import Combine
 
 protocol AuthProviding {
     
+    var userIdPublisher: PassthroughSubject<String?, Never> { get }
     //func updateUser(user: UserInfo?)
     //func resetUser()
     func listen ()
