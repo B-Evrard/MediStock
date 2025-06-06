@@ -69,12 +69,12 @@ class FireBaseAuthService: AuthProviding  {
         return user
     }
     
-//    func signOut() async throws {
-//        try auth.signOut()
+    func signOut() async throws {
+        try auth.signOut()
 //        await MainActor.run {
 //            resetUser()
 //        }
-//    }
+    }
     
     func unbind() {
         if let handle = handle {
