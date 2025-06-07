@@ -16,6 +16,8 @@ struct MedicineListView: View {
     @State private var medicineToDelete: MedicineViewData?
     @State private var showDeleteAlert = false
     
+    @State private var sortOption: SortOption = .none
+    
     var body: some View {
         
         NavigationStack {
@@ -38,24 +40,51 @@ struct MedicineListView: View {
 extension MedicineListView {
     
     private var headerSection: some View {
-        HStack {
-            Text("Medicines")
-                .foregroundColor(.white)
-                .font(.largeTitle)
-                .bold()
-            Spacer()
-            
-            NavigationLink(destination: MedicineView(viewModel: MedicineViewModel(session: session, medicine: MedicineViewData.init(aisle: viewModel.aisleSelected ))))
-            {
-                Image(systemName: "plus")
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
+        VStack {
+            HStack {
+                Text("Medicines")
                     .foregroundColor(.white)
-                    .clipShape(Circle())
-                    .frame(width: 20, height: 20)
+                    .font(.largeTitle)
+                    .bold()
+                Spacer()
+                
+                NavigationLink(destination: MedicineView(viewModel: MedicineViewModel(session: session, medicine: MedicineViewData.init(aisle: viewModel.aisleSelected ))))
+                {
+                    Image(systemName: "plus")
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .foregroundColor(.white)
+                        .clipShape(Circle())
+                        .frame(width: 20, height: 20)
+                }
             }
+            HStack {
+                Image(systemName: "magnifyingglass")
+                    .font(.callout)
+                    //.foregroundColor(.white)
+                    .padding(.leading, 8)
+                    .accessibilityHidden(true)
+                TextField("Filter by name", text: $viewModel.search)
+                    .font(.callout)
+                    .autocorrectionDisabled(true)
+                    .textFieldStyle(PlainTextFieldStyle())
+                    .padding(.leading, 10)
+                
+                Spacer()
+                
+                Picker("Sort by", selection: $sortOption) {
+                    Text("None").tag(SortOption.none)
+                    Text("Name").tag(SortOption.name)
+                    Text("Stock").tag(SortOption.stock)
+                }
+                .pickerStyle(MenuPickerStyle())
+            }
+            .background(Color("BackgroundElement"))
+            .cornerRadius(20)
+            
         }
         .padding(.horizontal)
+        .padding(.vertical, 8)
     }
     
     private var medicineList: some View {

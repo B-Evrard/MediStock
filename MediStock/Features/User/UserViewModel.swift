@@ -10,19 +10,24 @@ import Foundation
 @MainActor
 final class UserViewModel: ObservableObject {
     
-    private let session: SessionManager
-    private let storeService: DataStore
-    
-    
+    // MARK: - Published
     @Published var user: UserInfoViewData?
     @Published var error: String = ""
     
-    init(session: SessionManager, storeService: DataStore = FireBaseStoreService()) {
+    // MARK: - Public
+    
+    // MARK: - Private
+    private let session: SessionManager
+    private let storeService: DataStore
+    
+    // MARK: - Init
+    init(session: SessionManager) {
         self.session = session
-        self.storeService = storeService
+        self.storeService = session.storeService
         loadUser()
     }
     
+    // MARK: - Public methods
     func logout() async {
         self.error = ""
         do {
@@ -32,6 +37,8 @@ final class UserViewModel: ObservableObject {
         }
     }
     
+    
+    // MARK: - Private Methods
     private func loadUser() {
         guard let user = session.user else { return }
         self.user = UserInfoMapper.mapToViewData(user)

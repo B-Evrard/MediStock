@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 @MainActor
 final class MedicineListViewModel: ObservableObject {
@@ -14,6 +15,7 @@ final class MedicineListViewModel: ObservableObject {
     @Published var medicines: [MedicineViewData] = []
     @Published var isError: Bool = false
     @Published var errorMessage: String = ""
+    @Published var search: String = ""
     
     // MARK: - Public
     let aisleSelected: AisleViewData?
@@ -25,6 +27,8 @@ final class MedicineListViewModel: ObservableObject {
     private var isLoading: Bool = false
     private var hasStartedListening = false
     private var streamTask: Task<Void, Never>?
+    private var isInitialLoad = true
+    private var cancellables = Set<AnyCancellable>()
     
     // MARK: - Init
     init(session: SessionManager, aisleSelected: AisleViewData? = nil) {
@@ -32,6 +36,21 @@ final class MedicineListViewModel: ObservableObject {
         self.dataStoreService = session.storeService
         self.aisleSelected = aisleSelected
         self.historyService = HistoryService()
+        
+        $search
+            .debounce(for: .seconds(0.8), scheduler: DispatchQueue.main)
+            .removeDuplicates()
+            .sink { [weak self] searchText in
+                guard let self = self else { return }
+                    if self.isInitialLoad {
+                        self.isInitialLoad = false
+                        return
+                    }
+                    Task {
+                        await self.refreshMedicines()
+                    }
+            }
+            .store(in: &cancellables)
     }
     
     // MARK: - Methods
@@ -42,7 +61,7 @@ final class MedicineListViewModel: ObservableObject {
         streamTask = Task { [weak self] in
             guard let self = self else { return }
             do {
-                for try await medicineUpdate in dataStoreService.streamMedicines(aisleId: aisleSelected?.id ?? nil) {
+                for try await medicineUpdate in dataStoreService.streamMedicines(aisleId: aisleSelected?.id ?? nil, filter: search) {
                     
                     if (!medicineUpdate.added.isEmpty)
                     {

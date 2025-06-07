@@ -70,7 +70,7 @@ final class FireBaseStoreService: DataStore {
         try await db.collection("Medicines").document(id).delete()
     }
     
-    func streamMedicines(aisleId: String?) -> AsyncThrowingStream<MedicineUpdate, Error> {
+    func streamMedicines(aisleId: String?, filter: String?) -> AsyncThrowingStream<MedicineUpdate, Error> {
         AsyncThrowingStream { [weak self] continuation in
             guard let self else {
                 continuation.finish(throwing: CancellationError())
@@ -85,6 +85,12 @@ final class FireBaseStoreService: DataStore {
             } else {
                 query = FBMedicines.order(by: "name")
             }
+            if let filter = filter, !filter.isEmpty  {
+                query = query.whereField("nameSearch", isGreaterThanOrEqualTo: filter.removingAccentsUppercased)
+                            .whereField("nameSearch", isLessThanOrEqualTo: "\(filter.removingAccentsUppercased)~")
+            }
+            
+            
             resetStreamMedicines()
             self.listenerMedicine = query.addSnapshotListener { snapshot, error in
                 if let error {

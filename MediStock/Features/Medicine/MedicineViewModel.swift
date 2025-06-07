@@ -10,12 +10,7 @@ import Foundation
 @MainActor
 final class MedicineViewModel: ObservableObject {
     
-    private let session: SessionManager
-    private let dataStoreService: DataStore
-    private let historyService: HistoryService
-    
-    private var medicineBeforeUpdate: MedicineViewData? = nil
-    
+    // MARK: - Published
     @Published var medicine : MedicineViewData
     @Published var aisles: [AisleViewData] = []
     @Published var searchText: String = "" {
@@ -24,24 +19,31 @@ final class MedicineViewModel: ObservableObject {
         }
     }
     @Published var filteredAisles: [AisleViewData] = []
-    
     @Published var showAddAisleSheet = false
     @Published var newAisle = AisleViewData.init(id: nil, name: "")
-    
     @Published var isError: Bool = false
     @Published var errorMessage: String = ""
     
+    // MARK: - Public
+    
+    // MARK: - Private
+    private let session: SessionManager
+    private let dataStoreService: DataStore
+    private let historyService: HistoryService
+    private var medicineBeforeUpdate: MedicineViewData? = nil
+
+    // MARK: - Init
     init(
         session: SessionManager,
-        dataStoreService: DataStore = FireBaseStoreService(),
-        medicine: MedicineViewData = MedicineViewData.init(),
+        medicine: MedicineViewData = MedicineViewData.init()
     ) {
         self.session = session
-        self.dataStoreService = dataStoreService
+        self.dataStoreService = session.storeService
         self.medicine = medicine
         self.historyService = HistoryService()
     }
     
+    // MARK: - Public methods
     func initMedicine() async {
         await fetchAisles()
         guard let medicineId = medicine.id else {
@@ -66,16 +68,6 @@ final class MedicineViewModel: ObservableObject {
            return false
         }
         return aisleSelected.id == aisle.id
-    }
-    
-    private func fetchAisles() async {
-        do {
-            let aislesData = try await dataStoreService.fetchAisles()
-            self.aisles = aislesData.map(AisleMapper.mapToViewData)
-            
-        } catch {
-            self.isError = true
-        }
     }
     
     func updateFilteredAisles() {
@@ -141,6 +133,17 @@ final class MedicineViewModel: ObservableObject {
             self.isError = true
             self.errorMessage = AppMessages.genericError
             return false
+        }
+    }
+        
+    // MARK: - Private Methods
+    private func fetchAisles() async {
+        do {
+            let aislesData = try await dataStoreService.fetchAisles()
+            self.aisles = aislesData.map(AisleMapper.mapToViewData)
+            
+        } catch {
+            self.isError = true
         }
     }
     

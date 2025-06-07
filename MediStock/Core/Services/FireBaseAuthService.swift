@@ -25,7 +25,7 @@ class FireBaseAuthService: AuthProviding  {
 
     // MARK: - Methods
     func listen() {
-        handle = Auth.auth().addStateDidChangeListener { [weak self] auth, user in
+        handle = auth.addStateDidChangeListener { [weak self] auth, user in
             self?.userIdPublisher.send(user?.uid)
         }
     }

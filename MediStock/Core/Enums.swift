@@ -23,6 +23,14 @@ enum HistoryAction: String, CaseIterable {
     }
 }
 
+enum SortOption: String, CaseIterable, Identifiable {
+    case none
+    case name
+    case stock
+
+    var id: String { self.rawValue }
+}
+
 extension HistoryAction {
     static func from(_ rawValue: String) -> Self {
         Self(rawValue: rawValue) ?? .Unknown
