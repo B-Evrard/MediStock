@@ -109,6 +109,7 @@ final class MedicineListViewModel: ObservableObject {
     }
     
     func deleteMedicine(medicine: MedicineViewData) async -> Bool{
+        self.isError = false
         guard let user = session.user else {
             self.isError = true
             self.errorMessage = AppMessages.genericError

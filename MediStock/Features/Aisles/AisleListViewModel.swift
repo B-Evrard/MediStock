@@ -8,7 +8,7 @@
 import Foundation
 
 @MainActor
-final class AisleListViewModel: ObservableObject {
+class AisleListViewModel: ObservableObject {
     
     // MARK: - Published
     @Published var aisles: [AisleViewData] = []
@@ -31,7 +31,6 @@ final class AisleListViewModel: ObservableObject {
         do {
             let aislesData = try await dataStoreService.fetchAisles()
             self.aisles = aislesData.map(AisleMapper.mapToViewData)
-            
         } catch {
             self.isError = true
         }

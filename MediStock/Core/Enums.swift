@@ -30,6 +30,13 @@ enum SortOption: String, CaseIterable, Identifiable {
     var id: String { self.rawValue }
 }
 
+enum Action {
+    case load
+    case delete
+    case update
+}
+
+
 extension HistoryAction {
     static func from(_ rawValue: String) -> Self {
         Self(rawValue: rawValue) ?? .Unknown

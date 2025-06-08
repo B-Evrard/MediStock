@@ -21,9 +21,17 @@ struct MedicineListView: View {
         NavigationStack {
             ZStack {
                 Color("Background").ignoresSafeArea(edges: .top)
-                VStack {
-                    headerSection
-                    medicineList
+                if (viewModel.isError) {
+                    ErrorView(tryAgainVisible: true, onTryAgain: {
+                        Task {
+                            await viewModel.refreshMedicines()
+                        }})
+                } else  {
+                    
+                    VStack {
+                        headerSection
+                        medicineList
+                    }
                 }
             }
             .onAppear {

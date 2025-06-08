@@ -12,10 +12,19 @@ struct AisleListView: View {
         NavigationStack {
             ZStack {
                 Color("Background").ignoresSafeArea(edges: .top)
-                VStack {
-                    headerSection
-                    aisleList
+                if (viewModel.isError) {
+                    ErrorView(tryAgainVisible: true, onTryAgain: {
+                        Task {
+                            await viewModel.fetchAisles()
+                        }})
+                } else  {
+                    VStack {
+                        headerSection
+                        aisleList
+                    }
                 }
+                
+                
             }
             .onAppear {
                 Task {
@@ -36,7 +45,7 @@ extension AisleListView {
                 .bold()
             Spacer()
             
-                NavigationLink(destination: MedicineView(viewModel: MedicineViewModel(session: session, medicine: MedicineViewData.init())))
+            NavigationLink(destination: MedicineView(viewModel: MedicineViewModel(session: session, medicine: MedicineViewData.init())))
             {
                 Image(systemName: "plus")
                     .resizable()
@@ -54,17 +63,17 @@ extension AisleListView {
             LazyVStack {
                 ForEach(viewModel.aisles, id: \.self) { aisle in
                     NavigationLink(destination: MedicineListView(viewModel: MedicineListViewModel(session: session,aisleSelected: aisle))) {
-                    HStack {
-                        Text(aisle.label)
-                            .font(.system(size: 20, weight: .bold, design: .rounded))
-                            .foregroundColor(.black)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                        //.padding(.leading, 20)
-                    }
-                    .padding(.vertical,20)
-                    .padding(.horizontal)
-                    .background(Color("BackgroundElement"))
-                    .cornerRadius(20)
+                        HStack {
+                            Text(aisle.label)
+                                .font(.system(size: 20, weight: .bold, design: .rounded))
+                                .foregroundColor(.black)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            
+                        }
+                        .padding(.vertical,20)
+                        .padding(.horizontal)
+                        .background(Color("BackgroundElement"))
+                        .cornerRadius(20)
                     }
                 }
                 .listRowInsets(EdgeInsets())
@@ -74,15 +83,24 @@ extension AisleListView {
             .padding(.horizontal)
         }
         
-       
-    }
         
+    }
+    
+}
+
+
+class MockAisleListViewModel: AisleListViewModel {
+    override init(session: SessionManager) {
+        super.init(session: session)
+        self.isError = true
+    }
 }
 
 struct AisleListView_Previews: PreviewProvider {
     static var previews: some View {
         let session = SessionManager()
-        let viewModel = AisleListViewModel(session: session)
+        let viewModel = MockAisleListViewModel(session: session)
+    
         AisleListView(viewModel: viewModel)
     }
 }

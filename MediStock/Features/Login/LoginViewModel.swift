@@ -61,11 +61,8 @@ final class LoginViewModel: ObservableObject {
                 message = AppMessages.genericError
                 return false
             }
-           
         }
-        
         return true
-        
     }
     
     func signUp() async -> Bool {
@@ -85,7 +82,6 @@ final class LoginViewModel: ObservableObject {
                 return false
             }
             await session.updateUser(userId: id)
-            
             
         } catch let error as ControlError {
             message = error.message

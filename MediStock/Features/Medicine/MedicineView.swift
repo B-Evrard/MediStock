@@ -219,9 +219,10 @@ extension MedicineView {
                                         Text(history.ligne1)
                                             .font(.caption)
                                             .fontWeight(.bold)
-                                        
+                                            .foregroundColor(Color(.black))
                                         Text(history.details)
                                             .font(.caption2)
+                                            .foregroundColor(Color(.black))
                                               
                                     }
                                 }
