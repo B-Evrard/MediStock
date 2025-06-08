@@ -24,7 +24,6 @@ enum HistoryAction: String, CaseIterable {
 }
 
 enum SortOption: String, CaseIterable, Identifiable {
-    case none
     case name
     case stock
 

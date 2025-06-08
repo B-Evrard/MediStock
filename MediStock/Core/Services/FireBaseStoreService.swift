@@ -70,7 +70,7 @@ final class FireBaseStoreService: DataStore {
         try await db.collection("Medicines").document(id).delete()
     }
     
-    func streamMedicines(aisleId: String?, filter: String?) -> AsyncThrowingStream<MedicineUpdate, Error> {
+    func streamMedicines(aisleId: String?, filter: String?, sortOption: SortOption?) -> AsyncThrowingStream<MedicineUpdate, Error> {
         AsyncThrowingStream { [weak self] continuation in
             guard let self else {
                 continuation.finish(throwing: CancellationError())
@@ -81,13 +81,23 @@ final class FireBaseStoreService: DataStore {
             var query: Query
             
             if let aisleId {
-                query = FBMedicines.whereField("aisleId", isEqualTo: aisleId).order(by: "name")
+                query = FBMedicines.whereField("aisleId", isEqualTo: aisleId)
             } else {
-                query = FBMedicines.order(by: "name")
+                query = FBMedicines
             }
             if let filter = filter, !filter.isEmpty  {
                 query = query.whereField("nameSearch", isGreaterThanOrEqualTo: filter.removingAccentsUppercased)
                             .whereField("nameSearch", isLessThanOrEqualTo: "\(filter.removingAccentsUppercased)~")
+            }
+            if let sortOption = sortOption {
+                switch sortOption {
+                case .name:
+                    query = query.order(by: "name")
+                case .stock:
+                    query = query.order(by: "stock")
+                }
+            } else {
+                query = query.order(by: "name")
             }
             
             

@@ -16,8 +16,6 @@ struct MedicineListView: View {
     @State private var medicineToDelete: MedicineViewData?
     @State private var showDeleteAlert = false
     
-    @State private var sortOption: SortOption = .none
-    
     var body: some View {
         
         NavigationStack {
@@ -61,7 +59,6 @@ extension MedicineListView {
             HStack {
                 Image(systemName: "magnifyingglass")
                     .font(.callout)
-                    //.foregroundColor(.white)
                     .padding(.leading, 8)
                     .accessibilityHidden(true)
                 TextField("Filter by name", text: $viewModel.search)
@@ -72,12 +69,16 @@ extension MedicineListView {
                 
                 Spacer()
                 
-                Picker("Sort by", selection: $sortOption) {
-                    Text("None").tag(SortOption.none)
+                Picker("Sort by", selection: $viewModel.sortOption) {
                     Text("Name").tag(SortOption.name)
                     Text("Stock").tag(SortOption.stock)
                 }
                 .pickerStyle(MenuPickerStyle())
+                .onChange(of: viewModel.sortOption) {
+                    Task {
+                        await viewModel.refreshMedicines()
+                    }
+                }
             }
             .background(Color("BackgroundElement"))
             .cornerRadius(20)

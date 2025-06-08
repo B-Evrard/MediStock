@@ -16,6 +16,7 @@ final class MedicineListViewModel: ObservableObject {
     @Published var isError: Bool = false
     @Published var errorMessage: String = ""
     @Published var search: String = ""
+    @Published var sortOption: SortOption = .name
     
     // MARK: - Public
     let aisleSelected: AisleViewData?
@@ -61,7 +62,7 @@ final class MedicineListViewModel: ObservableObject {
         streamTask = Task { [weak self] in
             guard let self = self else { return }
             do {
-                for try await medicineUpdate in dataStoreService.streamMedicines(aisleId: aisleSelected?.id ?? nil, filter: search) {
+                for try await medicineUpdate in dataStoreService.streamMedicines(aisleId: aisleSelected?.id ?? nil, filter: search, sortOption: sortOption) {
                     
                     if (!medicineUpdate.added.isEmpty)
                     {
@@ -84,7 +85,12 @@ final class MedicineListViewModel: ObservableObject {
                         print ("--------> removed")
                     }
                     /// On retrie la liste car en cas d'ajout detecter par le addSnapshotListener la liste n'est plus triée
-                    medicines.sort { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
+                    switch sortOption {
+                    case .name:
+                        medicines.sort { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
+                    case .stock:
+                        medicines.sort { $0.stock < $1.stock}
+                    }
                     self.isError = false
                 }
             } catch {

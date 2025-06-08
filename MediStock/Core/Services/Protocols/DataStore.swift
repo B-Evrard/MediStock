@@ -14,7 +14,7 @@ protocol DataStore {
     func getAisle(id: String) async throws -> Aisle
     
     // MARK: Medicines
-    func streamMedicines(aisleId: String?, filter: String?) -> AsyncThrowingStream<MedicineUpdate, Error>
+    func streamMedicines(aisleId: String?, filter: String?, sortOption: SortOption?) -> AsyncThrowingStream<MedicineUpdate, Error>
     func resetStreamMedicines()
     func getMedicine(id: String) async throws -> Medicine
     func medicineExistByNameAndAisle(name: String, aisleId: String) async throws -> Bool
