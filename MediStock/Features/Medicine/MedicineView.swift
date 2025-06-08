@@ -135,14 +135,14 @@ extension MedicineView {
                         .foregroundColor(Color(.black))
                     
                     HStack {
-                        TextField("", text: $viewModel.searchText,
+                        TextField("", text: $viewModel.searchAisle,
                                   prompt: Text("Choose an aisle...")
                             .foregroundColor(.gray))
                         .font(.body)
                         .foregroundColor(Color("ColorFont"))
                         .autocorrectionDisabled()
                         Spacer()
-                        if (!viewModel.searchText.isEmpty && !viewModel.aisleExist()) {
+                        if (!viewModel.searchAisle.isEmpty && !viewModel.aisleExist()) {
                             Button(action: {
                                 Task {
                                     await viewModel.AddAisle()
@@ -167,7 +167,7 @@ extension MedicineView {
     
     private var listAisleSection: some View {
         Group {
-            if !viewModel.filteredAisles.isEmpty && !viewModel.searchText.isEmpty {
+            if !viewModel.filteredAisles.isEmpty && !viewModel.searchAisle.isEmpty {
                 GeometryReader { geo in
                     VStack(alignment: .leading, spacing: 4) {
                         ScrollView {
@@ -175,7 +175,7 @@ extension MedicineView {
                                 ForEach(viewModel.filteredAisles) { aisle in
                                     Button(action: {
                                         viewModel.medicine.aisle = aisle
-                                        viewModel.searchText = ""
+                                        viewModel.searchAisle = ""
                                         viewModel.filteredAisles = []
                                     }) {
                                         Text(aisle.label)

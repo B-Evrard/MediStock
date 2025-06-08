@@ -24,5 +24,4 @@ struct AisleMapper {
             sortKey: viewData.name.normalizedSortKey
         )
     }
-    
 }

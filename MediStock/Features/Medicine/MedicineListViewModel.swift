@@ -67,7 +67,6 @@ final class MedicineListViewModel: ObservableObject {
                     if (!medicineUpdate.added.isEmpty)
                     {
                         self.medicines.append(contentsOf: medicineUpdate.added.map(MedicineMapper.mapToListViewData))
-                        print ("--------> added")
                     }
                     
                     if (!medicineUpdate.modified.isEmpty) {
@@ -77,12 +76,10 @@ final class MedicineListViewModel: ObservableObject {
                                 self.medicines[index] = newMedViewData
                             }
                         }
-                        print ("--------> modified")
                     }
                     
                     if (!medicineUpdate.removedIds.isEmpty) {
                         self.medicines.removeAll { medicineUpdate.removedIds.contains($0.id ?? "") }
-                        print ("--------> removed")
                     }
                     /// On retrie la liste car en cas d'ajout detecter par le addSnapshotListener la liste n'est plus triée
                     switch sortOption {

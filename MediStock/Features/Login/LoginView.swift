@@ -8,7 +8,6 @@ struct LoginView: View {
     var body: some View {
         ZStack {
             Color("Background").ignoresSafeArea()
-            
             VStack {
                 Image("Logo")
                     .resizable()
@@ -26,7 +25,6 @@ struct LoginView: View {
                 } else {
                     SignUpView(viewModel: viewModel)
                 }
-                
                 
                 Button(action: {
                     Task {
@@ -54,7 +52,6 @@ struct LoginView: View {
                 }
                 .padding(.vertical, 30)
                 
-                
                 Button(action: {
                     isSignUp.toggle()
                 }) {
@@ -73,15 +70,12 @@ struct LoginView: View {
                 Spacer()
             }
             .padding(.horizontal, 30)
-            
         }
     }
-    
 }
 
 #Preview {
-    
-    let viewModel = LoginViewModel(session: SessionManager())
+     let viewModel = LoginViewModel(session: SessionManager())
     LoginView(viewModel: viewModel)
 }
 

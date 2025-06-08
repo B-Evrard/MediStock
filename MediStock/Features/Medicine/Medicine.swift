@@ -16,10 +16,4 @@ struct Medicine: Codable {
         self.nameSearch = name.removingAccentsUppercased
     }
 
-//    static func == (lhs: Medicine, rhs: Medicine) -> Bool {
-//        return lhs.id == rhs.id &&
-//               lhs.name == rhs.name &&
-//               lhs.stock == rhs.stock &&
-//               lhs.aisle == rhs.aisle
-//    }
 }

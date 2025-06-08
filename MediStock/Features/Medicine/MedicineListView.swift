@@ -10,7 +10,6 @@ import SwiftUI
 struct MedicineListView: View {
     
     @EnvironmentObject var session: SessionManager
-    
     @StateObject var viewModel: MedicineListViewModel
     @State private var showMedicineView = false
     @State private var medicineToDelete: MedicineViewData?
@@ -161,10 +160,7 @@ extension MedicineListView {
         } message: { medicine in
             Text("The medicine “\(medicine.name)” will be permanently deleted.")
         }
-        
-        
     }
-    
 }
 
 #Preview {

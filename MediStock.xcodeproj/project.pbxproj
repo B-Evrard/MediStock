@@ -47,7 +47,6 @@
 		FEB8F82E2DF170C700A8298B /* Ressources */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Ressources; sourceTree = "<group>"; };
 		FEB8F82F2DF170D600A8298B /* App */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = App; sourceTree = "<group>"; };
 		FEB8F8302DF1712600A8298B /* Core */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Core; sourceTree = "<group>"; };
-		FEFC1C6E2DDDC4AB007D10D8 /* ViewModels */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = ViewModels; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,7 +104,6 @@
 				FEB8F82E2DF170C700A8298B /* Ressources */,
 				53E0D89C2C06084900DE1134 /* Preview Content */,
 				FEB8F8302DF1712600A8298B /* Core */,
-				FEFC1C6E2DDDC4AB007D10D8 /* ViewModels */,
 			);
 			path = MediStock;
 			sourceTree = "<group>";
@@ -155,7 +153,6 @@
 				FEB8F82E2DF170C700A8298B /* Ressources */,
 				FEB8F82F2DF170D600A8298B /* App */,
 				FEB8F8302DF1712600A8298B /* Core */,
-				FEFC1C6E2DDDC4AB007D10D8 /* ViewModels */,
 			);
 			name = MediStock;
 			packageProductDependencies = (

@@ -16,8 +16,7 @@ enum ControlError: Error {
     case nameEmpty(message: String = AppMessages.nameEmpty)
     case genericError(message: String = AppMessages.genericError)
     case emptyField(message: String = AppMessages.emptyField)
-    
-    
+
     var message: String {
         switch self {
         case .mailEmpty(let message),
@@ -29,7 +28,6 @@ enum ControlError: Error {
                 .invalidPassword(message: let message),
                 .emptyField(message: let message):
             return message
-            
         }
     }
     

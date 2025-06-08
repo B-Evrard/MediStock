@@ -5,10 +5,7 @@ struct AisleListView: View {
     @EnvironmentObject var session: SessionManager
     @StateObject var viewModel: AisleListViewModel
     
-    @State private var showMedicineView = false
-    
     var body: some View {
-        
         NavigationStack {
             ZStack {
                 Color("Background").ignoresSafeArea(edges: .top)
@@ -23,8 +20,6 @@ struct AisleListView: View {
                         aisleList
                     }
                 }
-                
-                
             }
             .onAppear {
                 Task {
@@ -82,10 +77,7 @@ extension AisleListView {
             }
             .padding(.horizontal)
         }
-        
-        
     }
-    
 }
 
 

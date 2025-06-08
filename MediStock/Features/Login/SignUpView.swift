@@ -10,7 +10,7 @@ import SwiftUI
 struct SignUpView: View {
     @ObservedObject var viewModel: LoginViewModel
     @State private var showInfo = false
-    
+
     var body: some View {
         VStack {
             TextField("Email", text: $viewModel.email)
@@ -56,7 +56,6 @@ struct SignUpView: View {
 }
 
 #Preview {
-    
     let viewModel = LoginViewModel(session: SessionManager())
     SignUpView(viewModel: viewModel)
 }

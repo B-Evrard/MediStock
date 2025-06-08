@@ -100,7 +100,6 @@ final class FireBaseStoreService: DataStore {
                 query = query.order(by: "name")
             }
             
-            
             resetStreamMedicines()
             self.listenerMedicine = query.addSnapshotListener { snapshot, error in
                 if let error {
@@ -164,7 +163,6 @@ final class FireBaseStoreService: DataStore {
     
     
     // MARK: User
-    
     func addUser(_ user: UserInfo) async throws {
         _ = try db.collection("Users").addDocument(from: user)
     }
@@ -178,8 +176,4 @@ final class FireBaseStoreService: DataStore {
         }
         return user
     }
-    
-    
-    
-    
 }

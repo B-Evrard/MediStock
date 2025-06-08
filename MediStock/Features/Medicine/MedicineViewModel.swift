@@ -13,7 +13,7 @@ final class MedicineViewModel: ObservableObject {
     // MARK: - Published
     @Published var medicine : MedicineViewData
     @Published var aisles: [AisleViewData] = []
-    @Published var searchText: String = "" {
+    @Published var searchAisle: String = "" {
         didSet {
             updateFilteredAisles()
         }
@@ -71,7 +71,7 @@ final class MedicineViewModel: ObservableObject {
     }
     
     func updateFilteredAisles() {
-        let lowercased = searchText.lowercased()
+        let lowercased = searchAisle.lowercased()
         filteredAisles = aisles.filter {
             $0.name.lowercased().contains(lowercased)
         }
@@ -80,10 +80,10 @@ final class MedicineViewModel: ObservableObject {
     func AddAisle() async {
         self.isError = false
         do {
-            let newAisle = Aisle(name: self.searchText, nameSearch: self.searchText.removingAccentsUppercased, sortKey: self.searchText.normalizedSortKey)
+            let newAisle = Aisle(name: self.searchAisle, nameSearch: self.searchAisle.removingAccentsUppercased, sortKey: self.searchAisle.normalizedSortKey)
             let aisle = try await dataStoreService.addAisle(newAisle)
             self.medicine.aisle = AisleMapper.mapToViewData(aisle)
-            self.searchText = ""
+            self.searchAisle = ""
             await self.fetchAisles()
         } catch {
             self.isError = true
@@ -92,7 +92,7 @@ final class MedicineViewModel: ObservableObject {
     }
     
     func aisleExist() -> Bool {
-        return aisles.contains(where: { $0.name.uppercased() == self.searchText.uppercased() })
+        return aisles.contains(where: { $0.name.uppercased() == self.searchAisle.uppercased() })
     }
     
     func validate() async -> Bool {
@@ -141,8 +141,7 @@ final class MedicineViewModel: ObservableObject {
         do {
             let aislesData = try await dataStoreService.fetchAisles()
             self.aisles = aislesData.map(AisleMapper.mapToViewData)
-            
-        } catch {
+         } catch {
             self.isError = true
         }
     }

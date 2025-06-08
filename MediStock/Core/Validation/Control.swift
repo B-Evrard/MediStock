@@ -10,8 +10,7 @@ import UIKit
 
 /// Controls the input of the different views of the application
 public struct Control  {
-    
-    
+
     static func signIn(email: String, password: String) throws (ControlError) {
         try validateEmail(email)
         guard !password.isEmpty else {

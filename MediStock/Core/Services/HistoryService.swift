@@ -76,5 +76,4 @@ final class HistoryService {
         }
         return nil
     }
-    
 }

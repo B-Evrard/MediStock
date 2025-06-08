@@ -13,14 +13,21 @@ struct UserView: View {
     var body: some View {
         ZStack {
             Color("Background").ignoresSafeArea(edges: .top)
-            VStack(alignment: .leading) {
+            if (viewModel.isError) {
+                ErrorView(tryAgainVisible: true, onTryAgain: {
+                    Task {
+                        await viewModel.logout()
+                    }})
+            } else  {
                 
-                headerSection
-                userInfoSection
-                Spacer()
-
+                VStack(alignment: .leading) {
+                    headerSection
+                    userInfoSection
+                    Spacer()
+                    
+                }
+                .padding()
             }
-            .padding()
         }
         
     }
@@ -38,8 +45,7 @@ extension UserView {
                 Task {
                     await viewModel.logout()
                 }
-                
-            }) {
+             }) {
                 Image(systemName: "person.slash")
                     .resizable()
                     .aspectRatio(contentMode: .fill)
@@ -85,9 +91,7 @@ extension UserView {
             .padding(.vertical,10)
             .accessibilityElement(children: .ignore)
             .accessibilityLabel("Email : \(viewModel.user?.email ?? "")")
-            
         }
-        
     }
 }
 

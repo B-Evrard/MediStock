@@ -30,7 +30,7 @@ final class SessionManager: ObservableObject {
         self.storeService = storeService
         self.authService = authService
         self.isConnected = authService.isConnected()
-        // observeAppLifecycle()
+        observeAppLifecycle()
         observeAuthChanges()
     }
     
@@ -63,7 +63,6 @@ final class SessionManager: ObservableObject {
     }
     
     func stopListeners() {
-        print("----------->StopListeners")
         authService.removeListener()
     }
     

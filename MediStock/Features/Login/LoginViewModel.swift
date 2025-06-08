@@ -57,7 +57,6 @@ final class LoginViewModel: ObservableObject {
                 }
                 return false
             } else {
-                print (error.localizedDescription)
                 message = AppMessages.genericError
                 return false
             }

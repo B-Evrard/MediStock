@@ -12,7 +12,7 @@ final class UserViewModel: ObservableObject {
     
     // MARK: - Published
     @Published var user: UserInfoViewData?
-    @Published var error: String = ""
+    @Published var isError: Bool = false
     
     // MARK: - Public
     
@@ -29,18 +29,21 @@ final class UserViewModel: ObservableObject {
     
     // MARK: - Public methods
     func logout() async {
-        self.error = ""
+        self.isError = false
         do {
             try await session.signOut()
         } catch {
-           self.error = AppMessages.genericError
+            self.isError = true
         }
     }
     
     
     // MARK: - Private Methods
     private func loadUser() {
-        guard let user = session.user else { return }
+        guard let user = session.user else {
+            isError = true
+            return
+        }
         self.user = UserInfoMapper.mapToViewData(user)
     }
 }
