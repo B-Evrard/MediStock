@@ -13,6 +13,7 @@ class AisleListViewModel: ObservableObject {
     // MARK: - Published
     @Published var aisles: [AisleViewData] = []
     @Published var isError: Bool = false
+    @Published var isLoading = false
     
     // MARK: - Public
     
@@ -28,12 +29,14 @@ class AisleListViewModel: ObservableObject {
     
     // MARK: - Public methods
     func fetchAisles() async {
+        self.isLoading = true
         do {
             let aislesData = try await dataStoreService.fetchAisles()
             self.aisles = aislesData.map(AisleMapper.mapToViewData)
         } catch {
             self.isError = true
         }
+        self.isLoading = false
     }
     
 }

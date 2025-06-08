@@ -29,7 +29,13 @@ struct MedicineListView: View {
                     
                     VStack {
                         headerSection
-                        medicineList
+                        if viewModel.isLoading {
+                            Spacer()
+                            ProgressViewLoading()
+                            Spacer()
+                        } else {
+                            medicineList
+                        }
                     }
                 }
             }

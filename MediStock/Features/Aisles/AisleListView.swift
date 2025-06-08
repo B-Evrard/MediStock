@@ -9,15 +9,21 @@ struct AisleListView: View {
         NavigationStack {
             ZStack {
                 Color("Background").ignoresSafeArea(edges: .top)
-                if (viewModel.isError) {
-                    ErrorView(tryAgainVisible: true, onTryAgain: {
-                        Task {
-                            await viewModel.fetchAisles()
-                        }})
-                } else  {
-                    VStack {
-                        headerSection
-                        aisleList
+                if viewModel.isLoading {
+                    Spacer()
+                    ProgressViewLoading()
+                    Spacer()
+                } else {
+                    if (viewModel.isError) {
+                        ErrorView(tryAgainVisible: true, onTryAgain: {
+                            Task {
+                                await viewModel.fetchAisles()
+                            }})
+                    } else  {
+                        VStack {
+                            headerSection
+                            aisleList
+                        }
                     }
                 }
             }

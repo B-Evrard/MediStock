@@ -17,6 +17,7 @@ final class MedicineListViewModel: ObservableObject {
     @Published var errorMessage: String = ""
     @Published var search: String = ""
     @Published var sortOption: SortOption = .name
+    @Published var isLoading = false
     
     // MARK: - Public
     let aisleSelected: AisleViewData?
@@ -25,7 +26,6 @@ final class MedicineListViewModel: ObservableObject {
     private let session: SessionManager
     private let dataStoreService: DataStore
     private let historyService: HistoryService
-    private var isLoading: Bool = false
     private var hasStartedListening = false
     private var streamTask: Task<Void, Never>?
     private var isInitialLoad = true
@@ -62,6 +62,7 @@ final class MedicineListViewModel: ObservableObject {
         streamTask = Task { [weak self] in
             guard let self = self else { return }
             do {
+                self.isLoading = true
                 for try await medicineUpdate in dataStoreService.streamMedicines(aisleId: aisleSelected?.id ?? nil, filter: search, sortOption: sortOption) {
                     
                     if (!medicineUpdate.added.isEmpty)
@@ -89,9 +90,11 @@ final class MedicineListViewModel: ObservableObject {
                         medicines.sort { $0.stock < $1.stock}
                     }
                     self.isError = false
+                    self.isLoading = false
                 }
             } catch {
                 self.isError = true
+                self.isLoading = false
             }
         }
     }
