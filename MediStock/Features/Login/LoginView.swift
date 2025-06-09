@@ -49,6 +49,8 @@ struct LoginView: View {
                     .padding(.vertical, 15)
                     .background(Color("BackgroundRed"))
                     .cornerRadius(4)
+                    .accessibilityHint(isSignUp ? "Tap to sign up" : "Tap to sign in")
+            
                 }
                 .padding(.vertical, 30)
                 

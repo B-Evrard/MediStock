@@ -55,6 +55,8 @@ extension AisleListView {
                     .clipShape(Circle())
                     .frame(width: 20, height: 20)
             }
+            .accessibilityLabel("Add medicine")
+            .accessibilityHint("Tap to add medicine")
         }
         .padding(.horizontal)
     }
@@ -75,7 +77,9 @@ extension AisleListView {
                         .padding(.horizontal)
                         .background(Color("BackgroundElement"))
                         .cornerRadius(20)
+                        
                     }
+                    .accessibilityHint("Tap for the list of medicines in \(aisle.label)")
                 }
                 .listRowInsets(EdgeInsets())
                 .listRowBackground(Color("BackgroundColor"))

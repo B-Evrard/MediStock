@@ -68,6 +68,8 @@ extension MedicineListView {
                         .clipShape(Circle())
                         .frame(width: 20, height: 20)
                 }
+                .accessibilityLabel("Add medicine")
+                .accessibilityHint("Tap to add medicine")
             }
             HStack {
                 Image(systemName: "magnifyingglass")
@@ -131,6 +133,8 @@ extension MedicineListView {
                         .cornerRadius(20)
                         
                     }
+                    .accessibilityHint("Tap for more details \(medicine.stock==0 ? "Long press to delete" : "")")
+                    
                     .contextMenu {
                         if medicine.stock==0 {
                             Button(role: .destructive) {

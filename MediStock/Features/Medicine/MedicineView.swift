@@ -72,12 +72,12 @@ extension MedicineView {
                 .foregroundColor(.gray))
             .font(.body)
             .foregroundColor(Color("ColorFont"))
-            
         }
         .padding()
         .background(Color("BackgroundElement"))
         .cornerRadius(20)
-        .accessibilityLabel("Medicine name")
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("Medicine name \(viewModel.medicine.name)")
     }
     
     private var medicineStockSection: some View {
@@ -96,7 +96,7 @@ extension MedicineView {
                         .font(.title2)
                         .foregroundColor(.red)
                 }
-                
+                .accessibilityHint("Tap to decrease stock")
                 TextField(
                     "",
                     value: $viewModel.medicine.stock,
@@ -109,6 +109,7 @@ extension MedicineView {
                 .frame(width: 60)
                 .font(.body)
                 .foregroundColor(Color("ColorFont"))
+                .accessibilityLabel("Medicine stock \(viewModel.medicine.stock)")
                 
                 Button(action: {
                     viewModel.medicine.stock += 1
@@ -117,6 +118,7 @@ extension MedicineView {
                         .font(.title2)
                         .foregroundColor(.green)
                 }
+                .accessibilityHint("Tap to increase stock")
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }
