@@ -16,7 +16,7 @@ protocol AuthProviding {
     func isConnected() -> Bool
     func listen ()
     func signIn(withEmail email: String, password: String) async throws -> String?
-    func signUp(withEmail email: String, password: String) async throws -> UserInfo?
+    func signUp(withEmail email: String, password: String) async throws -> MediStockUser?
     func signOut() async throws
     func removeListener()
     

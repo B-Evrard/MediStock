@@ -42,7 +42,7 @@ final class LoginViewModel: ObservableObject {
                 message = AppMessages.genericError
                 return false
             }
-            await session.updateUser(userId: id)
+            try await session.updateUser(userId: id)
             
         } catch let error as ControlError {
             message = error.message
@@ -58,7 +58,9 @@ final class LoginViewModel: ObservableObject {
                 return false
             } else {
                 message = AppMessages.genericError
+                session.resetUser()
                 return false
+                
             }
         }
         return true
@@ -80,7 +82,7 @@ final class LoginViewModel: ObservableObject {
                 message = AppMessages.genericError
                 return false
             }
-            await session.updateUser(userId: id)
+            try await session.updateUser(userId: id)
             
         } catch let error as ControlError {
             message = error.message

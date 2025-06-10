@@ -11,6 +11,7 @@ final class FireBaseStoreService: DataStore {
     
     let db = Firestore.firestore()
     private var listenerMedicine: ListenerRegistration?
+    var medicineUpdates = MedicineUpdate()
     
     // MARK: Aisle
     func fetchAisles() async throws -> [Aisle] {
@@ -106,9 +107,9 @@ final class FireBaseStoreService: DataStore {
                     continuation.finish(throwing: error)
                     return
                 }
-                var mediciceUpdates = MedicineUpdate()
+                //var mediciceUpdates = MedicineUpdate()
                 guard let snapshot else {
-                    continuation.yield(mediciceUpdates)
+                    continuation.yield(self.medicineUpdates)
                     return
                 }
 
@@ -124,11 +125,11 @@ final class FireBaseStoreService: DataStore {
                     .filter { $0.type == .removed }
                     .map { $0.document.documentID }
                 
-                mediciceUpdates.added = added
-                mediciceUpdates.modified = modified
-                mediciceUpdates.removedIds = removedIds
+                self.medicineUpdates.added = added
+                self.medicineUpdates.modified = modified
+                self.medicineUpdates.removedIds = removedIds
                 
-                continuation.yield(mediciceUpdates)
+                continuation.yield(self.medicineUpdates)
             }
             
             continuation.onTermination = { [weak self] _ in
@@ -163,16 +164,16 @@ final class FireBaseStoreService: DataStore {
     
     
     // MARK: User
-    func addUser(_ user: UserInfo) async throws {
+    func addUser(_ user: MediStockUser) async throws {
         _ = try db.collection("Users").addDocument(from: user)
     }
     
-    func getUser(idAuth: String) async throws -> UserInfo? {
-        var user: UserInfo?
+    func getUser(idAuth: String) async throws -> MediStockUser? {
+        var user: MediStockUser?
         let FBUsers = db.collection("Users")
         let snapshot = try await FBUsers.whereField("idAuth", isEqualTo: idAuth).getDocuments()
         if (!snapshot.isEmpty) {
-            user = try snapshot.documents[0].data(as : UserInfo.self)
+            user = try snapshot.documents[0].data(as : MediStockUser.self)
         }
         return user
     }

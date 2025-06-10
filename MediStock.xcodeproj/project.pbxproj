@@ -8,9 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		53E0D89E2C06084900DE1134 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 53E0D89D2C06084900DE1134 /* Preview Assets.xcassets */; };
-		53E0D8A82C06084900DE1134 /* MediStockTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E0D8A72C06084900DE1134 /* MediStockTests.swift */; };
 		53E0D8B22C06084900DE1134 /* MediStockUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E0D8B12C06084900DE1134 /* MediStockUITests.swift */; };
 		53E0D8B42C06084900DE1134 /* MediStockUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E0D8B32C06084900DE1134 /* MediStockUITestsLaunchTests.swift */; };
+		FEB8F8BC2DF804D000A8298B /* LoginViewModelTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEB8F8BB2DF804D000A8298B /* LoginViewModelTest.swift */; };
+		FEB8F8C92DF84CA000A8298B /* AisleListViewModelTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEB8F8C82DF84CA000A8298B /* AisleListViewModelTest.swift */; };
+		FEB8F8CD2DF85ACA00A8298B /* MedicineListViewModelTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEB8F8CC2DF85ACA00A8298B /* MedicineListViewModelTest.swift */; };
 		FEDB6DB02DE363D2008E5701 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = FEDB6DAF2DE363D2008E5701 /* FirebaseAuth */; };
 		FEDB6DB22DE363D2008E5701 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = FEDB6DB12DE363D2008E5701 /* FirebaseFirestore */; };
 /* End PBXBuildFile section */
@@ -36,10 +38,12 @@
 		53E0D8932C06084700DE1134 /* MediStock.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MediStock.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		53E0D89D2C06084900DE1134 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		53E0D8A32C06084900DE1134 /* MediStockTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MediStockTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		53E0D8A72C06084900DE1134 /* MediStockTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediStockTests.swift; sourceTree = "<group>"; };
 		53E0D8AD2C06084900DE1134 /* MediStockUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MediStockUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		53E0D8B12C06084900DE1134 /* MediStockUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediStockUITests.swift; sourceTree = "<group>"; };
 		53E0D8B32C06084900DE1134 /* MediStockUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediStockUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		FEB8F8BB2DF804D000A8298B /* LoginViewModelTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModelTest.swift; sourceTree = "<group>"; };
+		FEB8F8C82DF84CA000A8298B /* AisleListViewModelTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AisleListViewModelTest.swift; sourceTree = "<group>"; };
+		FEB8F8CC2DF85ACA00A8298B /* MedicineListViewModelTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedicineListViewModelTest.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -47,6 +51,7 @@
 		FEB8F82E2DF170C700A8298B /* Ressources */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Ressources; sourceTree = "<group>"; };
 		FEB8F82F2DF170D600A8298B /* App */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = App; sourceTree = "<group>"; };
 		FEB8F8302DF1712600A8298B /* Core */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Core; sourceTree = "<group>"; };
+		FEB8F8BD2DF806B300A8298B /* Mocks */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Mocks; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,7 +124,10 @@
 		53E0D8A62C06084900DE1134 /* MediStockTests */ = {
 			isa = PBXGroup;
 			children = (
-				53E0D8A72C06084900DE1134 /* MediStockTests.swift */,
+				FEB8F8BD2DF806B300A8298B /* Mocks */,
+				FEB8F8BB2DF804D000A8298B /* LoginViewModelTest.swift */,
+				FEB8F8C82DF84CA000A8298B /* AisleListViewModelTest.swift */,
+				FEB8F8CC2DF85ACA00A8298B /* MedicineListViewModelTest.swift */,
 			);
 			path = MediStockTests;
 			sourceTree = "<group>";
@@ -175,6 +183,9 @@
 			);
 			dependencies = (
 				53E0D8A52C06084900DE1134 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				FEB8F8BD2DF806B300A8298B /* Mocks */,
 			);
 			name = MediStockTests;
 			productName = MediStockTests;
@@ -282,7 +293,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				53E0D8A82C06084900DE1134 /* MediStockTests.swift in Sources */,
+				FEB8F8CD2DF85ACA00A8298B /* MedicineListViewModelTest.swift in Sources */,
+				FEB8F8BC2DF804D000A8298B /* LoginViewModelTest.swift in Sources */,
+				FEB8F8C92DF84CA000A8298B /* AisleListViewModelTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -1,0 +1,136 @@
+//
+//  MockFBStoreService.swift
+//  MediStockTests
+//
+//  Created by Bruno Evrard on 10/06/2025.
+//
+
+import Foundation
+@testable import MediStock
+
+class MockFBStoreService: DataStore {
+   
+    var usersValid = MockUsers.mockUsers
+    var shouldSucceed: Bool = true
+    var medicineUpdates: MedicineUpdate = MedicineUpdate()
+    let mockError = NSError(domain: "MockFBStoreService", code: 1, userInfo: nil)
+    private var continuation: AsyncThrowingStream<MedicineUpdate, Error>.Continuation?
+    
+    func fetchAisles() async throws -> [Aisle] {
+        if (shouldSucceed) {
+            return MockProvider.generateAisles()
+        } else {
+            throw NSError(domain: "MockFBStoreService", code: 1, userInfo: nil) as Error
+        }
+    }
+    
+    func addAisle(_ aisle: Aisle) async throws -> Aisle {
+        let aisle: Aisle = Aisle(id: "1", name: "Aisle 1", nameSearch: "", sortKey: "" )
+        return aisle
+    }
+    
+    func getAisle(id: String) async throws -> Aisle {
+        let aisle: Aisle = Aisle(id: "1", name: "Aisle 1", nameSearch: "", sortKey: "" )
+        return aisle
+    }
+    
+    //func streamMedicines(aisleId: String?, filter: String?, sortOption: MediStock.SortOption?) -> AsyncThrowingStream<MedicineUpdate, any Error> {
+//        return AsyncThrowingStream { continuation in
+//            continuation.finish()
+//        }
+        
+    //}
+//    func streamMedicines(aisleId: String?, filter: String?, sortOption: SortOption?) -> AsyncThrowingStream<MedicineUpdate, Error> {
+//        AsyncThrowingStream { continuation in
+//            Task {
+//                if !shouldSucceed {
+//                    try await Task.sleep(nanoseconds: UInt64(2 * 1_000_000_000))
+//                    continuation.finish(throwing: mockError)
+//                    return
+//                }
+//                
+//                try await Task.sleep(nanoseconds: UInt64(2 * 1_000_000_000))
+//                continuation.yield(medicineUpdates)
+//                continuation.finish()
+//            }
+//        }
+//    }
+    
+    func streamMedicines(aisleId: String?, filter: String?, sortOption: SortOption?) -> AsyncThrowingStream<MedicineUpdate, Error> {
+            return AsyncThrowingStream { continuation in
+                self.continuation = continuation
+                // Ne rien envoyer ici, on contrôlera depuis le test
+            }
+        }
+
+    // Méthode utilitaire pour pousser un update
+        func send(update: MedicineUpdate) {
+            continuation?.yield(update)
+        }
+        
+        // Pour simuler une erreur
+        func sendError() {
+            continuation?.finish(throwing: mockError)
+        }
+        
+        // Pour terminer le stream proprement
+        func finishStream() {
+            continuation?.finish()
+        }
+    
+    func resetStreamMedicines() {
+        
+    }
+    
+    func getMedicine(id: String) async throws -> Medicine {
+        let Medicine = Medicine.init(id:"", aisleId: "", name: "", stock: 0)
+        return Medicine
+    }
+    
+    func medicineExistByNameAndAisle(name: String, aisleId: String) async throws -> Bool {
+        return false
+    }
+    
+    func addMedicine(_ medicine: Medicine) async throws -> Medicine {
+        let Medicine = Medicine.init(id:"", aisleId: "", name: "", stock: 0)
+        return Medicine
+    }
+    
+    func updateMedicine(_ medicine: Medicine) async throws {
+        
+    }
+    
+    func deleteMedicine(id: String) async throws {
+        
+    }
+    
+    func fetchHistory(medicineId: String) async throws -> [HistoryEntry] {
+        let history: [HistoryEntry] = []
+        return history
+    }
+    
+    func addHistory(_ historyEntry: HistoryEntry) async throws -> HistoryEntry {
+        let historyEntry = HistoryEntry.init(id: "", medicineId: "", action: "", details: "", modifiedAt: Date(), modifiedByUserId: "", modifiedByUserName: "")
+        return historyEntry
+    }
+    
+    func addUser(_ user: MediStockUser) async throws {
+        let newUser = user
+        usersValid.append(newUser)
+    }
+    
+    func getUser(idAuth: String) async throws -> MediStockUser? {
+        if shouldSucceed {
+            if let foundUser = usersValid.first(where: { $0.idAuth == idAuth }) {
+                return foundUser
+            } else {
+                throw mockError
+            }
+        } else {
+            throw mockError
+        }
+    }
+    
+    
+    
+}

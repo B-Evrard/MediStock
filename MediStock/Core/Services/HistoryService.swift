@@ -9,7 +9,7 @@ import Foundation
 
 final class HistoryService {
     
-    func generateHistory(user: UserInfo, oldMedicine: MedicineViewData?, newMedicine: MedicineViewData?) -> HistoryEntry? {
+    func generateHistory(user: MediStockUser, oldMedicine: MedicineViewData?, newMedicine: MedicineViewData?) -> HistoryEntry? {
         
         guard let oldMedicine = oldMedicine else {
             // ADD medicine

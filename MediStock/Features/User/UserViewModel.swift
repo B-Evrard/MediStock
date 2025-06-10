@@ -11,7 +11,7 @@ import Foundation
 final class UserViewModel: ObservableObject {
     
     // MARK: - Published
-    @Published var user: UserInfoViewData?
+    @Published var user: MediStockUserViewData?
     @Published var isError: Bool = false
     
     // MARK: - Public
@@ -44,6 +44,6 @@ final class UserViewModel: ObservableObject {
             isError = true
             return
         }
-        self.user = UserInfoMapper.mapToViewData(user)
+        self.user = MediStockUserInfoMapper.mapToViewData(user)
     }
 }

@@ -35,9 +35,9 @@ class FireBaseAuthService: AuthProviding  {
         return auth.currentUser?.uid
     }
     
-    func signUp(withEmail email: String, password: String) async throws  -> UserInfo?  {
+    func signUp(withEmail email: String, password: String) async throws  -> MediStockUser?  {
         _ = try await auth.createUser(withEmail: email, password: password)
-        let user = UserInfo(idAuth: auth.currentUser?.uid, displayName: "", email: email)
+        let user = MediStockUser(idAuth: auth.currentUser?.uid, displayName: "", email: email)
         return user
     }
     

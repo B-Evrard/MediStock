@@ -13,7 +13,7 @@ import Combine
 final class SessionManager: ObservableObject {
     
     // MARK: - Published
-    @Published var user: UserInfo?
+    @Published var user: MediStockUser?
     @Published var isConnected: Bool
     
     // MARK: - Public
@@ -25,7 +25,7 @@ final class SessionManager: ObservableObject {
     private var observers: [NSObjectProtocol] = []
     
     // MARK: - Init
-    init(user: UserInfo? = nil, storeService: DataStore = FireBaseStoreService(), authService: AuthProviding = FireBaseAuthService()) {
+    init(user: MediStockUser? = nil, storeService: DataStore = FireBaseStoreService(), authService: AuthProviding = FireBaseAuthService()) {
         self.user = user
         self.storeService = storeService
         self.authService = authService
@@ -46,14 +46,10 @@ final class SessionManager: ObservableObject {
         }
     }
     
-    func updateUser(userId: String) async {
-        do {
-            let userInfo = try await self.storeService.getUser(idAuth: userId)
-            self.user = userInfo
-            self.isConnected = user != nil
-        } catch {
-            self.resetUser()
-        }
+    func updateUser(userId: String) async throws {
+        let userInfo = try await self.storeService.getUser(idAuth: userId)
+        self.user = userInfo
+        self.isConnected = user != nil
     }
     
     func resetUser() {
@@ -78,7 +74,7 @@ final class SessionManager: ObservableObject {
                         self.resetUser()
                         return
                     }
-                    await self.updateUser(userId: userId)
+                    try await self.updateUser(userId: userId)
                 }
             }
             .store(in: &cancellables)
