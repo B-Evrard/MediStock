@@ -53,6 +53,8 @@ extension UserView {
                     .clipShape(Circle())
                     .frame(width: 30, height: 30)
             }
+            .accessibilityLabel("Disconnect")
+            .accessibilityHint("Tap to disconnect")
         }
     }
     

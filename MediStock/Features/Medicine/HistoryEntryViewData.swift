@@ -26,4 +26,8 @@ struct HistoryEntryViewData: Hashable {
     var ligne1: String {
         return "\(modifiedAt.formattedDateString) - \(action.display) by \(modifiedByUserName)"
     }
+    
+    var detailsAccess: String {
+        return details.replacingOccurrences(of: "-->", with: "to")
+    }
 }

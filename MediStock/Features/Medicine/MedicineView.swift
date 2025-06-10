@@ -19,20 +19,21 @@ struct MedicineView: View {
     var body: some View {
         ZStack {
             Color("Background").ignoresSafeArea(edges: .top)
-            VStack {
-                headerSection
-                medicineNameSection
-                medicineStockSection
-                medicineAisleSection
-                medicineHistorySection
-                Spacer()
-                buttonValidate
+            ScrollView {
+                VStack {
+                    headerSection
+                    medicineNameSection
+                    medicineStockSection
+                    medicineAisleSection
+                    medicineHistorySection
+                    Spacer()
+                    buttonValidate
+                }
+                .padding()
+                .overlay(alignment: .top) {
+                    listAisleSection
+                }
             }
-            .padding()
-            .overlay(alignment: .top) {
-                listAisleSection
-            }
-            
         }
         .onAppear() {
             Task {
@@ -85,7 +86,7 @@ extension MedicineView {
             Text("Stock")
                 .font(.title3)
                 .foregroundColor(Color("ColorFont"))
-            
+                .accessibilityHidden(true)
             HStack {
                 Button(action: {
                     if viewModel.medicine.stock > 0 {
@@ -135,7 +136,7 @@ extension MedicineView {
                     Text("Aisle : \(viewModel.medicine.aisle?.name ?? "")")
                         .font(.title3)
                         .foregroundColor(Color(.black))
-                    
+                        .accessibilityLabel("Aisle : \(viewModel.medicine.aisle?.name ?? "")")
                     HStack {
                         TextField("", text: $viewModel.searchAisle,
                                   prompt: Text("Choose an aisle...")
@@ -154,6 +155,7 @@ extension MedicineView {
                                     .font(.title3)
                                     .foregroundColor(.black)
                             }
+                            .accessibilityHint("Tap for add aisle : \(viewModel.searchAisle)")
                         }
                     }
                     
@@ -161,7 +163,7 @@ extension MedicineView {
                 .padding()
                 .background(Color("BackgroundElement"))
                 .cornerRadius(20)
-                .accessibilityLabel("Aisle")
+                
             }
             
         }
@@ -225,6 +227,7 @@ extension MedicineView {
                                         Text(history.details)
                                             .font(.caption2)
                                             .foregroundColor(Color(.black))
+                                            .accessibilityLabel(history.detailsAccess)
                                               
                                     }
                                 }
@@ -242,7 +245,7 @@ extension MedicineView {
         .padding()
         .background(Color("BackgroundElement"))
         .cornerRadius(20)
-        .accessibilityLabel("Aisle")
+        .accessibilityLabel("History")
         
     }
     
