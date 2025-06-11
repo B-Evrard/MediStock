@@ -14,13 +14,16 @@ struct MainTabView: View {
                     Image(systemName: "list.dash")
                     Text("Aisles")
                         .accessibilityHint("Tap for a list of all the aisles")
-                }
-            MedicineListView(viewModel: MedicineListViewModel(session: session)  )
+                    
+                    }
+                
+            MedicineListView(viewModel: MedicineListViewModel(session: session), isFromTab: true )
                 .tabItem {
                     Image(systemName: "square.grid.2x2")
                     Text("All Medicines")
                         .accessibilityHint("Tap for a list of all the medicines")
-                }
+                    }
+                .tag("Tab")
             UserView(viewModel: UserViewModel(session: session))
                 .tabItem {
                     Image(systemName: "person")

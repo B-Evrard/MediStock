@@ -21,9 +21,9 @@ final class UserViewModel: ObservableObject {
     private let storeService: DataStore
     
     // MARK: - Init
-    init(session: SessionManager) {
+    init(session: SessionManager, storeService: DataStore = FireBaseStoreService()) {
         self.session = session
-        self.storeService = session.storeService
+        self.storeService = storeService
         loadUser()
     }
     

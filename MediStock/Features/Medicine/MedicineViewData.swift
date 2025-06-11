@@ -21,4 +21,8 @@ struct MedicineViewData: Hashable, Identifiable {
         self.aisle = aisle
         self.history = history
     }
+    
+    var isDeleteable: Bool {
+        return stock == 0
+    }
 }

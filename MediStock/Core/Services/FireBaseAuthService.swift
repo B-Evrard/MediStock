@@ -7,10 +7,12 @@
 
 import Foundation
 import FirebaseAuth
+import FirebaseFirestore
 import Combine
 
 class FireBaseAuthService: AuthProviding  {
-    
+    let db = Firestore.firestore()
+
     // MARK: - Public
     var userIdPublisher = PassthroughSubject<String?, Never>()
     
@@ -53,5 +55,20 @@ class FireBaseAuthService: AuthProviding  {
         if let handle = handle {
             auth.removeStateDidChangeListener(handle)
         }
+    }
+    
+    // MARK: User
+    func addUser(_ user: MediStockUser) async throws {
+        _ = try db.collection("Users").addDocument(from: user)
+    }
+    
+    func getUser(idAuth: String) async throws -> MediStockUser? {
+        var user: MediStockUser?
+        let FBUsers = db.collection("Users")
+        let snapshot = try await FBUsers.whereField("idAuth", isEqualTo: idAuth).getDocuments()
+        if (!snapshot.isEmpty) {
+            user = try snapshot.documents[0].data(as : MediStockUser.self)
+        }
+        return user
     }
 }

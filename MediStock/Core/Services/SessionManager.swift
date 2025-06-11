@@ -17,7 +17,6 @@ final class SessionManager: ObservableObject {
     @Published var isConnected: Bool
     
     // MARK: - Public
-    let storeService: DataStore
     let authService:  AuthProviding
     
     // MARK: - Private
@@ -25,9 +24,8 @@ final class SessionManager: ObservableObject {
     private var observers: [NSObjectProtocol] = []
     
     // MARK: - Init
-    init(user: MediStockUser? = nil, storeService: DataStore = FireBaseStoreService(), authService: AuthProviding = FireBaseAuthService()) {
+    init(user: MediStockUser? = nil, authService: AuthProviding = FireBaseAuthService()) {
         self.user = user
-        self.storeService = storeService
         self.authService = authService
         self.isConnected = authService.isConnected()
         observeAppLifecycle()
@@ -47,7 +45,7 @@ final class SessionManager: ObservableObject {
     }
     
     func updateUser(userId: String) async throws {
-        let userInfo = try await self.storeService.getUser(idAuth: userId)
+        let userInfo = try await self.authService.getUser(idAuth: userId)
         self.user = userInfo
         self.isConnected = user != nil
     }

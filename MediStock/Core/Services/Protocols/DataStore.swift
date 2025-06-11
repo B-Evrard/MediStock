@@ -8,9 +8,8 @@
 
 protocol DataStore {
     
-    var medicineUpdates: MedicineUpdate { get set}
     
-    // MARK: Aisles
+// MARK: Aisles
     func fetchAisles() async throws -> [Aisle]
     func addAisle(_ aisle: Aisle) async throws -> Aisle
     func getAisle(id: String) async throws -> Aisle
@@ -28,7 +27,4 @@ protocol DataStore {
     func fetchHistory(medicineId: String) async throws -> [HistoryEntry]
     func addHistory(_ historyEntry: HistoryEntry) async throws -> HistoryEntry
     
-    // MARK: User
-    func addUser(_ user: MediStockUser) async throws
-    func getUser(idAuth: String) async throws -> MediStockUser?
 }

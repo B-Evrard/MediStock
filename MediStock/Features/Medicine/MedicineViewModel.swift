@@ -35,10 +35,11 @@ final class MedicineViewModel: ObservableObject {
     // MARK: - Init
     init(
         session: SessionManager,
-        medicine: MedicineViewData = MedicineViewData.init()
+        medicine: MedicineViewData = MedicineViewData.init(),
+        storeService: DataStore = FireBaseStoreService()
     ) {
         self.session = session
-        self.dataStoreService = session.storeService
+        self.dataStoreService = storeService
         self.medicine = medicine
         self.historyService = HistoryService()
     }

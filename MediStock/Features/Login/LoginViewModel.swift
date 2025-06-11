@@ -22,14 +22,14 @@ final class LoginViewModel: ObservableObject {
     
     // MARK: - Private
     private let session: SessionManager
-    private let authService: any AuthProviding
+    private let authService: AuthProviding
     private let storeService: DataStore
     
     // MARK: - Init
-    init(session: SessionManager) {
+    init(session: SessionManager, storeService: DataStore = FireBaseStoreService()) {
         self.session = session
         self.authService = session.authService
-        self.storeService = session.storeService
+        self.storeService = storeService
     }
     
     // MARK: - Public methods
@@ -77,7 +77,7 @@ final class LoginViewModel: ObservableObject {
             }
             user.displayName = name
             user.email = email
-            try await storeService.addUser(user)
+            try await authService.addUser(user)
             guard let id = user.idAuth else {
                 message = AppMessages.genericError
                 return false

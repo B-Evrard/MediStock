@@ -22,9 +22,9 @@ class AisleListViewModel: ObservableObject {
     private let dataStoreService: DataStore
     
     // MARK: - Init
-    init(session: SessionManager) {
+    init(session: SessionManager, storeService: DataStore = FireBaseStoreService()) {
         self.session = session
-        self.dataStoreService = session.storeService
+        self.dataStoreService = storeService
     }
     
     // MARK: - Public methods

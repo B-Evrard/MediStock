@@ -20,4 +20,7 @@ protocol AuthProviding {
     func signOut() async throws
     func removeListener()
     
+    // MARK: User
+    func addUser(_ user: MediStockUser) async throws
+    func getUser(idAuth: String) async throws -> MediStockUser?
 }

@@ -15,6 +15,10 @@ struct MedicineListView: View {
     @State private var medicineToDelete: MedicineViewData?
     @State private var showDeleteAlert = false
     
+    @State private var path = NavigationPath()
+    @State var isFromTab: Bool = false
+    
+    
     var body: some View {
         
         NavigationStack {
@@ -41,7 +45,13 @@ struct MedicineListView: View {
             }
             .onAppear {
                 Task {
+                    print ("onAppear \(isFromTab ? "true" : "false")")
                     viewModel.startListening()
+                }
+            }
+            .onDisappear() {
+                Task {
+                    viewModel.removeListener()
                 }
             }
         }
@@ -133,10 +143,10 @@ extension MedicineListView {
                         .cornerRadius(20)
                         
                     }
-                    .accessibilityHint("Tap for more details \(medicine.stock==0 ? "Long press to delete" : "")")
+                    .accessibilityHint("Tap for more details \(medicine.isDeleteable ? "Long press to delete" : "")")
                     
                     .contextMenu {
-                        if medicine.stock==0 {
+                        if medicine.isDeleteable {
                             Button(role: .destructive) {
                                 medicineToDelete = medicine
                                 showDeleteAlert = true

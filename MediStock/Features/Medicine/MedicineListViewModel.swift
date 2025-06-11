@@ -32,9 +32,9 @@ final class MedicineListViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     
     // MARK: - Init
-    init(session: SessionManager, aisleSelected: AisleViewData? = nil) {
+    init(session: SessionManager, storeService: DataStore = FireBaseStoreService(), aisleSelected: AisleViewData? = nil) {
         self.session = session
-        self.dataStoreService = session.storeService
+        self.dataStoreService = storeService
         self.aisleSelected = aisleSelected
         self.historyService = HistoryService()
         
@@ -115,21 +115,32 @@ final class MedicineListViewModel: ObservableObject {
             self.errorMessage = AppMessages.genericError
             return false
         }
-        guard let id = medicine.id else {
-            return false
-        }
-        do {
-            try await dataStoreService.deleteMedicine(id: id)
-            let historyEntry = historyService.generateHistory(user: user, oldMedicine: medicine, newMedicine: nil)
-            if let historyEntry {
-                _ = try await dataStoreService.addHistory(historyEntry)
+        if (medicine.isDeleteable) {
+            guard let id = medicine.id else {
+                return false
             }
-        } catch {
+            do {
+                try await dataStoreService.deleteMedicine(id: id)
+                let historyEntry = historyService.generateHistory(user: user, oldMedicine: medicine, newMedicine: nil)
+                if let historyEntry {
+                    _ = try await dataStoreService.addHistory(historyEntry)
+                }
+            } catch {
+                self.isError = true
+                self.errorMessage = AppMessages.genericError
+                return false
+            }
+            return true
+        } else {
             self.isError = true
             self.errorMessage = AppMessages.genericError
             return false
         }
-        return true
+        
+    }
+    
+    func removeListener() {
+        dataStoreService.resetStreamMedicines()
     }
     
 }

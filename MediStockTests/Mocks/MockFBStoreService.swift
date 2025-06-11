@@ -34,49 +34,43 @@ class MockFBStoreService: DataStore {
         return aisle
     }
     
-    //func streamMedicines(aisleId: String?, filter: String?, sortOption: MediStock.SortOption?) -> AsyncThrowingStream<MedicineUpdate, any Error> {
-//        return AsyncThrowingStream { continuation in
-//            continuation.finish()
-//        }
-        
-    //}
-//    func streamMedicines(aisleId: String?, filter: String?, sortOption: SortOption?) -> AsyncThrowingStream<MedicineUpdate, Error> {
-//        AsyncThrowingStream { continuation in
-//            Task {
-//                if !shouldSucceed {
-//                    try await Task.sleep(nanoseconds: UInt64(2 * 1_000_000_000))
-//                    continuation.finish(throwing: mockError)
-//                    return
-//                }
-//                
-//                try await Task.sleep(nanoseconds: UInt64(2 * 1_000_000_000))
-//                continuation.yield(medicineUpdates)
-//                continuation.finish()
-//            }
-//        }
-//    }
-    
     func streamMedicines(aisleId: String?, filter: String?, sortOption: SortOption?) -> AsyncThrowingStream<MedicineUpdate, Error> {
-            return AsyncThrowingStream { continuation in
-                self.continuation = continuation
-                // Ne rien envoyer ici, on contrôlera depuis le test
+        return AsyncThrowingStream { continuation in
+            self.continuation = continuation
+            var initialUpdate = MedicineUpdate()
+            guard let filter = filter else {
+                initialUpdate.added = MockProvider.getMockMedicines()
+                continuation.yield(initialUpdate)
+                return
             }
-        }
-
-    // Méthode utilitaire pour pousser un update
-        func send(update: MedicineUpdate) {
-            continuation?.yield(update)
-        }
-        
-        // Pour simuler une erreur
-        func sendError() {
-            continuation?.finish(throwing: mockError)
-        }
-        
-        // Pour terminer le stream proprement
-        func finishStream() {
-            continuation?.finish()
-        }
+            if filter.isEmpty {
+                initialUpdate.added = MockProvider.getMockMedicines()
+                continuation.yield(initialUpdate)
+            }  else {
+//                initialUpdate.added = MockProvider.getMockMedicines().filter {
+//                    $0.nameSearch?.uppercased().hasPrefix(filter)
+//                }
+                continuation.yield(initialUpdate)
+            }
+           
+                
+           
+            
+         }
+    }
+    
+    
+    func send(update: MedicineUpdate) {
+        continuation?.yield(update)
+    }
+    
+    func sendError() {
+        continuation?.finish(throwing: mockError)
+    }
+    
+    func finishStream() {
+        continuation?.finish()
+    }
     
     func resetStreamMedicines() {
         
@@ -101,7 +95,12 @@ class MockFBStoreService: DataStore {
     }
     
     func deleteMedicine(id: String) async throws {
-        
+        let expectedUpdate = MedicineUpdate(
+            added: [],
+            modified: [],
+            removedIds: [id]
+        )
+        send(update: expectedUpdate)
     }
     
     func fetchHistory(medicineId: String) async throws -> [HistoryEntry] {

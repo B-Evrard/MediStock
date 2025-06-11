@@ -90,18 +90,10 @@ extension AisleListView {
     }
 }
 
-
-class MockAisleListViewModel: AisleListViewModel {
-    override init(session: SessionManager) {
-        super.init(session: session)
-        self.isError = true
-    }
-}
-
 struct AisleListView_Previews: PreviewProvider {
     static var previews: some View {
         let session = SessionManager()
-        let viewModel = MockAisleListViewModel(session: session)
+        let viewModel = AisleListViewModel(session: session)
     
         AisleListView(viewModel: viewModel)
     }
