@@ -4,36 +4,36 @@ struct AisleListView: View {
     
     @EnvironmentObject var session: SessionManager
     @StateObject var viewModel: AisleListViewModel
+    @Binding var path: NavigationPath
     
     var body: some View {
-        NavigationStack {
-            ZStack {
-                Color("Background").ignoresSafeArea(edges: .top)
-                if viewModel.isLoading {
-                    Spacer()
-                    ProgressViewLoading()
-                    Spacer()
-                } else {
-                    if (viewModel.isError) {
-                        ErrorView(tryAgainVisible: true, onTryAgain: {
-                            Task {
-                                await viewModel.fetchAisles()
-                            }})
-                    } else  {
-                        VStack {
-                            headerSection
-                            aisleList
-                        }
+        //NavigationStack(path: $path)  {
+        ZStack {
+            Color("Background").ignoresSafeArea(edges: .top)
+            if viewModel.isLoading {
+                Spacer()
+                ProgressViewLoading()
+                Spacer()
+            } else {
+                if (viewModel.isError) {
+                    ErrorView(tryAgainVisible: true, onTryAgain: {
+                        Task {
+                            await viewModel.fetchAisles()
+                        }})
+                } else  {
+                    VStack {
+                        headerSection
+                        aisleList
                     }
                 }
             }
-            .onAppear {
-                Task {
-                    await viewModel.fetchAisles()
-                }
-            }
-            
         }
+        .onAppear {
+            Task {
+                await viewModel.fetchAisles()
+            }
+        }
+        
     }
 }
 
@@ -46,8 +46,8 @@ extension AisleListView {
                 .bold()
             Spacer()
             
-            NavigationLink(destination: MedicineView(viewModel: MedicineViewModel(session: session, medicine: MedicineViewData.init())))
-            {
+            NavigationLink(value: AppRoute.medicineCreate(forAisle: nil) ) {
+                
                 Image(systemName: "plus")
                     .resizable()
                     .aspectRatio(contentMode: .fill)
@@ -65,7 +65,8 @@ extension AisleListView {
         ScrollView {
             LazyVStack {
                 ForEach(viewModel.aisles, id: \.self) { aisle in
-                    NavigationLink(destination: MedicineListView(viewModel: MedicineListViewModel(session: session,aisleSelected: aisle))) {
+                    NavigationLink(value: AppRoute.medicines(forAisle: aisle)) {
+                        
                         HStack {
                             Text(aisle.label)
                                 .font(.system(size: 20, weight: .bold, design: .rounded))
@@ -90,11 +91,11 @@ extension AisleListView {
     }
 }
 
-struct AisleListView_Previews: PreviewProvider {
-    static var previews: some View {
-        let session = SessionManager()
-        let viewModel = AisleListViewModel(session: session)
-    
-        AisleListView(viewModel: viewModel)
-    }
-}
+//struct AisleListView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        let session = SessionManager()
+//        let viewModel = AisleListViewModel(session: session)
+//
+//        AisleListView(viewModel: viewModel)
+//    }
+//}

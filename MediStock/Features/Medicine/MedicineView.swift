@@ -11,6 +11,7 @@ struct MedicineView: View {
     @Environment(\.dismiss) var dismiss
     
     @StateObject var viewModel: MedicineViewModel
+    @Binding var path: NavigationPath
     
     @State private var showPicker = false
     @State private var showAddSheet = false
@@ -273,7 +274,16 @@ extension MedicineView {
 }
 
 #Preview {
-    let viewModel = MedicineViewModel( session: SessionManager(), medicine: MedicineViewData.init())
-    MedicineView(viewModel: viewModel)
-    
+    MedicineViewPreview()
+}
+
+struct MedicineViewPreview: View {
+    @State private var path = NavigationPath()
+
+    var body: some View {
+        let session = SessionManager()
+        let viewModel = MedicineViewModel(session: session, medicine: MedicineViewData())
+
+        return MedicineView(viewModel: viewModel, path: $path)
+    }
 }

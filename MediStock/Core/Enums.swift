@@ -30,6 +30,12 @@ enum SortOption: String, CaseIterable, Identifiable {
     var id: String { self.rawValue }
 }
 
+enum AppRoute: Hashable {
+    case medicines(forAisle: AisleViewData)
+    case medicineEdit(MedicineViewData)
+    case medicineCreate(forAisle: AisleViewData?)
+}
+
 extension HistoryAction {
     static func from(_ rawValue: String) -> Self {
         Self(rawValue: rawValue) ?? .Unknown

@@ -64,12 +64,12 @@ final class MedicineViewModel: ObservableObject {
         }
     }
     
-    func checkAilseSelected(aisleSelected: AisleViewData) -> Bool{
-        guard let aisle = medicine.aisle else {
-           return false
-        }
-        return aisleSelected.id == aisle.id
-    }
+//    func checkAilseSelected(aisleSelected: AisleViewData) -> Bool{
+//        guard let aisle = medicine.aisle else {
+//           return false
+//        }
+//        return aisleSelected.id == aisle.id
+//    }
     
     func updateFilteredAisles() {
         let lowercased = searchAisle.lowercased()

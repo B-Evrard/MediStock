@@ -15,46 +15,50 @@ struct MedicineListView: View {
     @State private var medicineToDelete: MedicineViewData?
     @State private var showDeleteAlert = false
     
-    @State private var path = NavigationPath()
     @State var isFromTab: Bool = false
+    @Binding var path: NavigationPath
     
     
     var body: some View {
         
-        NavigationStack {
-            ZStack {
-                Color("Background").ignoresSafeArea(edges: .top)
-                if (viewModel.isError) {
-                    ErrorView(tryAgainVisible: true, onTryAgain: {
-                        Task {
-                            await viewModel.refreshMedicines()
-                        }})
-                } else  {
-                    
-                    VStack {
-                        headerSection
-                        if viewModel.isLoading {
-                            Spacer()
-                            ProgressViewLoading()
-                            Spacer()
-                        } else {
-                            medicineList
-                        }
+        ZStack {
+            Color("Background").ignoresSafeArea(edges: .top)
+            if (viewModel.isError) {
+                ErrorView(tryAgainVisible: true, onTryAgain: {
+                    Task {
+                        await viewModel.refreshMedicines()
+                    }})
+            } else  {
+                
+                VStack {
+                    headerSection
+                    if viewModel.isLoading {
+                        Spacer()
+                        ProgressViewLoading()
+                        Spacer()
+                    } else {
+                        medicineList
                     }
                 }
             }
-            .onAppear {
-                Task {
-                    print ("onAppear \(isFromTab ? "true" : "false")")
-                    viewModel.startListening()
-                }
-            }
-            .onDisappear() {
-                Task {
-                    viewModel.removeListener()
-                }
+        }
+        .onAppear {
+            Task {
+                print ("onAppear \(isFromTab ? "true" : "false") -- \(path.count)")
+                viewModel.startListening()
             }
         }
+        .onDisappear() {
+            Task {
+                print ("onDisappear \(isFromTab ? "true" : "false") -- \(path.count)")
+                if (path.count == 0 && !isFromTab) {
+                    viewModel.removeListener()
+                }
+                
+            }
+        }
+        
+        
     }
 }
 
@@ -69,8 +73,7 @@ extension MedicineListView {
                     .bold()
                 Spacer()
                 
-                NavigationLink(destination: MedicineView(viewModel: MedicineViewModel(session: session, medicine: MedicineViewData.init(aisle: viewModel.aisleSelected ))))
-                {
+                NavigationLink(value: AppRoute.medicineCreate(forAisle: viewModel.aisleSelected)) {
                     Image(systemName: "plus")
                         .resizable()
                         .aspectRatio(contentMode: .fill)
@@ -117,14 +120,7 @@ extension MedicineListView {
         ScrollView {
             LazyVStack {
                 ForEach(viewModel.medicines, id: \.id) { medicine in
-                    NavigationLink(
-                        destination: MedicineView(
-                            viewModel: MedicineViewModel(
-                                session: session,
-                                medicine: medicine
-                            )
-                        )
-                    ) {
+                    NavigationLink(value: AppRoute.medicineEdit(medicine)) {
                         VStack {
                             Text(medicine.name)
                                 .font(.headline)
@@ -141,7 +137,6 @@ extension MedicineListView {
                         .padding(.horizontal)
                         .background(Color("BackgroundElement"))
                         .cornerRadius(20)
-                        
                     }
                     .accessibilityHint("Tap for more details \(medicine.isDeleteable ? "Long press to delete" : "")")
                     
@@ -153,7 +148,7 @@ extension MedicineListView {
                             } label: {
                                 Label("Delete", systemImage: "trash")
                             }
-                        } 
+                        }
                     }
                     
                 }
@@ -183,6 +178,17 @@ extension MedicineListView {
     }
 }
 
-#Preview {
-    MedicineListView(viewModel: MedicineListViewModel(session: SessionManager()))
-}
+//#Preview {
+//    MedicineListViewPreview()
+//}
+//
+//struct MedicineListViewPreview: View {
+//    @State private var path = NavigationPath()
+//
+//    var body: some View {
+//        let session = SessionManager()
+//        let viewModel = Mei(session: session)
+//
+//        return MedicineListView(viewModel: viewModel, path: $path)
+//    }
+//}

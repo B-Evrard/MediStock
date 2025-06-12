@@ -38,18 +38,26 @@ final class MedicineListViewModel: ObservableObject {
         self.aisleSelected = aisleSelected
         self.historyService = HistoryService()
         
+        
+        
+        self.session.$isConnected
+            .sink(receiveValue: { isLogged in
+                print("toto \(isLogged)")
+            })
+            .store(in: &self.cancellables)
+        
         $search
             .debounce(for: .seconds(0.8), scheduler: DispatchQueue.main)
             .removeDuplicates()
             .sink { [weak self] searchText in
                 guard let self = self else { return }
-                    if self.isInitialLoad {
-                        self.isInitialLoad = false
-                        return
-                    }
-                    Task {
-                        await self.refreshMedicines()
-                    }
+                if self.isInitialLoad {
+                    self.isInitialLoad = false
+                    return
+                }
+                Task {
+                    await self.refreshMedicines()
+                }
             }
             .store(in: &cancellables)
     }
@@ -101,8 +109,7 @@ final class MedicineListViewModel: ObservableObject {
     
     func refreshMedicines() async {
         self.isError = false
-        streamTask?.cancel()
-        dataStoreService.resetStreamMedicines()
+        removeListener()
         self.medicines = []
         self.hasStartedListening = false
         self.startListening()
@@ -140,6 +147,7 @@ final class MedicineListViewModel: ObservableObject {
     }
     
     func removeListener() {
+        streamTask?.cancel()
         dataStoreService.resetStreamMedicines()
     }
     
