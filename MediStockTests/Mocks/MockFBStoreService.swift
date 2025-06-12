@@ -10,7 +10,7 @@ import Foundation
 
 class MockFBStoreService: DataStore {
    
-    var usersValid = MockUsers.mockUsers
+    var usersValid = MockProvider.mockUsers
     var shouldSucceed: Bool = true
     var medicineUpdates: MedicineUpdateModel = MedicineUpdateModel()
     let mockError = NSError(domain: "MockFBStoreService", code: 1, userInfo: nil)
@@ -38,24 +38,16 @@ class MockFBStoreService: DataStore {
         return AsyncThrowingStream { continuation in
             self.continuation = continuation
             var initialUpdate = MedicineUpdateModel()
-            guard let filter = filter else {
-                initialUpdate.added = MockProvider.getMockMedicines()
-                continuation.yield(initialUpdate)
-                return
-            }
-            if filter.isEmpty {
-                initialUpdate.added = MockProvider.getMockMedicines()
-                continuation.yield(initialUpdate)
-            }  else {
-//                initialUpdate.added = MockProvider.getMockMedicines().filter {
-//                    $0.nameSearch?.uppercased().hasPrefix(filter)
-//                }
-                continuation.yield(initialUpdate)
-            }
-           
-                
-           
+            let allMedicines = MockProvider.getMockMedicines()
             
+            if let filter = filter, !filter.isEmpty {
+                initialUpdate.added = allMedicines.filter {
+                    $0.nameSearch?.uppercased().hasPrefix(filter.uppercased()) ?? false
+                }
+            } else {
+                initialUpdate.added = allMedicines
+            }
+            continuation.yield(initialUpdate)
          }
     }
     
@@ -95,16 +87,21 @@ class MockFBStoreService: DataStore {
     }
     
     func deleteMedicine(id: String) async throws {
-        let expectedUpdate = MedicineUpdateModel(
-            added: [],
-            modified: [],
-            removedIds: [id]
-        )
-        send(update: expectedUpdate)
+        if (shouldSucceed) {
+            let expectedUpdate = MedicineUpdateModel(
+                added: [],
+                modified: [],
+                removedIds: [id]
+            )
+            send(update: expectedUpdate)
+        } else {
+            throw NSError(domain: "MockFBStoreService", code: 1, userInfo: nil) as Error
+        }
     }
     
     func fetchHistory(medicineId: String) async throws -> [HistoryEntryModel] {
-        let history: [HistoryEntryModel] = []
+        let allHistory: [HistoryEntryModel] = MockProvider.historyEntries
+        let history = medicineId.isEmpty ? allHistory : allHistory.filter { $0.medicineId == medicineId }
         return history
     }
     
@@ -112,24 +109,5 @@ class MockFBStoreService: DataStore {
         let historyEntry = HistoryEntryModel.init(id: "", medicineId: "", action: "", details: "", modifiedAt: Date(), modifiedByUserId: "", modifiedByUserName: "")
         return historyEntry
     }
-    
-    func addUser(_ user: UserModel) async throws {
-        let newUser = user
-        usersValid.append(newUser)
-    }
-    
-    func getUser(idAuth: String) async throws -> UserModel? {
-        if shouldSucceed {
-            if let foundUser = usersValid.first(where: { $0.idAuth == idAuth }) {
-                return foundUser
-            } else {
-                throw mockError
-            }
-        } else {
-            throw mockError
-        }
-    }
-    
-    
     
 }

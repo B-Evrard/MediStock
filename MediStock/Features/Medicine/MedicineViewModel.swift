@@ -22,6 +22,7 @@ final class MedicineViewModel: ObservableObject {
     @Published var showAddAisleSheet = false
     @Published var newAisle = AisleViewData.init(id: nil, name: "")
     @Published var isError: Bool = false
+    @Published var isErrorInit: Bool = false
     @Published var errorMessage: String = ""
     
     // MARK: - Public
@@ -50,8 +51,7 @@ final class MedicineViewModel: ObservableObject {
         guard let medicineId = medicine.id else {
             return
         }
-        do
-        {
+        do {
             let medicineData = try await dataStoreService.getMedicine(id: medicineId)
             let aisleData = try await dataStoreService.getAisle(id: medicineData.aisleId)
             self.medicine = MedicineMapper.mapToViewData(medicineData, aisle: aisleData)
@@ -143,7 +143,8 @@ final class MedicineViewModel: ObservableObject {
             let aislesData = try await dataStoreService.fetchAisles()
             self.aisles = aislesData.map(AisleMapper.mapToViewData)
          } catch {
-            self.isError = true
+            self.isErrorInit = true
+            self.errorMessage = AppMessages.genericError
         }
     }
     

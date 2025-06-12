@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct MedicineViewData: Hashable, Identifiable {
+struct MedicineViewData: Hashable, Identifiable, Equatable {
     var id: String?
     var name: String
     var stock: Int
@@ -24,5 +24,12 @@ struct MedicineViewData: Hashable, Identifiable {
     
     var isDeleteable: Bool {
         return stock == 0
+    }
+    
+    static func == (lhs: MedicineViewData, rhs: MedicineViewData) -> Bool {
+        return lhs.id == rhs.id &&
+               lhs.name == rhs.name &&
+               lhs.stock == rhs.stock &&
+               lhs.aisle == rhs.aisle
     }
 }

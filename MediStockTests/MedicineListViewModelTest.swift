@@ -15,10 +15,11 @@ final class MedicineListViewModelTest: XCTestCase {
         let authService = MockFBAuthService()
         let storeService = MockFBStoreService()
         storeService.shouldSucceed = false
-        let session = SessionManager(storeService: storeService, authService: authService)
+        let session = SessionManager(authService: authService)
         
         let viewModel = MedicineListViewModel(
-            session: session
+            session: session,
+            storeService: storeService
         )
         
         viewModel.startListening()
@@ -34,10 +35,11 @@ final class MedicineListViewModelTest: XCTestCase {
     func testStartListeningOK() async {
         let authService = MockFBAuthService()
         let storeService = MockFBStoreService()
-        let session = SessionManager(storeService: storeService, authService: authService)
+        let session = SessionManager(authService: authService)
         
         let viewModel = MedicineListViewModel(
-            session: session
+            session: session,
+            storeService: storeService
         )
         
         viewModel.startListening()
@@ -93,10 +95,11 @@ final class MedicineListViewModelTest: XCTestCase {
     func testSortByStock() async {
         let authService = MockFBAuthService()
         let storeService = MockFBStoreService()
-        let session = SessionManager(storeService: storeService, authService: authService)
+        let session = SessionManager(authService: authService)
         
         let viewModel = MedicineListViewModel(
-            session: session
+            session: session,
+            storeService: storeService
         )
         
         viewModel.startListening()
@@ -126,10 +129,11 @@ final class MedicineListViewModelTest: XCTestCase {
     func testSearch() async {
         let authService = MockFBAuthService()
         let storeService = MockFBStoreService()
-        let session = SessionManager(storeService: storeService, authService: authService)
+        let session = SessionManager(authService: authService)
         
         let viewModel = MedicineListViewModel(
-            session: session
+            session: session,
+            storeService: storeService
         )
         
         viewModel.startListening()
@@ -143,18 +147,63 @@ final class MedicineListViewModelTest: XCTestCase {
         }
         
         viewModel.search = "a"
+        try? await Task.sleep(for: .seconds(2))
+        
+        XCTAssertFalse(viewModel.isError)
+        XCTAssertFalse(viewModel.isLoading)
+        XCTAssertEqual(viewModel.medicines.count, 2)
+        if (viewModel.medicines.count > 0) {
+            XCTAssertEqual(viewModel.medicines[0].id, "7")
+        }
+    }
+    
+    @MainActor
+    func testDeleteFail() async {
+        let authService = MockFBAuthService()
+        let storeService = MockFBStoreService()
+        let session = SessionManager(authService: authService)
+        session.user = UserModel(idAuth: "123", displayName: "Bruno", email: "test@test.com")
+        session.isConnected = true
+        let viewModel = MedicineListViewModel(
+            session: session,
+            storeService: storeService
+        )
+        
+        viewModel.startListening()
+        try? await Task.sleep(for: .seconds(2))
+        
+        XCTAssertFalse(viewModel.isError)
+        XCTAssertFalse(viewModel.isLoading)
+        XCTAssertEqual(viewModel.medicines.count, 20)
+        
+        var medicineToDelete = viewModel.medicines[0]
+        
+        await deleteMedicine(viewModel, medicineToDelete)
+        XCTAssertTrue(viewModel.isError)
+        XCTAssertFalse(viewModel.isLoading)
+        XCTAssertEqual(viewModel.medicines.count, 20)
+        
+        medicineToDelete.stock = 0
+        storeService.shouldSucceed = false
+        if medicineToDelete.isDeleteable {
+            await deleteMedicine(viewModel, medicineToDelete)
+            XCTAssertTrue(viewModel.isError)
+            XCTAssertFalse(viewModel.isLoading)
+            XCTAssertEqual(viewModel.medicines.count, 20)
+        }
         
     }
     
     @MainActor
-    func testDelete() async {
+    func testDeleteOk() async {
         let authService = MockFBAuthService()
         let storeService = MockFBStoreService()
-        let session = SessionManager(storeService: storeService, authService: authService)
+        let session = SessionManager(authService: authService)
         session.user = UserModel(idAuth: "123", displayName: "Bruno", email: "test@test.com")
         session.isConnected = true
         let viewModel = MedicineListViewModel(
-            session: session
+            session: session,
+            storeService: storeService
         )
         
         viewModel.startListening()

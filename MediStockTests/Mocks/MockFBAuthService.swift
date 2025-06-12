@@ -15,11 +15,14 @@ import Combine
 class MockFBAuthService: AuthProviding {
     
     var shouldSucceed: Bool = true
+    var userExist: Bool = true
+    var signUpValid: Bool = true
     var isConnectedValue: Bool = false
     var mockUserUID: String? = "mock_uid_123"
-    var usersValid = MockUsers.mockUsers
+    var usersValid = MockProvider.mockUsers
     
     let userIdPublisher = PassthroughSubject<String?, Never>()
+    let mockError = NSError(domain: "MockFBStoreService", code: 1, userInfo: nil)
     
     private var isListening = false
    
@@ -29,12 +32,6 @@ class MockFBAuthService: AuthProviding {
     
     func listen() {
         isListening = true
-        
-        // Simule une connexion
-        //mockAuth.simulateAuthChange(userId: "12345")
-
-        // Simule une déconnexion
-        //mockAuth.simulateAuthChange(userId: nil)<#code#>
     }
     
     func simulateAuthChange(userId: String?) {
@@ -42,7 +39,7 @@ class MockFBAuthService: AuthProviding {
     }
     
     func signIn(withEmail email: String, password: String) async throws -> String? {
-        if shouldSucceed {
+        if userExist {
             if let user = usersValid.first(where: { $0.email == email }) {
                 return user.idAuth
             }
@@ -58,7 +55,7 @@ class MockFBAuthService: AuthProviding {
     }
     
     func signUp(withEmail email: String, password: String) async throws -> UserModel? {
-        if shouldSucceed {
+        if signUpValid {
             if usersValid.first(where: { $0.email == email }) != nil {
                 throw AuthErrorCode.emailAlreadyInUse
             }
@@ -80,5 +77,21 @@ class MockFBAuthService: AuthProviding {
         
     }
     
+    func addUser(_ user: UserModel) async throws {
+        let newUser = user
+        usersValid.append(newUser)
+    }
+    
+    func getUser(idAuth: String) async throws -> UserModel? {
+        if shouldSucceed {
+            if let foundUser = usersValid.first(where: { $0.idAuth == idAuth }) {
+                return foundUser
+            } else {
+                throw mockError
+            }
+        } else {
+            throw mockError
+        }
+    }
     
 }

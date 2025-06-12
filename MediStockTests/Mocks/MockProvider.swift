@@ -8,6 +8,26 @@
 @testable import MediStock
 import Foundation
 class MockProvider {
+    static let mockUser = UserModel(
+        idAuth: "1",
+        displayName: "Alice Johnson",
+        email: "alice.johnson@example.com",
+    )
+    
+    static let mockUsers: [UserModel] = [
+        mockUser,
+        UserModel(
+            idAuth: "2",
+            displayName: "Bob Smith",
+            email: "bob.smith@example.com",
+        ),
+        UserModel(
+            idAuth: "3",
+            displayName: "Charlie Lee",
+            email: "charlie.lee@example.com",
+        )
+    ]
+    
     static func generateAisles(count: Int = 10) -> [AisleModel] {
         var aisles: [AisleModel] = []
         for i in 1...count {
@@ -50,4 +70,96 @@ class MockProvider {
         return mockMedicines
     }
     
+    static let historyEntries: [HistoryEntryModel] = [
+        HistoryEntryModel(
+            id: "h1",
+            medicineId: "1",
+            action: "Add",
+            details: "Stock : 50 - Aisle : Antibiotics",
+            modifiedAt: Calendar.current.date(byAdding: .day, value: -9, to: Date())!,
+            modifiedByUserId: "2",
+            modifiedByUserName: "Bob Smith"
+        ),
+        HistoryEntryModel(
+            id: "h2",
+            medicineId: "1",
+            action: "Update",
+            details: "Stock : 50 --> 40",
+            modifiedAt: Calendar.current.date(byAdding: .day, value: -8, to: Date())!,
+            modifiedByUserId: "3",
+            modifiedByUserName: "Charlie Lee"
+        ),
+        HistoryEntryModel(
+            id: "h3",
+            medicineId: "1",
+            action: "Update",
+            details: "Aisle : Antibiotics --> Painkillers",
+            modifiedAt: Calendar.current.date(byAdding: .day, value: -7, to: Date())!,
+            modifiedByUserId: "2",
+            modifiedByUserName: "Bob Smith"
+        ),
+        HistoryEntryModel(
+            id: "h4",
+            medicineId: "1",
+            action: "Update",
+            details: "Rename : Amoxicillin - Stock : 40 --> 35",
+            modifiedAt: Calendar.current.date(byAdding: .day, value: -6, to: Date())!,
+            modifiedByUserId: "3",
+            modifiedByUserName: "Charlie Lee"
+        ),
+        HistoryEntryModel(
+            id: "h5",
+            medicineId: "1",
+            action: "Delete",
+            details: "Amoxicillin - Aisle : Painkillers",
+            modifiedAt: Calendar.current.date(byAdding: .day, value: -5, to: Date())!,
+            modifiedByUserId: "2",
+            modifiedByUserName: "Bob Smith"
+        ),
+        HistoryEntryModel(
+            id: "h6",
+            medicineId: "2",
+            action: "Add",
+            details: "Stock : 30 - Aisle : Vitamins",
+            modifiedAt: Calendar.current.date(byAdding: .day, value: -4, to: Date())!,
+            modifiedByUserId: "3",
+            modifiedByUserName: "Charlie Lee"
+        ),
+        HistoryEntryModel(
+            id: "h7",
+            medicineId: "2",
+            action: "Update",
+            details: "Stock : 30 --> 28",
+            modifiedAt: Calendar.current.date(byAdding: .day, value: -3, to: Date())!,
+            modifiedByUserId: "2",
+            modifiedByUserName: "Bob Smith"
+        ),
+        HistoryEntryModel(
+            id: "h8",
+            medicineId: "2",
+            action: "Update",
+            details: "Rename : Vitamin D",
+            modifiedAt: Calendar.current.date(byAdding: .day, value: -2, to: Date())!,
+            modifiedByUserId: "3",
+            modifiedByUserName: "Charlie Lee"
+        ),
+        HistoryEntryModel(
+            id: "h9",
+            medicineId: "2",
+            action: "Update",
+            details: "Rename : Vitamin D3 - Aisle : Vitamins --> Supplements",
+            modifiedAt: Calendar.current.date(byAdding: .day, value: -1, to: Date())!,
+            modifiedByUserId: "2",
+            modifiedByUserName: "Bob Smith"
+        ),
+        HistoryEntryModel(
+            id: "h10",
+            medicineId: "2",
+            action: "Delete",
+            details: "Vitamin D3 - Aisle : Supplements",
+            modifiedAt: Date(),
+            modifiedByUserId: "3",
+            modifiedByUserName: "Charlie Lee"
+        )
+    ]
 }

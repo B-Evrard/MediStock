@@ -16,10 +16,11 @@ final class AisleListViewModelTest: XCTestCase {
         let authService = MockFBAuthService()
         let storeService = MockFBStoreService()
         storeService.shouldSucceed = false
-        let session = SessionManager(storeService: storeService, authService: authService)
+        let session = SessionManager(authService: authService)
         
         let viewModel = AisleListViewModel(
-            session: session
+            session: session,
+            storeService: storeService
         )
         
         await viewModel.fetchAisles()
@@ -36,10 +37,11 @@ final class AisleListViewModelTest: XCTestCase {
         
         let authService = MockFBAuthService()
         let storeService = MockFBStoreService()
-        let session = SessionManager(storeService: storeService, authService: authService)
+        let session = SessionManager(authService: authService)
         
         let viewModel = AisleListViewModel(
-            session: session
+            session: session,
+            storeService: storeService
         )
         
         await viewModel.fetchAisles()

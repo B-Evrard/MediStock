@@ -14,8 +14,7 @@ final class LoginViewModelTest: XCTestCase {
     func testLoginFail() async {
         
         let authService = MockFBAuthService()
-        let storeService = MockFBStoreService()
-        let session = SessionManager(storeService: storeService, authService: authService)
+        let session = SessionManager(authService: authService)
         
         let viewModel = LoginViewModel(
             session: session
@@ -49,15 +48,15 @@ final class LoginViewModelTest: XCTestCase {
     func testLoginAuthServiceFail() async {
         
         let authService = MockFBAuthService()
-        authService.shouldSucceed = false
-        let storeService = MockFBStoreService()
-        let session = SessionManager(storeService: storeService, authService: authService)
+        authService.userExist = false
+        
+        let session = SessionManager(authService: authService)
         
         let viewModel = LoginViewModel(
             session: session
         )
         
-        let mockUser = MockUsers.mockUser
+        let mockUser = MockProvider.mockUser
         viewModel.email = mockUser.email
         viewModel.password = "password"
         let isLogged = await viewModel.signIn()
@@ -70,15 +69,14 @@ final class LoginViewModelTest: XCTestCase {
     func testLoginFBUSerFail() async {
 
         let authService = MockFBAuthService()
-        let storeService = MockFBStoreService()
-        storeService.shouldSucceed = false
-        let session = SessionManager(storeService: storeService, authService: authService)
+        authService.shouldSucceed = false
+        let session = SessionManager(authService: authService)
         
         let viewModel = LoginViewModel(
             session: session
         )
         
-        let mockUser = MockUsers.mockUser
+        let mockUser = MockProvider.mockUser
         viewModel.email = mockUser.email
         viewModel.password = "password"
         let isLogged = await viewModel.signIn()
@@ -91,14 +89,13 @@ final class LoginViewModelTest: XCTestCase {
     func testLoginOk() async {
         
         let authService = MockFBAuthService()
-        let storeService = MockFBStoreService()
-        let session = SessionManager(storeService: storeService, authService: authService)
+        let session = SessionManager(authService: authService)
         
         let viewModel = LoginViewModel(
             session: session
         )
         
-        let mockUser = MockUsers.mockUser
+        let mockUser = MockProvider.mockUser
         viewModel.email = mockUser.email
         viewModel.password = "password"
         let isLogged = await viewModel.signIn()
@@ -115,8 +112,7 @@ final class LoginViewModelTest: XCTestCase {
     func testSignUpFail() async {
         
         let authService = MockFBAuthService()
-        let storeService = MockFBStoreService()
-        let session = SessionManager(storeService: storeService, authService: authService)
+        let session = SessionManager(authService: authService)
         
         let viewModel = LoginViewModel(
             session: session
@@ -161,7 +157,7 @@ final class LoginViewModelTest: XCTestCase {
         XCTAssertFalse(isLogged)
         XCTAssertEqual(viewModel.message, AppMessages.nameEmpty)
         
-        let mockUser = MockUsers.mockUser
+        let mockUser = MockProvider.mockUser
         viewModel.email = mockUser.email
         viewModel.password = "Bruno220865&"
         viewModel.confirmedPassword = "Bruno220865&"
@@ -176,9 +172,8 @@ final class LoginViewModelTest: XCTestCase {
     func testSignUpAuthServiceFail() async {
         
         let authService = MockFBAuthService()
-        authService.shouldSucceed = false
-        let storeService = MockFBStoreService()
-        let session = SessionManager(storeService: storeService, authService: authService)
+        authService.signUpValid = false
+        let session = SessionManager(authService: authService)
         
         let viewModel = LoginViewModel(
             session: session
@@ -198,8 +193,7 @@ final class LoginViewModelTest: XCTestCase {
     func testSignUpOk() async {
         
         let authService = MockFBAuthService()
-        let storeService = MockFBStoreService()
-        let session = SessionManager(storeService: storeService, authService: authService)
+        let session = SessionManager(authService: authService)
         
         let viewModel = LoginViewModel(
             session: session

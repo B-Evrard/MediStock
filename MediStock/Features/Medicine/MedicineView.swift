@@ -48,6 +48,15 @@ struct MedicineView: View {
                 dismissButton: .default(Text("OK"))
             )
         }
+        .alert(isPresented: $viewModel.isErrorInit) {
+            Alert(
+                title: Text("Error"),
+                message: Text(viewModel.errorMessage),
+                dismissButton: .default(Text("OK")) {
+                    path.removeLast()
+                }
+            )
+        }
         
     }
 }
