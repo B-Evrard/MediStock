@@ -8,7 +8,7 @@
 import Foundation
 import FirebaseFirestore
 
-struct Aisle: Codable {
+struct AisleModel: Codable {
     @DocumentID var id: String?
     let name: String
     let nameSearch: String?

@@ -13,7 +13,7 @@ import Combine
 final class SessionManager: ObservableObject {
     
     // MARK: - Published
-    @Published var user: MediStockUser?
+    @Published var user: UserModel?
     @Published var isConnected: Bool
     
     // MARK: - Public
@@ -24,7 +24,7 @@ final class SessionManager: ObservableObject {
     private var observers: [NSObjectProtocol] = []
     
     // MARK: - Init
-    init(user: MediStockUser? = nil, authService: AuthProviding = FireBaseAuthService()) {
+    init(user: UserModel? = nil, authService: AuthProviding = FireBaseAuthService()) {
         self.user = user
         self.authService = authService
         self.isConnected = authService.isConnected()

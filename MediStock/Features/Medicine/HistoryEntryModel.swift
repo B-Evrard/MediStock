@@ -1,7 +1,7 @@
 import Foundation
 import FirebaseFirestore
 
-struct HistoryEntry: Codable {
+struct HistoryEntryModel: Codable {
     @DocumentID var id: String?
     var medicineId: String
     var action: String

@@ -16,11 +16,11 @@ protocol AuthProviding {
     func isConnected() -> Bool
     func listen ()
     func signIn(withEmail email: String, password: String) async throws -> String?
-    func signUp(withEmail email: String, password: String) async throws -> MediStockUser?
+    func signUp(withEmail email: String, password: String) async throws -> UserModel?
     func signOut() async throws
     func removeListener()
     
     // MARK: User
-    func addUser(_ user: MediStockUser) async throws
-    func getUser(idAuth: String) async throws -> MediStockUser?
+    func addUser(_ user: UserModel) async throws
+    func getUser(idAuth: String) async throws -> UserModel?
 }

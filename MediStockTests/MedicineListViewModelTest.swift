@@ -51,10 +51,10 @@ final class MedicineListViewModelTest: XCTestCase {
             XCTAssertEqual(viewModel.medicines[0].id, "7")
         }
         
-        var expectedUpdate = MedicineUpdate(
-            added: [Medicine(id: "21", aisleId: "1", name: "aa", stock: 100),
-                    Medicine(id: "22", aisleId: "2", name: "bb", stock: 200),
-                    Medicine(id: "23", aisleId: "3", name: "cc", stock: 300)],
+        var expectedUpdate = MedicineUpdateModel(
+            added: [MedicineModel(id: "21", aisleId: "1", name: "aa", stock: 100),
+                    MedicineModel(id: "22", aisleId: "2", name: "bb", stock: 200),
+                    MedicineModel(id: "23", aisleId: "3", name: "cc", stock: 300)],
             modified: [],
             removedIds: []
         )
@@ -67,9 +67,9 @@ final class MedicineListViewModelTest: XCTestCase {
             XCTAssertEqual(viewModel.medicines[0].id, "21")
         }
         
-        expectedUpdate = MedicineUpdate(
+        expectedUpdate = MedicineUpdateModel(
             added: [],
-            modified: [Medicine(id: "7", aisleId: "5", name: "Actifed", stock: 200)],
+            modified: [MedicineModel(id: "7", aisleId: "5", name: "Actifed", stock: 200)],
             removedIds: []
         )
         storeService.send(update: expectedUpdate)
@@ -78,7 +78,7 @@ final class MedicineListViewModelTest: XCTestCase {
         XCTAssertEqual(viewModel.medicines[1].id, "7")
         XCTAssertEqual(viewModel.medicines[1].stock, 200)
         
-        expectedUpdate = MedicineUpdate(
+        expectedUpdate = MedicineUpdateModel(
             added: [],
             modified: [],
             removedIds: ["7"]
@@ -151,7 +151,7 @@ final class MedicineListViewModelTest: XCTestCase {
         let authService = MockFBAuthService()
         let storeService = MockFBStoreService()
         let session = SessionManager(storeService: storeService, authService: authService)
-        session.user = MediStockUser(idAuth: "123", displayName: "Bruno", email: "test@test.com")
+        session.user = UserModel(idAuth: "123", displayName: "Bruno", email: "test@test.com")
         session.isConnected = true
         let viewModel = MedicineListViewModel(
             session: session

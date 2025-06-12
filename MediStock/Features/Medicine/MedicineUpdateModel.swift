@@ -7,12 +7,12 @@
 
 import Foundation
 
-struct MedicineUpdate {
-    var added: [Medicine]
-    var modified: [Medicine]
+struct MedicineUpdateModel {
+    var added: [MedicineModel]
+    var modified: [MedicineModel]
     var removedIds: [String]
     
-    init(added: [Medicine] = [], modified: [Medicine] = [], removedIds: [String] = []) {
+    init(added: [MedicineModel] = [], modified: [MedicineModel] = [], removedIds: [String] = []) {
         self.added = added
         self.modified = modified
         self.removedIds = removedIds

@@ -11,7 +11,7 @@ import Foundation
 final class UserViewModel: ObservableObject {
     
     // MARK: - Published
-    @Published var user: MediStockUserViewData?
+    @Published var user: UserViewData?
     @Published var isError: Bool = false
     
     // MARK: - Public

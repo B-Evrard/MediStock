@@ -57,13 +57,13 @@ class MockFBAuthService: AuthProviding {
         
     }
     
-    func signUp(withEmail email: String, password: String) async throws -> MediStockUser? {
+    func signUp(withEmail email: String, password: String) async throws -> UserModel? {
         if shouldSucceed {
             if usersValid.first(where: { $0.email == email }) != nil {
                 throw AuthErrorCode.emailAlreadyInUse
             }
             else {
-                let user = MediStockUser(idAuth: UUID().uuidString, displayName: "", email: email)
+                let user = UserModel(idAuth: UUID().uuidString, displayName: "", email: email)
                 return user
             }
         } else {

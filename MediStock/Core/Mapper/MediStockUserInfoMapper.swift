@@ -9,7 +9,7 @@ import Foundation
 
 struct MediStockUserInfoMapper {
     
-    static func mapToViewData(_ userInfo: MediStockUser) -> MediStockUserViewData {
+    static func mapToViewData(_ userInfo: UserModel) -> UserViewData {
         return .init(
             idAuth: userInfo.idAuth,
             displayName: userInfo.displayName,
@@ -17,7 +17,7 @@ struct MediStockUserInfoMapper {
         )
     }
     
-    static func mapToModel(_ viewData: MediStockUserViewData) -> MediStockUser {
+    static func mapToModel(_ viewData: UserViewData) -> UserModel {
         return .init(
             idAuth: viewData.idAuth,
             displayName: viewData.displayName,

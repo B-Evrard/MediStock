@@ -9,7 +9,7 @@ import Foundation
 
 final class HistoryService {
     
-    func generateHistory(user: MediStockUser, oldMedicine: MedicineViewData?, newMedicine: MedicineViewData?) -> HistoryEntry? {
+    func generateHistory(user: UserModel, oldMedicine: MedicineViewData?, newMedicine: MedicineViewData?) -> HistoryEntryModel? {
         
         guard let oldMedicine = oldMedicine else {
             // ADD medicine
@@ -18,7 +18,7 @@ final class HistoryService {
             }
             let detail  = "Stock : \(newMedicine.stock) - Aisle : \(newMedicine.aisle?.label ?? "") "
             
-            let entry = HistoryEntry(
+            let entry = HistoryEntryModel(
                 medicineId: newMedicine.id ?? "",
                 action: HistoryAction.Add.rawValue,
                 details: detail,
@@ -33,7 +33,7 @@ final class HistoryService {
             // DELETE medicine
             let detail  = "\(oldMedicine.name) - Aisle : \(oldMedicine.aisle?.label ?? "") "
             
-            let entry = HistoryEntry(
+            let entry = HistoryEntryModel(
                 medicineId: oldMedicine.id ?? "",
                 action: HistoryAction.Delete.rawValue,
                 details: detail,
@@ -64,7 +64,7 @@ final class HistoryService {
             isModified = true
         }
         if (isModified) {
-            let entry = HistoryEntry(
+            let entry = HistoryEntryModel(
                 medicineId: oldMedicine.id ?? "",
                 action: HistoryAction.Update.rawValue,
                 details: detail,

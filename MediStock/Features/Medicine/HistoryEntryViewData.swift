@@ -14,7 +14,7 @@ struct HistoryEntryViewData: Hashable {
     var modifiedAt: Date
     var modifiedByUserName: String
     
-    init(historyEntry: HistoryEntry)
+    init(historyEntry: HistoryEntryModel)
     {
         self.id = historyEntry.id
         self.action = HistoryAction.from(historyEntry.action)

@@ -13,34 +13,34 @@ final class FireBaseStoreService: DataStore {
     private var listenerMedicine: ListenerRegistration?
     
     // MARK: Aisle
-    func fetchAisles() async throws -> [Aisle] {
-        var aisles: [Aisle] = []
+    func fetchAisles() async throws -> [AisleModel] {
+        var aisles: [AisleModel] = []
         let query = db.collection("Aisles")
             .order(by: "sortKey")
         
         let snapshot = try await query.getDocuments()
         
-        aisles = snapshot.documents.compactMap { document -> Aisle? in
-            try? document.data(as: Aisle.self)
+        aisles = snapshot.documents.compactMap { document -> AisleModel? in
+            try? document.data(as: AisleModel.self)
         }
         return aisles
     }
     
-    func addAisle(_ aisle: Aisle) async throws -> Aisle{
+    func addAisle(_ aisle: AisleModel) async throws -> AisleModel{
         let ref = try db.collection("Aisles").addDocument(from: aisle)
-        return try await ref.getDocument().data(as: Aisle.self)
+        return try await ref.getDocument().data(as: AisleModel.self)
     }
     
-    func getAisle(id: String) async throws -> Aisle {
+    func getAisle(id: String) async throws -> AisleModel {
         let ref = db.collection("Aisles").document(id)
-        let aisle = try await ref.getDocument(as: Aisle.self)
+        let aisle = try await ref.getDocument(as: AisleModel.self)
         return aisle
     }
     
     // MARK: Medicines
-    func getMedicine(id: String) async throws -> Medicine {
+    func getMedicine(id: String) async throws -> MedicineModel {
         let ref = db.collection("Medicines").document(id)
-        let medicine = try await ref.getDocument(as : Medicine.self)
+        let medicine = try await ref.getDocument(as : MedicineModel.self)
         return medicine
     }
     
@@ -54,12 +54,12 @@ final class FireBaseStoreService: DataStore {
         return snapshot.documents.count>0
     }
     
-    func addMedicine(_ medicine: Medicine) async throws -> Medicine {
+    func addMedicine(_ medicine: MedicineModel) async throws -> MedicineModel {
         let ref = try db.collection("Medicines").addDocument(from: medicine)
-        return try await ref.getDocument().data(as: Medicine.self)
+        return try await ref.getDocument().data(as: MedicineModel.self)
     }
     
-    func updateMedicine(_ medicine: Medicine) async throws {
+    func updateMedicine(_ medicine: MedicineModel) async throws {
         guard let id = medicine.id else {
             throw ControlError.genericError()
         }
@@ -70,7 +70,7 @@ final class FireBaseStoreService: DataStore {
         try await db.collection("Medicines").document(id).delete()
     }
     
-    func streamMedicines(aisleId: String?, filter: String?, sortOption: SortOption?) -> AsyncThrowingStream<MedicineUpdate, Error> {
+    func streamMedicines(aisleId: String?, filter: String?, sortOption: SortOption?) -> AsyncThrowingStream<MedicineUpdateModel, Error> {
         AsyncThrowingStream { [weak self] continuation in
             guard let self else {
                 continuation.finish(throwing: CancellationError())
@@ -106,7 +106,7 @@ final class FireBaseStoreService: DataStore {
                     continuation.finish(throwing: error)
                     return
                 }
-                var medicineUpdates = MedicineUpdate()
+                var medicineUpdates = MedicineUpdateModel()
                 guard let snapshot else {
                     continuation.yield(medicineUpdates)
                     return
@@ -114,11 +114,11 @@ final class FireBaseStoreService: DataStore {
 
                 let added = snapshot.documentChanges
                     .filter { $0.type == .added }
-                    .compactMap { try? $0.document.data(as: Medicine.self) }
+                    .compactMap { try? $0.document.data(as: MedicineModel.self) }
                 
                 let modified = snapshot.documentChanges
                     .filter { $0.type == .modified }
-                    .compactMap { try? $0.document.data(as: Medicine.self) }
+                    .compactMap { try? $0.document.data(as: MedicineModel.self) }
                 
                 let removedIds = snapshot.documentChanges
                     .filter { $0.type == .removed }
@@ -145,22 +145,22 @@ final class FireBaseStoreService: DataStore {
     
     
     // MARK: History
-    func fetchHistory(medicineId: String) async throws -> [HistoryEntry] {
+    func fetchHistory(medicineId: String) async throws -> [HistoryEntryModel] {
         let FBHistory = db.collection("History")
         var query: Query
         query = FBHistory
             .whereField("medicineId", isEqualTo: medicineId)
             .order(by: "modifiedAt")
         let snapshot = try await query.getDocuments()
-        let historyEntries = snapshot.documents.compactMap { document -> HistoryEntry? in
-            try? document.data(as: HistoryEntry.self)
+        let historyEntries = snapshot.documents.compactMap { document -> HistoryEntryModel? in
+            try? document.data(as: HistoryEntryModel.self)
         }
         return historyEntries
     }
     
-    func addHistory(_ historyEntry: HistoryEntry) async throws -> HistoryEntry {
+    func addHistory(_ historyEntry: HistoryEntryModel) async throws -> HistoryEntryModel {
         let ref = try db.collection("History").addDocument(from: historyEntry)
-        return try await ref.getDocument().data(as: HistoryEntry.self)
+        return try await ref.getDocument().data(as: HistoryEntryModel.self)
     }
     
     

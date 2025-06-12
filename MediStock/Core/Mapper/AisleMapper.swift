@@ -9,15 +9,15 @@ import Foundation
 
 struct AisleMapper {
     
-    static func mapToViewData(_ aisle: Aisle) -> AisleViewData {
+    static func mapToViewData(_ aisle: AisleModel) -> AisleViewData {
         return AisleViewData(
             id: aisle.id,
             name: aisle.name
         )
     }
     
-    static func mapToModel(_ viewData: AisleViewData) -> Aisle {
-        return Aisle(
+    static func mapToModel(_ viewData: AisleViewData) -> AisleModel {
+        return AisleModel(
             id: viewData.id,
             name: viewData.name,
             nameSearch: viewData.name.removingAccentsUppercased,

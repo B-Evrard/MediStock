@@ -9,16 +9,16 @@ import Foundation
 
 struct MedicineMapper {
     
-    static func mapToViewData(_ medicine: Medicine, aisle: Aisle?) -> MedicineViewData {
+    static func mapToViewData(_ medicine: MedicineModel, aisle: AisleModel?) -> MedicineViewData {
         return .init(
             id: medicine.id ?? "",
             name: medicine.name,
             stock: medicine.stock,
-            aisle: AisleMapper.mapToViewData(aisle ?? Aisle(id: "", name: "", nameSearch: "", sortKey: ""))
+            aisle: AisleMapper.mapToViewData(aisle ?? AisleModel(id: "", name: "", nameSearch: "", sortKey: ""))
         )
     }
     
-    static func mapToListViewData(_ medicine: Medicine) -> MedicineViewData {
+    static func mapToListViewData(_ medicine: MedicineModel) -> MedicineViewData {
         return .init(
             id: medicine.id ?? "",
             name: medicine.name,
@@ -27,7 +27,7 @@ struct MedicineMapper {
         )
     }
     
-    static func mapToModel(_ viewData: MedicineViewData) -> Medicine {
+    static func mapToModel(_ viewData: MedicineViewData) -> MedicineModel {
         return .init(
             id: viewData.id,
             aisleId: viewData.aisle?.id ?? "",

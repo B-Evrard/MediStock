@@ -1,7 +1,7 @@
 import Foundation
 import FirebaseFirestore
 
-struct Medicine: Codable {
+struct MedicineModel: Codable {
     @DocumentID var id: String?
     var aisleId: String
     var name: String

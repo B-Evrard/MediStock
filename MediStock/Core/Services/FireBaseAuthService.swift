@@ -37,9 +37,9 @@ class FireBaseAuthService: AuthProviding  {
         return auth.currentUser?.uid
     }
     
-    func signUp(withEmail email: String, password: String) async throws  -> MediStockUser?  {
+    func signUp(withEmail email: String, password: String) async throws  -> UserModel?  {
         _ = try await auth.createUser(withEmail: email, password: password)
-        let user = MediStockUser(idAuth: auth.currentUser?.uid, displayName: "", email: email)
+        let user = UserModel(idAuth: auth.currentUser?.uid, displayName: "", email: email)
         return user
     }
     
@@ -58,16 +58,16 @@ class FireBaseAuthService: AuthProviding  {
     }
     
     // MARK: User
-    func addUser(_ user: MediStockUser) async throws {
+    func addUser(_ user: UserModel) async throws {
         _ = try db.collection("Users").addDocument(from: user)
     }
     
-    func getUser(idAuth: String) async throws -> MediStockUser? {
-        var user: MediStockUser?
+    func getUser(idAuth: String) async throws -> UserModel? {
+        var user: UserModel?
         let FBUsers = db.collection("Users")
         let snapshot = try await FBUsers.whereField("idAuth", isEqualTo: idAuth).getDocuments()
         if (!snapshot.isEmpty) {
-            user = try snapshot.documents[0].data(as : MediStockUser.self)
+            user = try snapshot.documents[0].data(as : UserModel.self)
         }
         return user
     }

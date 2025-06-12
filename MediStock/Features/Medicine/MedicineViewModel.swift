@@ -81,7 +81,7 @@ final class MedicineViewModel: ObservableObject {
     func AddAisle() async {
         self.isError = false
         do {
-            let newAisle = Aisle(name: self.searchAisle, nameSearch: self.searchAisle.removingAccentsUppercased, sortKey: self.searchAisle.normalizedSortKey)
+            let newAisle = AisleModel(name: self.searchAisle, nameSearch: self.searchAisle.removingAccentsUppercased, sortKey: self.searchAisle.normalizedSortKey)
             let aisle = try await dataStoreService.addAisle(newAisle)
             self.medicine.aisle = AisleMapper.mapToViewData(aisle)
             self.searchAisle = ""
@@ -105,7 +105,7 @@ final class MedicineViewModel: ObservableObject {
                 self.errorMessage = AppMessages.genericError
                 return false
             }
-            var historyEntry: HistoryEntry?
+            var historyEntry: HistoryEntryModel?
             try Control.controleMedicine(medicine: medicine)
             let medicineModel = MedicineMapper.mapToModel(self.medicine)
             if medicineModel.id != nil {

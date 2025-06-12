@@ -9,20 +9,20 @@ import Foundation
 @testable import MediStock
 
 final class MockUsers {
-    static let mockUser = MediStockUser(
+    static let mockUser = UserModel(
         idAuth: "user_1",
         displayName: "Alice Johnson",
         email: "alice.johnson@example.com",
     )
     
-    static let mockUsers: [MediStockUser] = [
+    static let mockUsers: [UserModel] = [
         mockUser,
-        MediStockUser(
+        UserModel(
             idAuth: "user_2",
             displayName: "Bob Smith",
             email: "bob.smith@example.com",
         ),
-        MediStockUser(
+        UserModel(
             idAuth: "user_3",
             displayName: "Charlie Lee",
             email: "charlie.lee@example.com",
