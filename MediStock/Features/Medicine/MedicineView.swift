@@ -158,7 +158,7 @@ extension MedicineView {
                         if (!viewModel.searchAisle.isEmpty && !viewModel.aisleExist()) {
                             Button(action: {
                                 Task {
-                                    await viewModel.AddAisle()
+                                    await viewModel.addAisle()
                                 }
                             }) {
                                 Label("Add Aisle", systemImage: "plus.app")

@@ -73,12 +73,12 @@ final class MedicineViewModel: ObservableObject {
     
     func updateFilteredAisles() {
         let lowercased = searchAisle.lowercased()
-        filteredAisles = aisles.filter {
+        self.filteredAisles = aisles.filter {
             $0.name.lowercased().contains(lowercased)
         }
     }
     
-    func AddAisle() async {
+    func addAisle() async {
         self.isError = false
         do {
             let newAisle = AisleModel(name: self.searchAisle, nameSearch: self.searchAisle.removingAccentsUppercased, sortKey: self.searchAisle.normalizedSortKey)
@@ -88,7 +88,7 @@ final class MedicineViewModel: ObservableObject {
             await self.fetchAisles()
         } catch {
             self.isError = true
-            print("Error adding aisle")
+            self.errorMessage = AppMessages.genericError
         }
     }
     

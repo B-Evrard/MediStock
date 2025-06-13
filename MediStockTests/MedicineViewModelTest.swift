@@ -12,19 +12,8 @@ final class MedicineViewModelTest: XCTestCase {
     
     @MainActor
     func testInitMedicineAddFail() async {
-        
-        let authService = MockFBAuthService()
-        let storeService = MockFBStoreService()
-        storeService.shouldSucceed = false
-        let session = SessionManager(authService: authService)
-        
-        let viewModel = MedicineViewModel(
-            session: session,
-            medicine: MedicineViewData(),
-            storeService: storeService
-        )
-        
-        await viewModel.initMedicine()
+    
+        let viewModel = await makeInitializedViewModel(shouldSucceed: false)
         XCTAssertTrue(viewModel.isErrorInit)
         XCTAssertEqual(viewModel.aisles.count, 0)
     }
@@ -32,17 +21,7 @@ final class MedicineViewModelTest: XCTestCase {
     @MainActor
     func testInitMedicineAddOk() async {
         
-        let authService = MockFBAuthService()
-        let storeService = MockFBStoreService()
-        let session = SessionManager(authService: authService)
-        
-        let viewModel = MedicineViewModel(
-            session: session,
-            medicine: MedicineViewData(),
-            storeService: storeService
-        )
-        
-        await viewModel.initMedicine()
+        let viewModel = await makeInitializedViewModel()
         XCTAssertFalse(viewModel.isErrorInit)
         XCTAssertEqual(viewModel.aisles.count, 10)
         
@@ -51,23 +30,11 @@ final class MedicineViewModelTest: XCTestCase {
     @MainActor
     func testInitMedicineUpdateFail() async {
         
-        let authService = MockFBAuthService()
-        let storeService = MockFBStoreService()
-        storeService.shouldSucceed = false
-        let session = SessionManager(authService: authService)
-        
         let medicine = MedicineMapper.mapToViewData(
-            MockProvider.getMockMedicines()[0],
+            MockProvider.generateMedicines()[0],
             aisle: MockProvider.generateAisles()[0]
         )
-        
-        let viewModel = MedicineViewModel(
-            session: session,
-            medicine: medicine,
-            storeService: storeService
-        )
-        
-        await viewModel.initMedicine()
+        let viewModel = await makeInitializedViewModel(shouldSucceed: false, medicine: medicine)
         XCTAssertTrue(viewModel.isErrorInit)
         XCTAssertEqual(viewModel.aisles.count, 0)
     }
@@ -75,15 +42,111 @@ final class MedicineViewModelTest: XCTestCase {
     @MainActor
     func testInitMedicineUpdateOk() async {
         
+        let medicine = MedicineMapper.mapToViewData(
+            MockProvider.generateMedicines()[0],
+            aisle: MockProvider.generateAisles()[0]
+        )
+        let viewModel = await makeInitializedViewModel(medicine: medicine)
+        XCTAssertFalse(viewModel.isErrorInit)
+        XCTAssertEqual(viewModel.aisles.count, 10)
+        XCTAssertEqual(viewModel.medicine.history?.count, 5)
+    }
+    
+    @MainActor
+    func testUpdateFilteredAisles() async {
+        
+        let viewModel = await makeInitializedViewModel()
+        XCTAssertFalse(viewModel.isErrorInit)
+        XCTAssertEqual(viewModel.aisles.count, 10)
+        
+        viewModel.searchAisle = "1"
+        XCTAssertEqual(viewModel.filteredAisles.count, 2)
+    }
+    
+    
+    @MainActor
+    func testAddAisleFail() async {
         let authService = MockFBAuthService()
         let storeService = MockFBStoreService()
         let session = SessionManager(authService: authService)
         
-        let medicine = MedicineMapper.mapToViewData(
-            MockProvider.getMockMedicines()[0],
-            aisle: MockProvider.generateAisles()[0]
+        let viewModel = MedicineViewModel(
+            session: session,
+            medicine: MedicineViewData(),
+            storeService: storeService
         )
         
+        await viewModel.initMedicine()
+        XCTAssertFalse(viewModel.isError)
+        XCTAssertEqual(viewModel.aisles.count, 10)
+        
+        viewModel.searchAisle = "new 1"
+        XCTAssertEqual(viewModel.filteredAisles.count, 0)
+        
+        storeService.shouldSucceed = false
+        await viewModel.addAisle()
+        
+        XCTAssertTrue(viewModel.isError)
+        XCTAssertEqual(viewModel.errorMessage, AppMessages.genericError)
+        XCTAssertEqual(viewModel.aisles.count, 10)
+        viewModel.searchAisle = "new 1"
+        XCTAssertEqual(viewModel.filteredAisles.count, 0)
+    }
+    
+    
+    @MainActor
+    func testAddAisle() async {
+        let viewModel = await makeInitializedViewModel()
+        XCTAssertFalse(viewModel.isErrorInit)
+        XCTAssertEqual(viewModel.aisles.count, 10)
+        
+        viewModel.searchAisle = "new 1"
+        XCTAssertEqual(viewModel.filteredAisles.count, 0)
+        await viewModel.addAisle()
+        XCTAssertEqual(viewModel.aisles.count, 11)
+        viewModel.searchAisle = "new 1"
+        XCTAssertEqual(viewModel.filteredAisles.count, 1)
+    }
+    
+    @MainActor
+    func testAisleExists() async {
+        
+        let viewModel = await makeInitializedViewModel()
+        
+        viewModel.searchAisle = "1"
+        XCTAssertTrue(viewModel.aisleExist())
+        
+        viewModel.searchAisle = "1*"
+        XCTAssertFalse(viewModel.aisleExist())
+        
+    }
+
+    
+    @MainActor
+    func testValidateFailControl() async {
+        
+        let viewModel = await makeInitializedViewModel()
+        
+        _ = await viewModel.validate()
+        XCTAssertTrue(viewModel.isError)
+        XCTAssertEqual(viewModel.errorMessage, AppMessages.medicineNameEmpty)
+        
+        viewModel.medicine.name = "Test"
+        _ = await viewModel.validate()
+        XCTAssertTrue(viewModel.isError)
+        XCTAssertEqual(viewModel.errorMessage, AppMessages.aisleEmpty)
+        
+    }
+    
+    @MainActor
+    func makeInitializedViewModel(shouldSucceed: Bool = true, medicine: MedicineViewData = MedicineViewData()) async -> MedicineViewModel {
+        
+        let authService = MockFBAuthService()
+        let storeService = MockFBStoreService()
+        storeService.shouldSucceed = shouldSucceed
+        let session = SessionManager(authService: authService)
+        session.user = UserModel(idAuth: "123", displayName: "Bruno", email: "test@test.com")
+        session.isConnected = true
         let viewModel = MedicineViewModel(
             session: session,
             medicine: medicine,
@@ -91,9 +154,6 @@ final class MedicineViewModelTest: XCTestCase {
         )
         
         await viewModel.initMedicine()
-        XCTAssertFalse(viewModel.isErrorInit)
-        XCTAssertEqual(viewModel.aisles.count, 10)
-        XCTAssertEqual(viewModel.medicine.history?.count, 5)
+        return viewModel
     }
-    
 }

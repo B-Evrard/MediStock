@@ -16,29 +16,50 @@ class MockFBStoreService: DataStore {
     let mockError = NSError(domain: "MockFBStoreService", code: 1, userInfo: nil)
     private var continuation: AsyncThrowingStream<MedicineUpdateModel, Error>.Continuation?
     
+    private var mockAisles = MockProvider.generateAisles()
+    private var mockMedicines = MockProvider.generateMedicines()
+    private var mockHistory = MockProvider.historyEntries
+    
     func fetchAisles() async throws -> [AisleModel] {
         if (shouldSucceed) {
-            return MockProvider.generateAisles()
+            return mockAisles
         } else {
             throw NSError(domain: "MockFBStoreService", code: 1, userInfo: nil) as Error
         }
     }
     
     func addAisle(_ aisle: AisleModel) async throws -> AisleModel {
-        let aisle: AisleModel = AisleModel(id: "1", name: "Aisle 1", nameSearch: "", sortKey: "" )
-        return aisle
+        if (shouldSucceed) {
+            let maxID = mockAisles
+                .compactMap { $0.id }
+                .compactMap { Int($0) }
+                .max()
+
+            let nextID = (maxID ?? 0) + 1
+            let nextIDString = String(nextID)
+            var aisle = aisle
+            aisle.id = nextIDString
+            mockAisles.append(aisle)
+            return aisle
+        } else {
+            throw NSError(domain: "MockFBStoreService", code: 1, userInfo: nil) as Error
+        }
     }
     
     func getAisle(id: String) async throws -> AisleModel {
-        let aisle: AisleModel = AisleModel(id: "1", name: "Aisle 1", nameSearch: "", sortKey: "" )
-        return aisle
+        if let aisle = mockAisles.first(where: { $0.id == id }) {
+            return aisle
+        } else {
+            throw NSError(domain: "MockFBStoreService", code: 1, userInfo: nil) as Error
+        }
+        
     }
     
     func streamMedicines(aisleId: String?, filter: String?, sortOption: SortOption?) -> AsyncThrowingStream<MedicineUpdateModel, Error> {
         return AsyncThrowingStream { continuation in
             self.continuation = continuation
             var initialUpdate = MedicineUpdateModel()
-            let allMedicines = MockProvider.getMockMedicines()
+            let allMedicines = MockProvider.generateMedicines()
             
             if let filter = filter, !filter.isEmpty {
                 initialUpdate.added = allMedicines.filter {
@@ -69,8 +90,12 @@ class MockFBStoreService: DataStore {
     }
     
     func getMedicine(id: String) async throws -> MedicineModel {
-        let Medicine = MedicineModel.init(id:"", aisleId: "", name: "", stock: 0)
-        return Medicine
+        if let medicine = mockMedicines.first(where: { $0.id == id}) {
+            return medicine
+        } else {
+            throw NSError(domain: "MockFBStoreService", code: 1, userInfo: nil) as Error
+        }
+        
     }
     
     func medicineExistByNameAndAisle(name: String, aisleId: String) async throws -> Bool {
@@ -100,8 +125,7 @@ class MockFBStoreService: DataStore {
     }
     
     func fetchHistory(medicineId: String) async throws -> [HistoryEntryModel] {
-        let allHistory: [HistoryEntryModel] = MockProvider.historyEntries
-        let history = medicineId.isEmpty ? allHistory : allHistory.filter { $0.medicineId == medicineId }
+        let history = medicineId.isEmpty ? mockHistory : mockHistory.filter { $0.medicineId == medicineId }
         return history
     }
     

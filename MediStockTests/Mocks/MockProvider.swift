@@ -31,20 +31,19 @@ class MockProvider {
     static func generateAisles(count: Int = 10) -> [AisleModel] {
         var aisles: [AisleModel] = []
         for i in 1...count {
-            let name = "Allée \(i)"
-            let sortKey = String(format: "%02d", i)
+            let name = "\(i)"
             let aisle = AisleModel(
                 id: "\(i)",
                 name: name,
-                nameSearch: name.lowercased(),
-                sortKey: sortKey
+                nameSearch: name.removingAccentsUppercased,
+                sortKey: name.normalizedSortKey
             )
             aisles.append(aisle)
         }
         return aisles
     }
     
-    static func getMockMedicines() -> [MedicineModel] {
+    static func generateMedicines() -> [MedicineModel] {
         let mockMedicines: [MedicineModel] = [
             MedicineModel(id: "1", aisleId: "1", name: "Paracetamol", stock: 100),
             MedicineModel(id: "2", aisleId: "2", name: "Ibuprofen", stock: 80),
