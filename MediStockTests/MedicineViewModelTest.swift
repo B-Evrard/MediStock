@@ -175,6 +175,29 @@ final class MedicineViewModelTest: XCTestCase {
     }
     
     @MainActor
+    func testValidationAddOk() async {
+        let viewModel = await makeInitializedViewModel()
+        viewModel.medicine.name = "TestNewMedicine"
+        viewModel.medicine.aisle = viewModel.aisles.first(where: { $0.id == "1" })
+        _ = await viewModel.validate()
+        XCTAssertFalse(viewModel.isError)
+        XCTAssertNotNil(viewModel.medicine.id)
+    }
+    
+    @MainActor
+    func testValidationUpdateOk() async {
+        guard let medicine = MockProvider.generateMedicines().first else {
+            XCTFail()
+            return
+        }
+        let medicineViewData = MedicineMapper.mapToViewData(medicine, aisle: nil)
+        let viewModel = await makeInitializedViewModel(medicine: medicineViewData)
+        viewModel.medicine.name = "TestUpdateMedicine"
+        _ = await viewModel.validate()
+        XCTAssertFalse(viewModel.isError)
+    }
+    
+    @MainActor
     func makeInitializedViewModel(shouldSucceed: Bool = true, medicine: MedicineViewData = MedicineViewData()) async -> MedicineViewModel {
         
         let authService = MockFBAuthService()

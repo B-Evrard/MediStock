@@ -63,14 +63,7 @@ final class MedicineViewModel: ObservableObject {
             self.errorMessage = AppMessages.genericError
         }
     }
-    
-//    func checkAilseSelected(aisleSelected: AisleViewData) -> Bool{
-//        guard let aisle = medicine.aisle else {
-//           return false
-//        }
-//        return aisleSelected.id == aisle.id
-//    }
-    
+
     func updateFilteredAisles() {
         let lowercased = searchAisle.lowercased()
         self.filteredAisles = aisles.filter {
