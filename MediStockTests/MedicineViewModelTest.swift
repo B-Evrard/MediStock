@@ -139,6 +139,42 @@ final class MedicineViewModelTest: XCTestCase {
     }
     
     @MainActor
+    func testAddMedicineFailsIfAlreadyExists() async {
+    
+        let viewModel = await makeInitializedViewModel()
+        //MedicineModel(id: "1", aisleId: "1", name: "Paracetamol", stock: 100),
+        viewModel.medicine.name = "Paracetamol"
+        viewModel.medicine.aisle = viewModel.aisles.first(where: { $0.id == "1" })
+        _ = await viewModel.validate()
+        XCTAssertTrue(viewModel.isError)
+        XCTAssertEqual(viewModel.errorMessage, AppMessages.medicineExist)
+        
+    }
+    
+    @MainActor
+    func testValidationFailsWhenDatabaseUpdateFails() async {
+    
+        let authService = MockFBAuthService()
+        let storeService = MockFBStoreService()
+        let session = SessionManager(authService: authService)
+        session.user = UserModel(idAuth: "123", displayName: "Bruno", email: "test@test.com")
+        session.isConnected = true
+        let viewModel = MedicineViewModel(
+            session: session,
+            medicine: MedicineViewData(),
+            storeService: storeService
+        )
+        await viewModel.initMedicine()
+        viewModel.medicine.name = "TestNewMedicine"
+        viewModel.medicine.aisle = viewModel.aisles.first(where: { $0.id == "1" })
+        storeService.shouldSucceed = false
+        _ = await viewModel.validate()
+        XCTAssertTrue(viewModel.isError)
+        XCTAssertEqual(viewModel.errorMessage, AppMessages.genericError)
+        
+    }
+    
+    @MainActor
     func makeInitializedViewModel(shouldSucceed: Bool = true, medicine: MedicineViewData = MedicineViewData()) async -> MedicineViewModel {
         
         let authService = MockFBAuthService()

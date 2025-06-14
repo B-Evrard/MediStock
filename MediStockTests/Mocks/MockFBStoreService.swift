@@ -99,12 +99,34 @@ class MockFBStoreService: DataStore {
     }
     
     func medicineExistByNameAndAisle(name: String, aisleId: String) async throws -> Bool {
-        return false
+        guard mockMedicines.first(where: { $0.name == name && $0.aisleId == aisleId}) != nil else {
+            return false
+        }
+        return true
     }
     
     func addMedicine(_ medicine: MedicineModel) async throws -> MedicineModel {
-        let Medicine = MedicineModel.init(id:"", aisleId: "", name: "", stock: 0)
-        return Medicine
+        if (shouldSucceed) {
+            let maxID = mockMedicines
+                .compactMap { $0.id }
+                .compactMap { Int($0) }
+                .max()
+            let nextID = (maxID ?? 0) + 1
+            let nextIDString = String(nextID)
+            var medicineToAdd = medicine
+            medicineToAdd.id = nextIDString
+            mockMedicines.append(medicineToAdd)
+            
+            let expectedUpdate = MedicineUpdateModel(
+                added: [medicineToAdd],
+                modified: [],
+                removedIds: []
+            )
+            send(update: expectedUpdate)
+            return medicineToAdd
+        } else {
+            throw NSError(domain: "MockFBStoreService", code: 1, userInfo: nil) as Error
+        }
     }
     
     func updateMedicine(_ medicine: MedicineModel) async throws {

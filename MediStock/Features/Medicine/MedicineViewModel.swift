@@ -101,8 +101,7 @@ final class MedicineViewModel: ObservableObject {
         self.errorMessage = ""
         do {
             guard let user = session.user else {
-                self.isError = true
-                self.errorMessage = AppMessages.genericError
+                try await session.signOut()
                 return false
             }
             var historyEntry: HistoryEntryModel?
