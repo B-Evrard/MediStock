@@ -190,9 +190,16 @@ final class MedicineViewModelTest: XCTestCase {
             XCTFail()
             return
         }
+        guard let aisle = MockProvider.generateAisles().first(where: { $0.id == "2" })  else {
+            XCTFail()
+            return
+        }
+        let aisleData = AisleMapper.mapToViewData(aisle)
         let medicineViewData = MedicineMapper.mapToViewData(medicine, aisle: nil)
         let viewModel = await makeInitializedViewModel(medicine: medicineViewData)
         viewModel.medicine.name = "TestUpdateMedicine"
+        viewModel.medicine.aisle = aisleData
+        viewModel.medicine.stock = 110
         _ = await viewModel.validate()
         XCTAssertFalse(viewModel.isError)
     }

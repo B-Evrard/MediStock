@@ -18,12 +18,10 @@ final class UserViewModel: ObservableObject {
     
     // MARK: - Private
     private let session: SessionManager
-    private let storeService: DataStore
     
     // MARK: - Init
-    init(session: SessionManager, storeService: DataStore = FireBaseStoreService()) {
+    init(session: SessionManager) {
         self.session = session
-        self.storeService = storeService
         loadUser()
     }
     
