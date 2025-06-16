@@ -47,7 +47,7 @@ jobs:
           path: testResults/TestResults.xcresult
 
       - name: Process Test Results
-        uses: kishikawakatsumi/xcresulttool@v1
+        uses: slidoapp/xcresulttool@v3.1.0
         with:
           path: testResults/TestResults.xcresult
         if: success() || failure()
