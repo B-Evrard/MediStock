@@ -42,20 +42,21 @@ struct MedicineView: View {
             }
         }
         .alert(isPresented: $viewModel.isError) {
-            Alert(
-                title: Text("Error"),
-                message: Text(viewModel.errorMessage),
-                dismissButton: .default(Text("OK"))
-            )
-        }
-        .alert(isPresented: $viewModel.isErrorInit) {
-            Alert(
-                title: Text("Error"),
-                message: Text(viewModel.errorMessage),
-                dismissButton: .default(Text("OK")) {
-                    path.removeLast()
-                }
-            )
+            if viewModel.isErrorInit {
+                return Alert(
+                    title: Text("Error"),
+                    message: Text(viewModel.errorMessage),
+                    dismissButton: .default(Text("OK")) {
+                        path.removeLast()
+                    }
+                )
+            } else {
+                return Alert(
+                    title: Text("Error"),
+                    message: Text(viewModel.errorMessage),
+                    dismissButton: .default(Text("OK"))
+                )
+            }
         }
         
     }
@@ -224,8 +225,9 @@ extension MedicineView {
                 Text("History")
                     .font(.title3)
                     .foregroundColor(Color("ColorFont"))
-                VStack(alignment: .leading, spacing: 4) {
-                    ScrollView {
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 4) {
+                   
                         VStack(alignment: .leading, spacing: 4) {
                             if let history = viewModel.medicine.history {
                                 ForEach(history, id: \.id) { history in
@@ -238,7 +240,6 @@ extension MedicineView {
                                             .font(.caption2)
                                             .foregroundColor(Color(.black))
                                             .accessibilityLabel(history.detailsAccess)
-                                              
                                     }
                                 }
                             }
@@ -246,6 +247,7 @@ extension MedicineView {
                         .frame(maxWidth: .infinity, alignment: .leading)
                     }
                 }
+                .frame(maxHeight: 150)
                 .background(Color("BackgroundElement"))
                 .cornerRadius(8)
                 .padding(.horizontal)
@@ -288,11 +290,11 @@ extension MedicineView {
 
 struct MedicineViewPreview: View {
     @State private var path = NavigationPath()
-
+    
     var body: some View {
         let session = SessionManager()
         let viewModel = MedicineViewModel(session: session, medicine: MedicineViewData())
-
+        
         return MedicineView(viewModel: viewModel, path: $path)
     }
 }

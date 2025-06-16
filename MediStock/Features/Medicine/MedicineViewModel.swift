@@ -21,8 +21,14 @@ final class MedicineViewModel: ObservableObject {
     @Published var filteredAisles: [AisleViewData] = []
     @Published var showAddAisleSheet = false
     @Published var newAisle = AisleViewData.init(id: nil, name: "")
-    @Published var isError: Bool = false
-    @Published var isErrorInit: Bool = false
+    @Published var isError: Bool = false {
+        didSet { updateIsAlertPresented() }
+    }
+    
+    @Published var isErrorInit: Bool = false {
+        didSet { updateIsAlertPresented() }
+    }
+    @Published var isAlertPresented: Bool = false
     @Published var errorMessage: String = ""
     
     // MARK: - Public
@@ -32,7 +38,7 @@ final class MedicineViewModel: ObservableObject {
     private let dataStoreService: DataStore
     private let historyService: HistoryService
     private var medicineBeforeUpdate: MedicineViewData? = nil
-
+    
     // MARK: - Init
     init(
         session: SessionManager,
@@ -63,7 +69,7 @@ final class MedicineViewModel: ObservableObject {
             self.errorMessage = AppMessages.genericError
         }
     }
-
+    
     func updateFilteredAisles() {
         let lowercased = searchAisle.lowercased()
         self.filteredAisles = aisles.filter {
@@ -128,16 +134,20 @@ final class MedicineViewModel: ObservableObject {
             return false
         }
     }
-        
+    
     // MARK: - Private Methods
     private func fetchAisles() async {
         do {
             let aislesData = try await dataStoreService.fetchAisles()
             self.aisles = aislesData.map(AisleMapper.mapToViewData)
-         } catch {
+        } catch {
             self.isErrorInit = true
             self.errorMessage = AppMessages.genericError
         }
+    }
+    
+    private func updateIsAlertPresented() {
+        isAlertPresented = isError || isErrorInit
     }
     
 }

@@ -15,6 +15,8 @@ final class MedicineViewModelTest: XCTestCase {
     
         let viewModel = await makeInitializedViewModel(shouldSucceed: false)
         XCTAssertTrue(viewModel.isErrorInit)
+        XCTAssertFalse(viewModel.isError)
+        XCTAssertTrue(viewModel.isAlertPresented)
         XCTAssertEqual(viewModel.aisles.count, 0)
     }
     
@@ -23,6 +25,8 @@ final class MedicineViewModelTest: XCTestCase {
         
         let viewModel = await makeInitializedViewModel()
         XCTAssertFalse(viewModel.isErrorInit)
+        XCTAssertFalse(viewModel.isError)
+        XCTAssertFalse(viewModel.isAlertPresented)
         XCTAssertEqual(viewModel.aisles.count, 10)
         
     }
@@ -36,6 +40,8 @@ final class MedicineViewModelTest: XCTestCase {
         )
         let viewModel = await makeInitializedViewModel(shouldSucceed: false, medicine: medicine)
         XCTAssertTrue(viewModel.isErrorInit)
+        XCTAssertFalse(viewModel.isError)
+        XCTAssertTrue(viewModel.isAlertPresented)
         XCTAssertEqual(viewModel.aisles.count, 0)
     }
     
@@ -48,6 +54,8 @@ final class MedicineViewModelTest: XCTestCase {
         )
         let viewModel = await makeInitializedViewModel(medicine: medicine)
         XCTAssertFalse(viewModel.isErrorInit)
+        XCTAssertFalse(viewModel.isError)
+        XCTAssertFalse(viewModel.isAlertPresented)
         XCTAssertEqual(viewModel.aisles.count, 10)
         XCTAssertEqual(viewModel.medicine.history?.count, 5)
     }
@@ -57,6 +65,8 @@ final class MedicineViewModelTest: XCTestCase {
         
         let viewModel = await makeInitializedViewModel()
         XCTAssertFalse(viewModel.isErrorInit)
+        XCTAssertFalse(viewModel.isError)
+        XCTAssertFalse(viewModel.isAlertPresented)
         XCTAssertEqual(viewModel.aisles.count, 10)
         
         viewModel.searchAisle = "1"
@@ -87,6 +97,8 @@ final class MedicineViewModelTest: XCTestCase {
         await viewModel.addAisle()
         
         XCTAssertTrue(viewModel.isError)
+        XCTAssertFalse(viewModel.isErrorInit)
+        XCTAssertTrue(viewModel.isAlertPresented)
         XCTAssertEqual(viewModel.errorMessage, AppMessages.genericError)
         XCTAssertEqual(viewModel.aisles.count, 10)
         viewModel.searchAisle = "new 1"
@@ -98,6 +110,8 @@ final class MedicineViewModelTest: XCTestCase {
     func testAddAisle() async {
         let viewModel = await makeInitializedViewModel()
         XCTAssertFalse(viewModel.isErrorInit)
+        XCTAssertFalse(viewModel.isError)
+        XCTAssertFalse(viewModel.isAlertPresented)
         XCTAssertEqual(viewModel.aisles.count, 10)
         
         viewModel.searchAisle = "new 1"
@@ -134,6 +148,8 @@ final class MedicineViewModelTest: XCTestCase {
         viewModel.medicine.name = "Test"
         _ = await viewModel.validate()
         XCTAssertTrue(viewModel.isError)
+        XCTAssertFalse(viewModel.isErrorInit)
+        XCTAssertTrue(viewModel.isAlertPresented)
         XCTAssertEqual(viewModel.errorMessage, AppMessages.aisleEmpty)
         
     }
@@ -147,6 +163,8 @@ final class MedicineViewModelTest: XCTestCase {
         viewModel.medicine.aisle = viewModel.aisles.first(where: { $0.id == "1" })
         _ = await viewModel.validate()
         XCTAssertTrue(viewModel.isError)
+        XCTAssertFalse(viewModel.isErrorInit)
+        XCTAssertTrue(viewModel.isAlertPresented)
         XCTAssertEqual(viewModel.errorMessage, AppMessages.medicineExist)
         
     }
@@ -170,6 +188,8 @@ final class MedicineViewModelTest: XCTestCase {
         storeService.shouldSucceed = false
         _ = await viewModel.validate()
         XCTAssertTrue(viewModel.isError)
+        XCTAssertFalse(viewModel.isErrorInit)
+        XCTAssertTrue(viewModel.isAlertPresented)
         XCTAssertEqual(viewModel.errorMessage, AppMessages.genericError)
         
     }
@@ -181,6 +201,8 @@ final class MedicineViewModelTest: XCTestCase {
         viewModel.medicine.aisle = viewModel.aisles.first(where: { $0.id == "1" })
         _ = await viewModel.validate()
         XCTAssertFalse(viewModel.isError)
+        XCTAssertFalse(viewModel.isErrorInit)
+        XCTAssertFalse(viewModel.isAlertPresented)
         XCTAssertNotNil(viewModel.medicine.id)
     }
     
@@ -202,6 +224,8 @@ final class MedicineViewModelTest: XCTestCase {
         viewModel.medicine.stock = 110
         _ = await viewModel.validate()
         XCTAssertFalse(viewModel.isError)
+        XCTAssertFalse(viewModel.isErrorInit)
+        XCTAssertFalse(viewModel.isAlertPresented)
     }
     
     @MainActor
