@@ -1,0 +1,50 @@
+name: iOS Build and Test
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create test results directory
+        run: mkdir -p testResults
+
+      - name: Select Xcode Version
+        run: sudo xcode-select -s /Applications/Xcode.app
+
+      - name: Build and Test
+        uses: sersoft-gmbh/xcodebuild-action@v3.2.0
+        with:
+          project: MediStock.xcodeproj
+          scheme: MediStock
+          destination: 'platform=iOS Simulator,name=iPhone 16'
+          action: test
+          result-bundle-path: 'testResults/TestResults.xcresult'
+
+      - name: Check if Test Results Exist
+        run: |
+          if [ -d "testResults/TestResults.xcresult" ]; then
+            echo "Test results found."
+          else
+            echo "Test results not found."
+            exit 1
+          fi
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: success() || failure()
+        with:
+          name: test-results
+          path: testResults/TestResults.xcresult
+
+      - name: Process Test Results
+        uses: kishikawakatsumi/xcresulttool@v1
+        with:
+          path: testResults/TestResults.xcresult
+        if: success() || failure()
