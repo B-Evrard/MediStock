@@ -27,6 +27,7 @@ jobs:
           scheme: MediStock
           destination: 'platform=iOS Simulator,name=iPhone 16'
           action: test
+          only-testing: MediStockTests
           result-bundle-path: 'testResults/TestResults.xcresult'
 
       - name: Check if Test Results Exist
