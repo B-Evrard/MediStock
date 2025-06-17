@@ -16,25 +16,27 @@ struct MedicineView: View {
     @State private var showPicker = false
     @State private var showAddSheet = false
     @State private var newAisleName: String = ""
+    @State private var isShowingFullHistory = false
     
     var body: some View {
         ZStack {
             Color("Background").ignoresSafeArea(edges: .top)
-            ScrollView {
-                VStack {
-                    headerSection
-                    medicineNameSection
-                    medicineStockSection
-                    medicineAisleSection
-                    medicineHistorySection
-                    Spacer()
-                    buttonValidate
-                }
-                .padding()
-                .overlay(alignment: .top) {
-                    listAisleSection
-                }
+            
+            VStack {
+                headerSection
+                medicineNameSection
+                medicineStockSection
+                medicineAisleSection
+                medicineHistorySection
+                Spacer()
+                buttonValidate
             }
+            
+            .padding()
+            .overlay(alignment: .top) {
+                listAisleSection
+            }
+            
         }
         .onAppear() {
             Task {
@@ -58,6 +60,9 @@ struct MedicineView: View {
                 )
             }
         }
+        .sheet(isPresented: $isShowingFullHistory) {
+            FullHistoryView(history: viewModel.medicine.history ?? [])
+        }
         
     }
 }
@@ -79,6 +84,7 @@ extension MedicineView {
             Text("Name")
                 .font(.title3)
                 .foregroundColor(Color("ColorFont"))
+            
             TextField("", text: $viewModel.medicine.name,
                       prompt: Text("Medicine name")
                 .foregroundColor(.gray))
@@ -98,6 +104,7 @@ extension MedicineView {
                 .font(.title3)
                 .foregroundColor(Color("ColorFont"))
                 .accessibilityHidden(true)
+            
             HStack {
                 Button(action: {
                     if viewModel.medicine.stock > 0 {
@@ -142,41 +149,38 @@ extension MedicineView {
     
     private var medicineAisleSection: some View {
         ZStack(alignment: .top) {
-            VStack {
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Aisle : \(viewModel.medicine.aisle?.name ?? "")")
-                        .font(.title3)
-                        .foregroundColor(Color(.black))
-                        .accessibilityLabel("Aisle : \(viewModel.medicine.aisle?.name ?? "")")
-                    HStack {
-                        TextField("", text: $viewModel.searchAisle,
-                                  prompt: Text("Choose an aisle...")
-                            .foregroundColor(.gray))
-                        .font(.body)
-                        .foregroundColor(Color("ColorFont"))
-                        .autocorrectionDisabled()
-                        Spacer()
-                        if (!viewModel.searchAisle.isEmpty && !viewModel.aisleExist()) {
-                            Button(action: {
-                                Task {
-                                    await viewModel.addAisle()
-                                }
-                            }) {
-                                Label("Add Aisle", systemImage: "plus.app")
-                                    .font(.title3)
-                                    .foregroundColor(.black)
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Aisle : \(viewModel.medicine.aisle?.name ?? "")")
+                    .font(.title3)
+                    .foregroundColor(Color(.black))
+                    .accessibilityLabel("Aisle : \(viewModel.medicine.aisle?.name ?? "")")
+                
+                HStack {
+                    TextField("", text: $viewModel.searchAisle,
+                              prompt: Text("Choose an aisle...")
+                        .foregroundColor(.gray))
+                    .font(.body)
+                    .foregroundColor(Color("ColorFont"))
+                    .autocorrectionDisabled()
+                    Spacer()
+                    if (!viewModel.searchAisle.isEmpty && !viewModel.aisleExist()) {
+                        Button(action: {
+                            Task {
+                                await viewModel.addAisle()
                             }
-                            .accessibilityHint("Tap for add aisle : \(viewModel.searchAisle)")
+                        }) {
+                            Label("Add Aisle", systemImage: "plus.app")
+                                .font(.title3)
+                                .foregroundColor(.black)
                         }
+                        .accessibilityHint("Tap for add aisle : \(viewModel.searchAisle)")
                     }
-                    
                 }
-                .padding()
-                .background(Color("BackgroundElement"))
-                .cornerRadius(20)
                 
             }
-            
+            .padding()
+            .background(Color("BackgroundElement"))
+            .cornerRadius(20)
         }
     }
     
@@ -220,44 +224,47 @@ extension MedicineView {
     }
     
     private var medicineHistorySection: some View {
-        VStack {
-            VStack(alignment: .leading, spacing: 8) {
-                Text("History")
-                    .font(.title3)
-                    .foregroundColor(Color("ColorFont"))
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 4) {
-                   
-                        VStack(alignment: .leading, spacing: 4) {
-                            if let history = viewModel.medicine.history {
-                                ForEach(history, id: \.id) { history in
-                                    VStack(alignment: .leading, spacing: 2) {
-                                        Text(history.ligne1)
-                                            .font(.caption)
-                                            .fontWeight(.bold)
-                                            .foregroundColor(Color(.black))
-                                        Text(history.details)
-                                            .font(.caption2)
-                                            .foregroundColor(Color(.black))
-                                            .accessibilityLabel(history.detailsAccess)
-                                    }
-                                }
+        VStack(alignment: .leading, spacing: 8) {
+            Text("History")
+                .font(.title3)
+                .foregroundColor(Color("ColorFont"))
+            ScrollView(showsIndicators: false) {
+                VStack(alignment: .leading, spacing: 4) {
+                    if let history = viewModel.medicine.history {
+                        ForEach(history, id: \.id) { item in
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(item.ligne1)
+                                    .font(.caption)
+                                    .fontWeight(.bold)
+                                    .foregroundColor(Color(.black))
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                Text(item.details)
+                                    .font(.caption2)
+                                    .foregroundColor(Color(.black))
+                                    .accessibilityLabel(item.detailsAccess)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
                             }
+                            .padding(2)
+                            .background(Color.gray.opacity(0.1))
+                            .cornerRadius(8)
+                            
                         }
-                        .frame(maxWidth: .infinity, alignment: .leading)
                     }
+                    
                 }
-                .frame(maxHeight: 150)
-                .background(Color("BackgroundElement"))
-                .cornerRadius(8)
-                .padding(.horizontal)
+                
             }
-            
+            .frame(maxWidth: .infinity,maxHeight: 150)
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
         .padding()
         .background(Color("BackgroundElement"))
         .cornerRadius(20)
+        .onTapGesture {
+            isShowingFullHistory = true
+        }
         .accessibilityLabel("History")
+        .accessibilityHint("Tap to view the complete medication history")
         
     }
     
