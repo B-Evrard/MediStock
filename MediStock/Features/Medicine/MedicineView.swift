@@ -261,7 +261,10 @@ extension MedicineView {
         .background(Color("BackgroundElement"))
         .cornerRadius(20)
         .onTapGesture {
-            isShowingFullHistory = true
+            if let history = viewModel.medicine.history {
+                isShowingFullHistory = history.count > 0 ? true : false
+            }
+           
         }
         .accessibilityLabel("History")
         .accessibilityHint("Tap to view the complete medication history")
