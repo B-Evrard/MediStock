@@ -30,22 +30,6 @@ jobs:
           only-testing: MediStockTests
           result-bundle-path: 'testResults/TestResults.xcresult'
 
-      - name: Check if Test Results Exist
-        run: |
-          if [ -d "testResults/TestResults.xcresult" ]; then
-            echo "Test results found."
-          else
-            echo "Test results not found."
-            exit 1
-          fi
-
-      - name: Upload test results
-        uses: actions/upload-artifact@v4
-        if: success() || failure()
-        with:
-          name: test-results
-          path: testResults/TestResults.xcresult
-
       - name: Process Test Results
         uses: slidoapp/xcresulttool@v3.1.0
         with:
