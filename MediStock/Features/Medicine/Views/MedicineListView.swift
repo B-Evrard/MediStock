@@ -44,13 +44,11 @@ struct MedicineListView: View {
         }
         .onAppear {
             Task {
-                print ("onAppear \(isFromTab ? "true" : "false") -- \(path.count)")
                 viewModel.startListening()
             }
         }
         .onDisappear() {
             Task {
-                print ("onDisappear \(isFromTab ? "true" : "false") -- \(path.count)")
                 if (path.count == 0 && !isFromTab) {
                     viewModel.removeListener()
                 }

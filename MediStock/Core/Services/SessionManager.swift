@@ -57,7 +57,6 @@ final class SessionManager: ObservableObject {
     }
     
     func stopListeners() {
-        print ("Stop listeners")
         authService.removeListener()
     }
     
@@ -67,8 +66,9 @@ final class SessionManager: ObservableObject {
         authService.userIdPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] userId in
-                guard let self = self else { return }
-                Task {
+                guard let self else { return }
+                Task { [weak self] in
+                    guard let self else { return }
                     guard let userId = userId else {
                         self.resetUser()
                         return

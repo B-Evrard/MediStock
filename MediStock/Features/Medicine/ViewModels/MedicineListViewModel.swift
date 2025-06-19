@@ -38,14 +38,6 @@ final class MedicineListViewModel: ObservableObject {
         self.aisleSelected = aisleSelected
         self.historyService = HistoryService()
         
-        
-        
-        //        self.session.$isConnected
-        //            .sink(receiveValue: { isLogged in
-        //                print("toto \(isLogged)")
-        //            })
-        //            .store(in: &self.cancellables)
-        
         $search
             .debounce(for: .seconds(0.8), scheduler: DispatchQueue.main)
             .removeDuplicates()

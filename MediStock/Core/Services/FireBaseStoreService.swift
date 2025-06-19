@@ -130,7 +130,6 @@ final class FireBaseStoreService: DataStore {
                 
                 continuation.yield(medicineUpdates)
             }
-            print("Add listener \(listenerMedicine.debugDescription) ")
             
             continuation.onTermination = { [weak self] _ in
                 self?.resetStreamMedicines()
@@ -139,7 +138,6 @@ final class FireBaseStoreService: DataStore {
     }
     
     func resetStreamMedicines() {
-        print("Remove listener \(listenerMedicine.debugDescription) ")
         listenerMedicine?.remove()
     }
     
