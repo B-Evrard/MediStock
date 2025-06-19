@@ -87,13 +87,20 @@ extension MedicineListView {
             HStack {
                 Image(systemName: "magnifyingglass")
                     .font(.callout)
+                    .foregroundColor(.black)
                     .padding(.leading, 8)
                     .accessibilityHidden(true)
-                TextField("Filter by name", text: $viewModel.search)
-                    .font(.callout)
-                    .autocorrectionDisabled(true)
-                    .textFieldStyle(PlainTextFieldStyle())
-                    .padding(.leading, 10)
+                TextField(
+                    text: $viewModel.search,
+                    prompt: Text("Filter by name").foregroundStyle(.gray)
+                ) {
+                    EmptyView()
+                }
+                .font(.callout)
+                .foregroundColor(.black) 
+                .autocorrectionDisabled(true)
+                .textFieldStyle(PlainTextFieldStyle())
+                .padding(.leading, 10)
                 
                 Spacer()
                 

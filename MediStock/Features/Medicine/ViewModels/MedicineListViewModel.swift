@@ -40,11 +40,11 @@ final class MedicineListViewModel: ObservableObject {
         
         
         
-        self.session.$isConnected
-            .sink(receiveValue: { isLogged in
-                print("toto \(isLogged)")
-            })
-            .store(in: &self.cancellables)
+        //        self.session.$isConnected
+        //            .sink(receiveValue: { isLogged in
+        //                print("toto \(isLogged)")
+        //            })
+        //            .store(in: &self.cancellables)
         
         $search
             .debounce(for: .seconds(0.8), scheduler: DispatchQueue.main)
@@ -67,42 +67,51 @@ final class MedicineListViewModel: ObservableObject {
         guard !hasStartedListening else { return }
         hasStartedListening = true
         self.isError = false
+        
         streamTask = Task { [weak self] in
-            guard let self = self else { return }
+            guard let dataStoreService = self?.dataStoreService else { return }
             do {
-                self.isLoading = true
-                for try await medicineUpdate in dataStoreService.streamMedicines(aisleId: aisleSelected?.id ?? nil, filter: search, sortOption: sortOption) {
+                self?.isLoading = true
+                
+                for try await update in dataStoreService.streamMedicines(
                     
-                    if (!medicineUpdate.added.isEmpty)
-                    {
-                        self.medicines.append(contentsOf: medicineUpdate.added.map(MedicineMapper.mapToListViewData))
-                    }
+                    aisleId: self?.aisleSelected?.id ?? nil,
+                    filter: self?.search,
+                    sortOption: self?.sortOption
+                ) {
                     
-                    if (!medicineUpdate.modified.isEmpty) {
-                        for medicineData in medicineUpdate.modified {
-                            let newMedViewData = MedicineMapper.mapToListViewData(medicineData)
-                            if let index = self.medicines.firstIndex(where: { $0.id == medicineData.id }) {
-                                self.medicines[index] = newMedViewData
-                            }
+                    guard let self else { return }
+                    var updatedList = self.medicines
+                    
+                    let added = update.added.map(MedicineMapper.mapToListViewData)
+                    updatedList.append(contentsOf: added)
+                    
+                    for medData in update.modified {
+                        let mapped = MedicineMapper.mapToListViewData(medData)
+                        if let index = updatedList.firstIndex(where: { $0.id == medData.id }) {
+                            updatedList[index] = mapped
                         }
                     }
                     
-                    if (!medicineUpdate.removedIds.isEmpty) {
-                        self.medicines.removeAll { medicineUpdate.removedIds.contains($0.id ?? "") }
-                    }
-                    /// On retrie la liste car en cas d'ajout detecter par le addSnapshotListener la liste n'est plus triée
-                    switch sortOption {
+                    updatedList.removeAll { update.removedIds.contains($0.id ?? "") }
+                    
+                    switch self.sortOption {
                     case .name:
-                        medicines.sort { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
+                        updatedList = updatedList.sorted {
+                            $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending
+                        }
                     case .stock:
-                        medicines.sort { $0.stock < $1.stock}
+                        updatedList = updatedList.sorted { $0.stock < $1.stock }
                     }
-                    self.isError = false
+                    
+                    
+                    self.medicines = updatedList
                     self.isLoading = false
+                    self.isError = false
                 }
             } catch {
-                self.isError = true
-                self.isLoading = false
+                self?.isError = true
+                self?.isLoading = false
             }
         }
     }

@@ -33,7 +33,7 @@ final class SessionManager: ObservableObject {
     }
     
     deinit {
-        observers.forEach { NotificationCenter.default.removeObserver($0) }
+        NotificationCenter.default.removeObserver(self, name: UIApplication.willTerminateNotification, object: nil)
     }
     
     // MARK: - Public methods
@@ -57,6 +57,7 @@ final class SessionManager: ObservableObject {
     }
     
     func stopListeners() {
+        print ("Stop listeners")
         authService.removeListener()
     }
     
@@ -77,19 +78,19 @@ final class SessionManager: ObservableObject {
             }
             .store(in: &cancellables)
     }
-    
+
     private func observeAppLifecycle() {
-        let center = NotificationCenter.default
-        
-        let terminationObserver = center.addObserver(
-            forName: UIApplication.willTerminateNotification,
-            object: nil,
-            queue: .main
-        ) { [weak self] _ in
-            Task { @MainActor in
-                self?.stopListeners()
-            }
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(applicationWillTerminate(_:)),
+            name: UIApplication.willTerminateNotification,
+            object: nil
+        )
+    }
+    
+    @objc private func applicationWillTerminate(_ notification: Notification) {
+        Task { @MainActor in
+            stopListeners()
         }
-        observers.append(terminationObserver)
     }
 }
