@@ -18,8 +18,10 @@ struct MediStockApp: App {
         WindowGroup {
             if session.isConnected {
                 MainTabView()
+                    .preferredColorScheme(.dark)
             } else {
                 LoginView(viewModel: LoginViewModel(session: session))
+                    .preferredColorScheme(.dark)
             }
         }
         .environmentObject(session)

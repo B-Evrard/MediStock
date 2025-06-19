@@ -35,25 +35,25 @@ struct MainTabView: View {
             }
             
             
-            NavigationStack(path: $medicinePath) {
-                MedicineListView(viewModel: MedicineListViewModel(session: session), isFromTab: true, path: $medicinePath )
-                    .navigationDestination(for: AppRoute.self) { route in
-                        switch route {
-                        case .medicines(_):
-                            EmptyView()
-                        case .medicineEdit(let med):
-                            MedicineView(viewModel: MedicineViewModel(session: session, medicine: med), path: $medicinePath)
-                            
-                        case .medicineCreate:
-                            MedicineView(viewModel: MedicineViewModel(session: session, medicine: MedicineViewData()), path: $medicinePath)
-                        }
-                    }
-            }
-            .tabItem {
-                Image(systemName: "square.grid.2x2")
-                Text("All Medicines")
-                    .accessibilityHint("Tap for a list of all the medicines")
-            }
+//            NavigationStack(path: $medicinePath) {
+//                MedicineListView(viewModel: MedicineListViewModel(session: session), isFromTab: true, path: $medicinePath )
+//                    .navigationDestination(for: AppRoute.self) { route in
+//                        switch route {
+//                        case .medicines(_):
+//                            EmptyView()
+//                        case .medicineEdit(let med):
+//                            MedicineView(viewModel: MedicineViewModel(session: session, medicine: med), path: $medicinePath)
+//                            
+//                        case .medicineCreate:
+//                            MedicineView(viewModel: MedicineViewModel(session: session, medicine: MedicineViewData()), path: $medicinePath)
+//                        }
+//                    }
+//            }
+//            .tabItem {
+//                Image(systemName: "square.grid.2x2")
+//                Text("All Medicines")
+//                    .accessibilityHint("Tap for a list of all the medicines")
+//            }
             
             
             UserView(viewModel: UserViewModel(session: session))
