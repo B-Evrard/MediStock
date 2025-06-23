@@ -10,18 +10,13 @@ import SwiftUI
 struct SignUpView: View {
     @ObservedObject var viewModel: LoginViewModel
     @State private var showInfo = false
-
+    
     var body: some View {
         VStack {
-            TextField("Email", text: $viewModel.email)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .keyboardType(.emailAddress)
-                .autocapitalization(.none)
-                .disableAutocorrection(true)
             
-            SecureField("Password", text: $viewModel.password)
-                .font(.callout)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
+            
+            InputFieldString(text: $viewModel.email, placeholder: "Email", keyboard: .emailAddress, autocorrectionDisabled: true, hasPadding: true)
+            InputFieldString(text: $viewModel.password, placeholder: "Password", isSecure: true, hasPadding: true)
                 .overlay(
                     Group {
                         
@@ -43,14 +38,9 @@ struct SignUpView: View {
                     }, alignment: .trailing
                 )
             
-            SecureField("Confirm your password", text: $viewModel.confirmedPassword)
-                .font(.callout)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
+            InputFieldString(text: $viewModel.confirmedPassword, placeholder: "Confirm your password", isSecure: true, hasPadding: true)
             
-            TextField("Enter your name", text: $viewModel.name)
-                .font(.callout)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-        
+            InputFieldString(text: $viewModel.name, placeholder: "Enter your name", autocorrectionDisabled: true, hasPadding: true)
         }
     }
 }

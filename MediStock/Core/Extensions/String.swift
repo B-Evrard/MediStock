@@ -1,20 +1,12 @@
 //
-//  GlobalExtensions.swift
+//  StringExtensions.swift
 //  MediStock
 //
-//  Created by Bruno Evrard on 21/05/2025.
+//  Created by Bruno Evrard on 23/06/2025.
 //
+
 import Foundation
 
-// MARK: Date Extension
-extension Date {
-    var formattedDateString: String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MM/dd/yyyy 'at' HH:mm"
-        return dateFormatter.string(from: self)}
-}
-
-// MARK: String Extension
 extension String {
     
     var removingAccentsUppercased: String {

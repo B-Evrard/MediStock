@@ -7,7 +7,6 @@ struct AisleListView: View {
     @Binding var path: NavigationPath
     
     var body: some View {
-        //NavigationStack(path: $path)  {
         ZStack {
             Color("Background").ignoresSafeArea(edges: .top)
             if viewModel.isLoading {
@@ -33,7 +32,6 @@ struct AisleListView: View {
                 await viewModel.fetchAisles()
             }
         }
-        
     }
 }
 
