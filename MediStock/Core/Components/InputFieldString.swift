@@ -14,6 +14,7 @@ struct InputFieldString: View {
     var autocorrectionDisabled = false
     var isSecure: Bool = false
     var hasPadding: Bool = false
+    var hasCornerRadius: Bool = false
     
     var body: some View {
         Group {
@@ -34,6 +35,9 @@ struct InputFieldString: View {
             view.padding()
         }
         .background(Color("BackgroundElement"))
-        .cornerRadius(20)
+        .if(hasCornerRadius) { view in
+            view.cornerRadius(20)
+        }
+       
     }
 }

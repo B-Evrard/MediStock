@@ -15,8 +15,8 @@ struct SignUpView: View {
         VStack {
             
             
-            InputFieldString(text: $viewModel.email, placeholder: "Email", keyboard: .emailAddress, autocorrectionDisabled: true, hasPadding: true)
-            InputFieldString(text: $viewModel.password, placeholder: "Password", isSecure: true, hasPadding: true)
+            InputFieldString(text: $viewModel.email, placeholder: "Email", keyboard: .emailAddress, autocorrectionDisabled: true, hasPadding: true, hasCornerRadius: true)
+            InputFieldString(text: $viewModel.password, placeholder: "Password", isSecure: true, hasPadding: true, hasCornerRadius: true)
                 .overlay(
                     Group {
                         
@@ -38,9 +38,9 @@ struct SignUpView: View {
                     }, alignment: .trailing
                 )
             
-            InputFieldString(text: $viewModel.confirmedPassword, placeholder: "Confirm your password", isSecure: true, hasPadding: true)
+            InputFieldString(text: $viewModel.confirmedPassword, placeholder: "Confirm your password", isSecure: true, hasPadding: true, hasCornerRadius: true)
             
-            InputFieldString(text: $viewModel.name, placeholder: "Enter your name", autocorrectionDisabled: true, hasPadding: true)
+            InputFieldString(text: $viewModel.name, placeholder: "Enter your name", autocorrectionDisabled: true, hasPadding: true, hasCornerRadius: true)
         }
     }
 }
