@@ -12,16 +12,11 @@ struct SignInView: View {
     @ObservedObject var viewModel: LoginViewModel
     
     var body: some View {
-        VStack {
-            TextField("Email", text: $viewModel.email)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .keyboardType(.emailAddress)
-                .autocapitalization(.none)
-                .disableAutocorrection(true)
-            
-            SecureField("Password", text: $viewModel.password)
-                .font(.callout)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
+        VStack(spacing: 16) {
+            InputFieldString(text: $viewModel.email, placeholder: "Email", keyboard: .emailAddress, autocorrectionDisabled: true, hasPadding: true)
+                
+            InputFieldString(text: $viewModel.password, placeholder: "Password", isSecure: true, hasPadding: true)
+                
         }
     }
     

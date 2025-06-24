@@ -85,11 +85,7 @@ extension MedicineView {
                 .font(.title3)
                 .foregroundColor(Color("ColorFont"))
             
-            TextField("", text: $viewModel.medicine.name,
-                      prompt: Text("Medicine name")
-                .foregroundColor(.gray))
-            .font(.body)
-            .foregroundColor(Color("ColorFont"))
+            InputFieldString(text: $viewModel.medicine.name, placeholder: "Medicine name")
         }
         .padding()
         .background(Color("BackgroundElement"))
@@ -116,19 +112,11 @@ extension MedicineView {
                         .foregroundColor(.red)
                 }
                 .accessibilityHint("Tap to decrease stock")
-                TextField(
-                    "",
-                    value: $viewModel.medicine.stock,
-                    formatter: NumberFormatter(),
-                    prompt: Text("0")
-                        .foregroundColor(.gray)
-                )
-                .keyboardType(.numberPad)
-                .multilineTextAlignment(.center)
-                .frame(width: 60)
-                .font(.body)
-                .foregroundColor(Color("ColorFont"))
-                .accessibilityLabel("Medicine stock \(viewModel.medicine.stock)")
+
+                InputFieldInt(value: $viewModel.medicine.stock, placeholder: "0")
+                    .multilineTextAlignment(.center)
+                    .frame(width: 60)
+                    .accessibilityLabel("Medicine stock \(viewModel.medicine.stock)")
                 
                 Button(action: {
                     viewModel.medicine.stock += 1
