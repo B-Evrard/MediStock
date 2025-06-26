@@ -11,69 +11,70 @@ final class HistoryService {
     
     func generateHistory(user: UserModel, oldMedicine: MedicineViewData?, newMedicine: MedicineViewData?) -> HistoryEntryModel? {
         
-        guard let oldMedicine = oldMedicine else {
-            // ADD medicine
-            guard let newMedicine = newMedicine else {
-                return nil
-            }
-            let detail  = "Stock : \(newMedicine.stock) - Aisle : \(newMedicine.aisle?.label ?? "") "
-            
-            let entry = HistoryEntryModel(
-                medicineId: newMedicine.id ?? "",
-                action: HistoryAction.Add.rawValue,
+        guard oldMedicine != nil || newMedicine != nil else { return nil }
+        
+        // ADD medicine
+        if oldMedicine == nil, let newMedicine {
+            let detail = "Stock: \(newMedicine.stock) - Aisle: \(newMedicine.aisle?.label ?? "")"
+            return makeEntry(
+                id: newMedicine.id ?? "",
+                action: .Add,
                 details: detail,
-                modifiedAt: Date(),
-                modifiedByUserId: user.idAuth ?? "",
-                modifiedByUserName: user.displayName
+                user: user
             )
-            return entry
         }
         
-        guard let newMedicine = newMedicine else {
-            // DELETE medicine
-            let detail  = "\(oldMedicine.name) - Aisle : \(oldMedicine.aisle?.label ?? "") "
-            
-            let entry = HistoryEntryModel(
-                medicineId: oldMedicine.id ?? "",
-                action: HistoryAction.Delete.rawValue,
+        // DELETE medicine
+        if newMedicine == nil, let oldMedicine {
+            let detail = "\(oldMedicine.name) - Aisle: \(oldMedicine.aisle?.label ?? "")"
+            return makeEntry(
+                id: oldMedicine.id ?? "",
+                action: .Delete,
                 details: detail,
-                modifiedAt: Date(),
-                modifiedByUserId: user.idAuth ?? "",
-                modifiedByUserName: user.displayName
+                user: user
             )
-            return entry
         }
         
         // MODIFIY
-        var isModified: Bool = false
-        var detail = ""
-        if (oldMedicine.name != newMedicine.name) {
-            detail += "Rename : \(newMedicine.name)"
-            isModified = true
+        guard let old = oldMedicine, let new = newMedicine else { return nil }
+
+        var changes: [String] = []
+
+        if old.name != new.name {
+            changes.append("Rename: \(new.name)")
         }
-        
-        if (oldMedicine.stock != newMedicine.stock) {
-            detail += detail.isEmpty ? "" : " - "
-            detail += "Stock : \(oldMedicine.stock) --> \(newMedicine.stock)"
-            isModified = true
+
+        if old.stock != new.stock {
+            changes.append("Stock: \(old.stock) → \(new.stock)")
         }
-        
-        if (oldMedicine.aisle?.label != newMedicine.aisle?.label) {
-            detail += detail.isEmpty ? "" : " - "
-            detail += "Aisle : \(oldMedicine.aisle?.label ?? "") --> \(newMedicine.aisle?.label ?? "")"
-            isModified = true
+
+        if old.aisle?.label != new.aisle?.label {
+            changes.append("Aisle: \(old.aisle?.label ?? "") → \(new.aisle?.label ?? "")")
         }
-        if (isModified) {
-            let entry = HistoryEntryModel(
-                medicineId: oldMedicine.id ?? "",
-                action: HistoryAction.Update.rawValue,
-                details: detail,
-                modifiedAt: Date(),
-                modifiedByUserId: user.idAuth ?? "",
-                modifiedByUserName: user.displayName
-            )
-            return entry
-        }
-        return nil
+
+        guard !changes.isEmpty else { return nil }
+
+        return makeEntry(
+            id: old.id ?? "",
+            action: .Update,
+            details: changes.joined(separator: " - "),
+            user: user
+        )
+    }
+    
+    private func makeEntry(
+        id: String,
+        action: HistoryAction,
+        details: String,
+        user: UserModel
+    ) -> HistoryEntryModel {
+        return HistoryEntryModel(
+            medicineId: id,
+            action: action.rawValue,
+            details: details,
+            modifiedAt: Date(),
+            modifiedByUserId: user.idAuth ?? "",
+            modifiedByUserName: user.displayName
+        )
     }
 }

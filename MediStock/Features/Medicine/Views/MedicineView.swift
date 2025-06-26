@@ -144,12 +144,7 @@ extension MedicineView {
                     .accessibilityLabel("Aisle : \(viewModel.medicine.aisle?.name ?? "")")
                 
                 HStack {
-                    TextField("", text: $viewModel.searchAisle,
-                              prompt: Text("Choose an aisle...")
-                        .foregroundColor(.gray))
-                    .font(.body)
-                    .foregroundColor(Color("ColorFont"))
-                    .autocorrectionDisabled()
+                    InputFieldString(text: $viewModel.searchAisle, placeholder: "Choose an aisle...", autocorrectionDisabled: true)
                     Spacer()
                     if (!viewModel.searchAisle.isEmpty && !viewModel.aisleExist()) {
                         Button(action: {

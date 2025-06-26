@@ -21,7 +21,6 @@ final class SessionManager: ObservableObject {
     
     // MARK: - Private
     private var cancellables = Set<AnyCancellable>()
-    private var observers: [NSObjectProtocol] = []
     
     // MARK: - Init
     init(user: UserModel? = nil, authService: AuthProviding = FireBaseAuthService()) {
@@ -40,7 +39,7 @@ final class SessionManager: ObservableObject {
     func signOut() async throws {
         try await authService.signOut()
         await MainActor.run {
-            resetUser()
+            clearSession()
         }
     }
     
@@ -50,7 +49,7 @@ final class SessionManager: ObservableObject {
         self.isConnected = user != nil
     }
     
-    func resetUser() {
+    func clearSession() {
         stopListeners()
         self.user = nil
         self.isConnected = false
@@ -70,7 +69,7 @@ final class SessionManager: ObservableObject {
                 Task { [weak self] in
                     guard let self else { return }
                     guard let userId = userId else {
-                        self.resetUser()
+                        self.clearSession()
                         return
                     }
                     try await self.updateUser(userId: userId)

@@ -13,9 +13,9 @@ struct SignInView: View {
     
     var body: some View {
         VStack(spacing: 16) {
-            InputFieldString(text: $viewModel.email, placeholder: "Email", keyboard: .emailAddress, autocorrectionDisabled: true, hasPadding: true)
+            InputFieldString(text: $viewModel.email, placeholder: "Email", keyboard: .emailAddress, autocorrectionDisabled: true, hasPadding: true, hasCornerRadius: true)
                 
-            InputFieldString(text: $viewModel.password, placeholder: "Password", isSecure: true, hasPadding: true)
+            InputFieldString(text: $viewModel.password, placeholder: "Password", isSecure: true, hasPadding: true, hasCornerRadius: true)
                 
         }
     }

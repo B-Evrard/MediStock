@@ -136,7 +136,7 @@ extension MedicineListView {
                                 .font(.body)
                                 .foregroundColor(.black)
                                 .frame(maxWidth: .infinity, alignment: .leading)
-                            //.padding(.leading, 20)
+                            
                         }
                         .padding(.vertical,10)
                         .padding(.horizontal)

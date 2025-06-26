@@ -58,7 +58,7 @@ final class LoginViewModel: ObservableObject {
                 return false
             } else {
                 message = AppMessages.genericError
-                session.resetUser()
+                session.clearSession()
                 return false
                 
             }
