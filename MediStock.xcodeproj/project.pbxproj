@@ -44,6 +44,7 @@
 		FEB8F8BB2DF804D000A8298B /* LoginViewModelTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModelTest.swift; sourceTree = "<group>"; };
 		FEB8F8C82DF84CA000A8298B /* AisleListViewModelTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AisleListViewModelTest.swift; sourceTree = "<group>"; };
 		FEB8F8CC2DF85ACA00A8298B /* MedicineListViewModelTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedicineListViewModelTest.swift; sourceTree = "<group>"; };
+		FEB9C3072E0EDC4A001B8E21 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -103,6 +104,7 @@
 		53E0D8952C06084700DE1134 /* MediStock */ = {
 			isa = PBXGroup;
 			children = (
+				FEB9C3072E0EDC4A001B8E21 /* Info.plist */,
 				FEB8F82F2DF170D600A8298B /* App */,
 				FEB8F8262DF16E8500A8298B /* Features */,
 				FEB8F82E2DF170C700A8298B /* Ressources */,
@@ -446,6 +448,7 @@
 				DEVELOPMENT_TEAM = C3825553HQ;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MediStock/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -475,6 +478,7 @@
 				DEVELOPMENT_TEAM = C3825553HQ;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MediStock/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
