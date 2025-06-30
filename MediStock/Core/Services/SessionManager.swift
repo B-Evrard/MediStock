@@ -27,12 +27,7 @@ final class SessionManager: ObservableObject {
         self.user = user
         self.authService = authService
         self.isConnected = authService.isConnected()
-        observeAppLifecycle()
         observeAuthChanges()
-    }
-    
-    deinit {
-        NotificationCenter.default.removeObserver(self, name: UIApplication.willTerminateNotification, object: nil)
     }
     
     // MARK: - Public methods
@@ -78,18 +73,4 @@ final class SessionManager: ObservableObject {
             .store(in: &cancellables)
     }
 
-    private func observeAppLifecycle() {
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(applicationWillTerminate(_:)),
-            name: UIApplication.willTerminateNotification,
-            object: nil
-        )
-    }
-    
-    @objc private func applicationWillTerminate(_ notification: Notification) {
-        Task { @MainActor in
-            stopListeners()
-        }
-    }
 }
