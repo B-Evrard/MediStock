@@ -9,6 +9,28 @@ import Foundation
 
 final class HistoryService {
     
+    /// Génère une entrée d'historique en fonction des changements apportés à un médicament.
+    ///
+    /// Cette méthode compare deux états d'un médicament (`oldMedicine` et `newMedicine`) pour déterminer
+    /// s'il s'agit d'une création, suppression ou modification, et produit une entrée d'historique adaptée.
+    ///
+    /// - Parameters:
+    ///   - user: L'utilisateur ayant effectué l'action.
+    ///   - oldMedicine: L'état précédent du médicament (optionnel).
+    ///   - newMedicine: Le nouvel état du médicament (optionnel).
+    ///
+    /// - Returns: Une `HistoryEntryModel` décrivant l'action, ou `nil` si aucun changement pertinent n’est détecté.
+    ///
+    /// - Cas traités :
+    ///   - **Ajout** : `oldMedicine == nil` et `newMedicine != nil` → action `.Add`
+    ///   - **Suppression** : `newMedicine == nil` et `oldMedicine != nil` → action `.Delete`
+    ///   - **Modification** : les deux non-nuls, comparaison des champs `name`, `stock`, `aisle`
+    ///     → action `.Update` si au moins un champ a changé.
+    ///
+    /// - Remarques:
+    ///   - Retourne `nil` si les deux paramètres sont `nil` ou s’il n’y a aucun changement détecté.
+    ///   - Les détails de l’action sont formatés en texte lisible (ex. : "Stock: 5 → 8 - Aisle: Réserve → Frigo").
+    ///   - L’identifiant utilisé est celui du médicament concerné.
     func generateHistory(user: UserModel, oldMedicine: MedicineViewData?, newMedicine: MedicineViewData?) -> HistoryEntryModel? {
         
         guard oldMedicine != nil || newMedicine != nil else { return nil }
@@ -70,7 +92,7 @@ final class HistoryService {
     ) -> HistoryEntryModel {
         return HistoryEntryModel(
             medicineId: id,
-            action: action.rawValue,
+            action: action.display,
             details: details,
             modifiedAt: Date(),
             modifiedByUserId: user.idAuth ?? "",
