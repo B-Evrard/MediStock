@@ -115,7 +115,7 @@ extension MedicineView {
 
                 InputFieldInt(value: $viewModel.medicine.stock, placeholder: "0")
                     .multilineTextAlignment(.center)
-                    .frame(width: 60)
+                    .frame(width: 80)
                     .accessibilityLabel("Medicine stock \(viewModel.medicine.stock)")
                 
                 Button(action: {

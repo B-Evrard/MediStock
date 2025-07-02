@@ -92,7 +92,7 @@ final class HistoryService {
     ) -> HistoryEntryModel {
         return HistoryEntryModel(
             medicineId: id,
-            action: action.display,
+            action: action.rawValue,
             details: details,
             modifiedAt: Date(),
             modifiedByUserId: user.idAuth ?? "",
