@@ -4,7 +4,7 @@
 
 #### Mission
 
-* Comprendre code le code existant.
+* Comprendre le code existant.
 * Corriger les différents bugs remontés.
 * Implementer les nouvelles fonctionnalités.
 * Revoir le design de l'application.
